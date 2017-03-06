@@ -20,20 +20,40 @@ NOWADAYS_UBUNTU_VERSION="xenial"
 SANAGER_INSTALL_DIR="/opt/sanagerInstall"
 SUBLIME_TEXT_GIT="git@git.ondratra.eu:ondratra/sublime-text-ondratra.git"
 
-USER_RUNNING_SCRIPT=$SUDO_USER
+SCRIPT_EXECUTING_USER=$SUDO_USER
+SCRIPT_DIR="`dirname \"$0\"`" # relative
+SCRIPT_DIR="`( cd \"$SCRIPT_DIR\" && pwd )`"  # absolutized and normalized
+
+if [[ "$SUDO_USER" == "" ]]; then
+    echo $0;
+    TMP='`sudo -E '$0'`'
+    echo "You should run this script as regular user. Run: $TMP"
+    echo "It's the only way to use your ssh keys for git auth, etc."
+    exit 1;
+fi
+
+
+function printMsg {
+    echo "SANAGER: $@"
+}
+
+function aptInstall {
+    printMsg "Installing packages: $@"
+    apt-get install $@
+}
+
+
 
 function essential {
     PACKAGES="apt-transport-https"
 
-    apt-get install $PACKAGES
+    aptInstall $PACKAGES
 }
 
 function desktopDisplayEtc {
     PACKAGES="xorg pulseaudio"
     DESKTOP="mate mate-desktop-environment mate-desktop-environment-extras"
     DISPLAY="lightdm"
-    # TODO: mb nemo?
-    #DESKTOP_APPS="gnome-terminal"
     DESKTOP_APPS="network-manager network-manager-gnome"
 
     function ininalityFonts {
@@ -44,10 +64,10 @@ function desktopDisplayEtc {
         sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E985B27B # key can be found at https://launchpad.net/~no1wantdthisname/+archive/ubuntu/ppa
         echo $REPO_ROW > $SOURCE_LIST_PATH
         apt-get update
-        apt-get install $PACKAGES
+        aptInstall $PACKAGES
     }
 
-    apt-get install $PACKAGES $DEKSTOP $DISPLAY $DESKTOP_APPS
+    aptInstall $PACKAGES $DEKSTOP $DISPLAY $DESKTOP_APPS
     ininalityFonts
 }
 
@@ -59,12 +79,12 @@ function userEssential {
         sed -e '/.*\(history-search-backward\|history-search-forward\)/s/^# //g' /etc/inputrc > tmpSadReplacementFile && mv tmpSadReplacementFile /etc/inputrc
     }
 
-    apt-get install $PACKAGES
+    aptInstall $PACKAGES
     enableHistorySearch
 }
 
 function work {
-	PACKAGES="git meld"
+	PACKAGES="git meld virtualbox gimp"
 	JAVASCRIPT="nodejs"
     OFFICE="thunderbird libreoffice"
 
@@ -83,13 +103,19 @@ function work {
 
             INSTALLED_PACKAGES_DIR="$CONFIG_DIR/Installed Packages"
             PACKAGE_LOCAL_NAME="Ondratra"
+            FILES_TO_SYMLINK=("Preferences.sublime-settings" "Default (Linux).sublime-keymap" "SideBarEnhancements")
+
+            # download editor's configuration and setup everything
             mkdir $INSTALLED_PACKAGES_DIR -p
             mkdir "$CONFIG_DIR/Packages/User" -p
-            git clone $SUBLIME_TEXT_GIT "$CONFIG_DIR/Packages/$PACKAGE_LOCAL_NAME"
-            ln -s "../$PACKAGE_LOCAL_NAME/Preferences.sublime-settings" "$CONFIG_DIR/Packages/User/Preferences.sublime-settings"
-            ln -s "../$PACKAGE_LOCAL_NAME/Default (Linux).sublime-keymap" "$CONFIG_DIR/Packages/User/Default (Linux).sublime-keymap"
+            cp "$SCRIPT_DIR/data/sublimeText" "$CONFIG_DIR/Packages/$PACKAGE_LOCAL_NAME" -r
+            for TMP_FILE in "${FILES_TO_SYMLINK[@]}"; do
+                ln -s "../$PACKAGE_LOCAL_NAME/$TMP_FILE" "$CONFIG_DIR/Packages/User/$TMP_FILE"
+            done
+            # download package control for sublime text -> it will download all other packages on first run
             wget --directory-prefix "$INSTALLED_PACKAGES_DIR" $PACKAGE_CONTROL_DOWNLOAD_URL
-            chown -R "$USER_RUNNING_SCRIPT:$USER_RUNNING_SCRIPT" $CONFIG_DIR
+            # pass folder permission to relevant user
+            chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_DIR
         fi
     }
 
@@ -102,16 +128,16 @@ function work {
             curl -sS "https://dl.yarnpkg.com/debian/pubkey.gpg" | apt-key add -
             echo $REPO_ROW > $SOURCE_LIST_PATH
             apt-get update
-            apt-get install $PACKAGES
+            aptInstall $PACKAGES
         fi
     }
 
     # Linux Apache MySQL PHP
     function lamp {
-       PACKAGES="apache2 php7"
+       PACKAGES="apache2 php7 mysql-server"
     }
 
-    apt-get install $PACKAGES $JAVASCRIPT $OFFICE
+    aptInstall $PACKAGES $JAVASCRIPT $OFFICE
     sublimeText
     yarnpkg
 }
@@ -129,13 +155,13 @@ function fun {
             sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F4FE239D # key can be found at https://launchpad.net/~fossfreedom/+archive/ubuntu/rhythmbox
             echo $REPO_ROW > $SOURCE_LIST_PATH
             apt-get update
-            apt-get install $PACKAGES
+            aptInstall $PACKAGES
         fi
 
-        apt-get install $PACKAGES
+        aptInstall $PACKAGES
     }
 
-	apt-get install $PACKAGES $PLAY_ON_LINUX
+	aptInstall $PACKAGES $PLAY_ON_LINUX
     rhythmbox
 }
 

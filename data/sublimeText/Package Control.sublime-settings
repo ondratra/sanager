@@ -1,0 +1,24 @@
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"All Autocomplete",
+		"LESS",
+		"LoremIpsum",
+		"Markdown Preview",
+		"Nette",
+		"Package Control",
+		"PHP-Twig",
+		"ScopeHunter",
+		"SideBarEnhancements",
+		"SublimeCodeIntel",
+		"SublimeLinter",
+		"SublimeLinter-php",
+		"SyncedSideBar",
+		"Theme - Soda",
+		"TrailingSpaces"
+	]
+}

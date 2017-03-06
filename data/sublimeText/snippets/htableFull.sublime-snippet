@@ -1,0 +1,24 @@
+<snippet>
+    <content>
+<![CDATA[<table>
+	<thead>
+		<tr>
+			<td>$1</td>
+			<td></td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>]]>
+</content>
+    <tabTrigger>htableFull</tabTrigger>
+    <description>HTML table (full)</description>
+</snippet>

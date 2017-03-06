@@ -1,0 +1,16 @@
+<snippet>
+    <content>
+<![CDATA[<table>
+	<tr>
+		<td>$1</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+	</tr>
+</table>]]>
+</content>
+    <tabTrigger>htable</tabTrigger>
+    <description>HTML table</description>
+</snippet>

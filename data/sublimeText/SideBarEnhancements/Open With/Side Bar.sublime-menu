@@ -1,0 +1,31 @@
+[
+	{"id": "side-bar-files-open-with",
+		"children":
+		[
+			{
+				"caption": "Caja",
+				"id": "side-bar-files-open-with-caja",
+
+				"command": "side_bar_files_open_with",
+				"args": {
+									"paths": [],
+									"application": "caja",
+									"extensions":"" //open all even folders
+								},
+				"open_automatically" : false // will close the view/tab and launch the application
+			},
+			{
+				"caption": "Terminal",
+				"id": "side-bar-files-open-with-terminal",
+
+				"command": "side_bar_files_open_with",
+				"args": {
+									"paths": [],
+									"application": "mate-terminal",
+									"extensions":"" //open all even folders
+								},
+				"open_automatically" : false // will close the view/tab and launch the application
+			}
+		]
+	}
+]
