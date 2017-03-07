@@ -6,9 +6,9 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-TMP_USERNAME=`id -u "$YOUR_NON_ROOT_USERNAME"`
+TMP_USERNAME=`id -u "$NON_ROOT_USERNAME"`
 if [[ $TMP_USERNAME == "" ]] || [[ $TMP_USERNAME == "root" ]]; then
-   echo "You must provide you regular user's username via YOUR_NON_ROOT_USERNAME" 1>&2
+   echo "You must provide you regular user's username via NON_ROOT_USERNAME" 1>&2
    exit 1
 fi
 
@@ -17,5 +17,5 @@ fi
 echo "SANAGER: Updating apt cache and installing sudo package";
 apt-get update -qq
 apt-get install sudo -qq
-echo "SANAGER: Adding user $YOUR_NON_ROOT_USERNAME privileges to sudo. (relogin on all terminals to make effect)";
-adduser $YOUR_NON_ROOT_USERNAME sudo
+echo "SANAGER: Adding user $NON_ROOT_USERNAME privileges to sudo. (relogin on all terminals to make effect)";
+adduser $NON_ROOT_USERNAME sudo

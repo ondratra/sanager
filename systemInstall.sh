@@ -5,10 +5,6 @@
 NOWADAYS_UBUNTU_VERSION="xenial"
 SANAGER_INSTALL_DIR="/opt/sanagerInstall"
 
-SCRIPT_EXECUTING_USER=$SUDO_USER
-SCRIPT_DIR="`dirname \"$0\"`" # relative
-SCRIPT_DIR="`( cd \"$SCRIPT_DIR\" && pwd )`"  # absolutized and normalized
-
 if [[ "$SUDO_USER" == "" ]]; then
     TMP='`sudo -E '$0'`'
     echo "You should run this script as regular user. Run: $TMP"
@@ -16,23 +12,26 @@ if [[ "$SUDO_USER" == "" ]]; then
     exit 1;
 fi
 
+SCRIPT_EXECUTING_USER=$SUDO_USER
+SCRIPT_DIR="`dirname \"$0\"`" # relative
+SCRIPT_DIR="`( cd \"$SCRIPT_DIR\" && pwd )`"  # absolutized and normalized
+
 VERBOSE_SCRIPT=`[[ "$1" == "--verbose" ]] && echo 1 || echo 0`
 VERBOSE_APT_FLAG=`[[ "$VERBOSE_SCRIPT" == "1" ]] && echo "" || echo "-qq"`
 VERBOSE_WGET_FLAG=`[[ "$VERBOSE_SCRIPT" == "0" ]] && echo "" || echo "-q"`
-echo "-$VERBOSE_SCRIPT-$VERBOSE_APT_FLAG-$VERBOSE_WGET_FLAG"
-#exit
+
 function printMsg {
     echo "SANAGER: $@"
 }
 
 function aptUpdate {
+    printMsg "Updating repository cache"
     apt-get update $VERBOSE_APT_FLAG
 }
 
 function aptInstall {
     printMsg "Installing packages: $@"
-    apt-get install "$VERBOSE_APT_FLAG" -y $@
-    #apt-get install -qq -y $@
+    DEBIAN_FRONTEND="noninteractive" apt-get install "$VERBOSE_APT_FLAG" -y $@
 }
 
 function dpkgInstall {
@@ -44,14 +43,9 @@ function dpkgInstall {
     fi
 }
 
-function aptInstallNonInteractive {
-    printMsg "Installing packages(noninteractive): $@"
-    DEBIAN_FRONTEND="noninteractive" apt-get install $VERBOSE_APT_FLAG -y $@
-}
-
 function wgetDownload {
     printMsg "Downloading files via wget: $@"
-    wget $VERBOSE_WGET_FLAG $@
+    wget --no-hsts $VERBOSE_WGET_FLAG $@
 }
 
 
@@ -82,7 +76,7 @@ function desktopDisplayEtc {
         fi
     }
 
-    aptInstall $PACKAGES $DEKSTOP $DISPLAY $DESKTOP_APPS
+    aptInstall $PACKAGES $DESKTOP $DISPLAY $DESKTOP_APPS
     ininalityFonts
 }
 
@@ -139,6 +133,7 @@ function work {
             FILES_TO_SYMLINK=("Preferences.sublime-settings" "Default (Linux).sublime-keymap" "SideBarEnhancements")
 
             # download editor's configuration and setup everything
+            sudo -u $NON_ROOT_USERNAME mkdir $CONFIG_DIR -p
             mkdir $INSTALLED_PACKAGES_DIR -p
             mkdir "$CONFIG_DIR/Packages/User" -p
             cp "$SCRIPT_DIR/data/sublimeText" "$CONFIG_DIR/Packages/$PACKAGE_LOCAL_NAME" -r
@@ -167,10 +162,8 @@ function work {
 
     # Linux Apache MySQL PHP
     function lamp {
-       PACKAGES="apache2 php libapache2-mod-php php-curl php-gd php-mysql php-json php-soap"
-       PACKAGES_NONINTERACTIVE="mysql-server"
+       PACKAGES="mysql-server apache2 php libapache2-mod-php php-curl php-gd php-mysql php-json php-soap"
 
-       aptInstallNonInteractive $PACKAGES_NONINTERACTIVE
        aptInstall $PACKAGES
        a2enmod rewrite && a2enmod vhost_alias
     }

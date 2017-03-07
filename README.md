@@ -31,9 +31,9 @@ git clone https://github.com/ondratra/sanager /opt/sanager
 ```
 # use your actual username in following command
 # following command is needed only once (will not break anything when run repeatedly)
-YOUR_NON_ROOT_USERNAME=ondratra su -c ./rootInit.sh
+NON_ROOT_USERNAME=ondratra su -c ./rootInit.sh
 
-# following command must be run as regular user($YOUR_NON_ROOT_USERNAME)
+# following command must be run as regular user($NON_ROOT_USERNAME)
 # it install all packages and restores all configurations from Sanager
 sudo -E ./systemInstall.sh
 
