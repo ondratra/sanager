@@ -16,25 +16,49 @@ if [[ "$SUDO_USER" == "" ]]; then
     exit 1;
 fi
 
-
+VERBOSE_SCRIPT=`[[ "$1" == "--verbose" ]] && echo 1 || echo 0`
+VERBOSE_APT_FLAG=`[[ "$VERBOSE_SCRIPT" == "1" ]] && echo "" || echo "-qq"`
+VERBOSE_WGET_FLAG=`[[ "$VERBOSE_SCRIPT" == "0" ]] && echo "" || echo "-q"`
+echo "-$VERBOSE_SCRIPT-$VERBOSE_APT_FLAG-$VERBOSE_WGET_FLAG"
+#exit
 function printMsg {
     echo "SANAGER: $@"
 }
 
-function aptInstall {
-    printMsg "Installing packages: $@"
-    apt-get install $@
+function aptUpdate {
+    apt-get update $VERBOSE_APT_FLAG
 }
 
-function aptInstallNoninteractive {
-    printMsg "Installing packages(noninteractive): $@"
-    DEBIAN_FRONTEND="noninteractive" apt-get install -y $@
+function aptInstall {
+    printMsg "Installing packages: $@"
+    apt-get install "$VERBOSE_APT_FLAG" -y $@
+    #apt-get install -qq -y $@
 }
+
+function dpkgInstall {
+    printMsg "Installing packages(dpkg): $@"
+    if [ $VERBOSE_SCRIPT ]; then
+        dpkg -i $@
+    else
+        dpkg -i $@ > /dev/null
+    fi
+}
+
+function aptInstallNonInteractive {
+    printMsg "Installing packages(noninteractive): $@"
+    DEBIAN_FRONTEND="noninteractive" apt-get install $VERBOSE_APT_FLAG -y $@
+}
+
+function wgetDownload {
+    printMsg "Downloading files via wget: $@"
+    wget $VERBOSE_WGET_FLAG $@
+}
+
 
 
 
 function essential {
-    PACKAGES="apt-transport-https"
+    PACKAGES="apt-transport-https aptitude"
 
     aptInstall $PACKAGES
 }
@@ -53,7 +77,7 @@ function desktopDisplayEtc {
         if [ ! -f $SOURCE_LIST_PATH ]; then
             sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E985B27B # key can be found at https://launchpad.net/~no1wantdthisname/+archive/ubuntu/ppa
             echo $REPO_ROW > $SOURCE_LIST_PATH
-            apt-get update
+            aptUpdate
             aptInstall $PACKAGES
         fi
     }
@@ -72,14 +96,17 @@ function userEssential {
     }
 
     function dropbox {
+        PACKAGES="lsb-release"
         OPT_DIR="$SANAGER_INSTALL_DIR/dropbox"
         DEB_FILE="dropbox_2015.10.28_amd64.deb"
 
+        mkdir $OPT_DIR -p
+        cd $OPT_DIR
+
         if [ ! -f $DEB_FILE ]; then
-            mkdir $OPT_DIR -p
-            cd $OPT_DIR
-            wget "https://www.dropbox.com/download?dl=packages/debian/$DEB_FILE" -O $DEB_FILE
-            dpkg -i $DEB_FILE
+            aptInstall lsb-release
+            wgetDownload "https://www.dropbox.com/download?dl=packages/debian/$DEB_FILE" -O $DEB_FILE
+            dpkgInstall $DEB_FILE
             dropbox start -i
         fi
     }
@@ -104,8 +131,8 @@ function work {
         cd $OPT_DIR
 
         if [ ! -f $DEB_FILE ]; then
-            wget "https://download.sublimetext.com/$DEB_FILE"
-            dpkg -i $DEB_FILE
+            wgetDownload "https://download.sublimetext.com/$DEB_FILE"
+            dpkgInstall $DEB_FILE
 
             INSTALLED_PACKAGES_DIR="$CONFIG_DIR/Installed Packages"
             PACKAGE_LOCAL_NAME="Ondratra"
@@ -119,7 +146,7 @@ function work {
                 ln -s "../$PACKAGE_LOCAL_NAME/$TMP_FILE" "$CONFIG_DIR/Packages/User/$TMP_FILE"
             done
             # download package control for sublime text -> it will download all other packages on first run
-            wget --directory-prefix "$INSTALLED_PACKAGES_DIR" $PACKAGE_CONTROL_DOWNLOAD_URL
+            wgetDownload --directory-prefix "$INSTALLED_PACKAGES_DIR" $PACKAGE_CONTROL_DOWNLOAD_URL
             # pass folder permission to relevant user
             chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_DIR
         fi
@@ -133,7 +160,7 @@ function work {
         if [ ! -f $SOURCE_LIST_PATH ]; then
             curl -sS "https://dl.yarnpkg.com/debian/pubkey.gpg" | apt-key add -
             echo $REPO_ROW > $SOURCE_LIST_PATH
-            apt-get update
+            aptUpdate
             aptInstall $PACKAGES
         fi
     }
@@ -143,7 +170,7 @@ function work {
        PACKAGES="apache2 php libapache2-mod-php php-curl php-gd php-mysql php-json php-soap"
        PACKAGES_NONINTERACTIVE="mysql-server"
 
-       aptInstallNoninteractive $PACKAGES_NONINTERACTIVE
+       aptInstallNonInteractive $PACKAGES_NONINTERACTIVE
        aptInstall $PACKAGES
        a2enmod rewrite && a2enmod vhost_alias
     }
@@ -155,8 +182,15 @@ function work {
 }
 
 function fun {
-	PACKAGES="vlc transmission steam"
+	PACKAGES="vlc transmission"
     PLAY_ON_LINUX="playonlinux ttf-mscorefonts-installer"
+
+    function steam {
+        PACKAGES="steam"
+
+        dpkg --add-architecture i386
+        aptInstall $PACKAGES
+    }
 
     function rhythmbox {
         PACKAGES="rhythmbox rhythmbox-plugin-llyrics"
@@ -166,7 +200,7 @@ function fun {
         if [ ! -f $SOURCE_LIST_PATH ]; then
             sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F4FE239D # key can be found at https://launchpad.net/~fossfreedom/+archive/ubuntu/rhythmbox
             echo $REPO_ROW > $SOURCE_LIST_PATH
-            apt-get update
+            aptUpdate
             aptInstall $PACKAGES
         fi
 
@@ -183,3 +217,6 @@ userEssential
 work
 fun
 
+
+apt-get $VERBOSE_APT_FLAG -f install # make sure all dependencies are met
+apt-get $VERBOSE_APT_FLAG autoremove # remove any unused packages
