@@ -5,7 +5,7 @@ on all Debian-like distributions.
 
 # Use
 `sudo -E ./systemInstall.sh`
-run this script on regular user account with -E ensures your git keeps, etc. will be available
+run this script on regular user account with -E ensuring your git keys, etc. will be available
 
 
 ## Not handeled by this script

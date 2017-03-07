@@ -1,31 +1,15 @@
 #!/bin/bash
-
-# should work on most Debian-like distribution(tested on Debian and Ubuntu)
-
-# Use
-# `sudo -E`
-# run this script on regular user account with -E ensures your git keeps, etc. will be available
-
-# not handeled by this script
-# - running `sudo apt-get update` before script
-# - adding user to sudo; use `adduser yourNonRootUserName sudo` as root to do so
-
-# script is meant to be non-destructive when run repeatedly
-# script has no fail handeling -> when problem occurs fix it manually and update script
-
-
+# see README.md for script description
 
 # used when importing ubuntu packages
 NOWADAYS_UBUNTU_VERSION="xenial"
 SANAGER_INSTALL_DIR="/opt/sanagerInstall"
-SUBLIME_TEXT_GIT="git@git.ondratra.eu:ondratra/sublime-text-ondratra.git"
 
 SCRIPT_EXECUTING_USER=$SUDO_USER
 SCRIPT_DIR="`dirname \"$0\"`" # relative
 SCRIPT_DIR="`( cd \"$SCRIPT_DIR\" && pwd )`"  # absolutized and normalized
 
 if [[ "$SUDO_USER" == "" ]]; then
-    echo $0;
     TMP='`sudo -E '$0'`'
     echo "You should run this script as regular user. Run: $TMP"
     echo "It's the only way to use your ssh keys for git auth, etc."
@@ -40,6 +24,11 @@ function printMsg {
 function aptInstall {
     printMsg "Installing packages: $@"
     apt-get install $@
+}
+
+function aptInstallNoninteractive {
+    printMsg "Installing packages(noninteractive): $@"
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y $@
 }
 
 
@@ -61,10 +50,12 @@ function desktopDisplayEtc {
         REPO_ROW="deb http://ppa.launchpad.net/no1wantdthisname/ppa/ubuntu $NOWADAYS_UBUNTU_VERSION main"
         SOURCE_LIST_PATH="/etc/apt/sources.list.d/ininality-fonts.list"
 
-        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E985B27B # key can be found at https://launchpad.net/~no1wantdthisname/+archive/ubuntu/ppa
-        echo $REPO_ROW > $SOURCE_LIST_PATH
-        apt-get update
-        aptInstall $PACKAGES
+        if [ ! -f $SOURCE_LIST_PATH ]; then
+            sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E985B27B # key can be found at https://launchpad.net/~no1wantdthisname/+archive/ubuntu/ppa
+            echo $REPO_ROW > $SOURCE_LIST_PATH
+            apt-get update
+            aptInstall $PACKAGES
+        fi
     }
 
     aptInstall $PACKAGES $DEKSTOP $DISPLAY $DESKTOP_APPS
@@ -74,13 +65,28 @@ function desktopDisplayEtc {
 function userEssential {
 	PACKAGES="wget curl vim htop firefox chromium disk-manager"
 
+    # enables bash histroy search by PageUp and PageDown keys
     function enableHistorySearch {
         # works system wide (changing /etc/inputrc)
         sed -e '/.*\(history-search-backward\|history-search-forward\)/s/^# //g' /etc/inputrc > tmpSadReplacementFile && mv tmpSadReplacementFile /etc/inputrc
     }
 
+    function dropbox {
+        OPT_DIR="$SANAGER_INSTALL_DIR/dropbox"
+        DEB_FILE="dropbox_2015.10.28_amd64.deb"
+
+        if [ ! -f $DEB_FILE ]; then
+            mkdir $OPT_DIR -p
+            cd $OPT_DIR
+            wget "https://www.dropbox.com/download?dl=packages/debian/$DEB_FILE" -O $DEB_FILE
+            dpkg -i $DEB_FILE
+            dropbox start -i
+        fi
+    }
+
     aptInstall $PACKAGES
     enableHistorySearch
+    dropbox
 }
 
 function work {
@@ -134,12 +140,18 @@ function work {
 
     # Linux Apache MySQL PHP
     function lamp {
-       PACKAGES="apache2 php7 mysql-server"
+       PACKAGES="apache2 php libapache2-mod-php php-curl php-gd php-mysql php-json php-soap"
+       PACKAGES_NONINTERACTIVE="mysql-server"
+
+       aptInstallNoninteractive $PACKAGES_NONINTERACTIVE
+       aptInstall $PACKAGES
+       a2enmod rewrite && a2enmod vhost_alias
     }
 
     aptInstall $PACKAGES $JAVASCRIPT $OFFICE
     sublimeText
     yarnpkg
+    lamp
 }
 
 function fun {
