@@ -1,11 +1,16 @@
 # Sanager - System Manager
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
+
 Installs all applications and libraries used by autor on local computer. Creates (almost) identical enviroments
 on all Debian-like distributions.
 
 
 # Use
-`sudo -E ./systemInstall.sh`
-run this script on regular user account with -E ensuring your git keys, etc. will be available
+```
+sudo -E ./systemInstall.sh`
+```
+Run this script on regular user account with -E ensuring your git keys, etc. will be available
 
 
 ## Not handeled by this script
