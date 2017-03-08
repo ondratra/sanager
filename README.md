@@ -45,7 +45,7 @@ Running this script on regular user account with `sudo -E` ensuring your git key
 ## Logging
 If you need to log system install run command with additional parameter `--verbose`.
 ```
-sudo -E ./systemInstall.sh --verbose | tee systemInstall.log
+sudo -E ./systemInstall.sh --verbose | sudo tee systemInstall.log
 ```
 
 
@@ -53,3 +53,11 @@ sudo -E ./systemInstall.sh --verbose | tee systemInstall.log
 All scripts are meant to be non-destructive when run repeatedly.
 Script has limited to no error handeling, when problem occurs fix it manually and update script.
 All script are meant to be quite by default; messages to stderr are enabled always.
+
+# Troubleshooting
+When somethings goes wrong try to rerun `systemInstall.sh`. 
+Additionally you can delete content of some config folders before rerun.
+```
+rm -rf /etc/apt/sources.list.d/* # dont run this if you manually added some sources
+rm -rf /opt/sanagerInstall/*
+```

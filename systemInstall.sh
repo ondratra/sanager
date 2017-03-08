@@ -52,7 +52,7 @@ function wgetDownload {
 
 
 function essential {
-    PACKAGES="apt-transport-https aptitude"
+    PACKAGES="apt-transport-https aptitude wget"
 
     aptInstall $PACKAGES
 }
@@ -69,7 +69,7 @@ function desktopDisplayEtc {
         SOURCE_LIST_PATH="/etc/apt/sources.list.d/ininality-fonts.list"
 
         if [ ! -f $SOURCE_LIST_PATH ]; then
-            sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E985B27B # key can be found at https://launchpad.net/~no1wantdthisname/+archive/ubuntu/ppa
+            apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E985B27B # key can be found at https://launchpad.net/~no1wantdthisname/+archive/ubuntu/ppa
             echo $REPO_ROW > $SOURCE_LIST_PATH
             aptUpdate
             aptInstall $PACKAGES
@@ -81,7 +81,7 @@ function desktopDisplayEtc {
 }
 
 function userEssential {
-	PACKAGES="wget curl vim htop firefox chromium disk-manager"
+	PACKAGES="curl vim htop firefox chromium disk-manager"
 
     # enables bash histroy search by PageUp and PageDown keys
     function enableHistorySearch {
@@ -133,7 +133,7 @@ function work {
             FILES_TO_SYMLINK=("Preferences.sublime-settings" "Default (Linux).sublime-keymap" "SideBarEnhancements")
 
             # download editor's configuration and setup everything
-            sudo -u $NON_ROOT_USERNAME mkdir $CONFIG_DIR -p
+            sudo -u $SCRIPT_EXECUTING_USER mkdir $CONFIG_DIR -p
             mkdir $INSTALLED_PACKAGES_DIR -p
             mkdir "$CONFIG_DIR/Packages/User" -p
             cp "$SCRIPT_DIR/data/sublimeText" "$CONFIG_DIR/Packages/$PACKAGE_LOCAL_NAME" -r
@@ -191,7 +191,7 @@ function fun {
         SOURCE_LIST_PATH="/etc/apt/sources.list.d/rhytmbox-plugins.list"
 
         if [ ! -f $SOURCE_LIST_PATH ]; then
-            sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F4FE239D # key can be found at https://launchpad.net/~fossfreedom/+archive/ubuntu/rhythmbox
+            apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F4FE239D # key can be found at https://launchpad.net/~fossfreedom/+archive/ubuntu/rhythmbox
             echo $REPO_ROW > $SOURCE_LIST_PATH
             aptUpdate
             aptInstall $PACKAGES

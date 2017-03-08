@@ -6,7 +6,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-TMP_USERNAME=`id -u "$NON_ROOT_USERNAME"`
+TMP_USERNAME=`id -u "$NON_ROOT_USERNAME" 2> /dev/null`
 if [[ $TMP_USERNAME == "" ]] || [[ $TMP_USERNAME == "root" ]]; then
    echo "You must provide you regular user's username via NON_ROOT_USERNAME" 1>&2
    exit 1
