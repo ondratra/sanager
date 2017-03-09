@@ -20,6 +20,10 @@ VERBOSE_SCRIPT=`[[ "$1" == "--verbose" ]] && echo 1 || echo 0`
 VERBOSE_APT_FLAG=`[[ "$VERBOSE_SCRIPT" == "1" ]] && echo "" || echo "-qq"`
 VERBOSE_WGET_FLAG=`[[ "$VERBOSE_SCRIPT" == "0" ]] && echo "" || echo "-q"`
 
+# for detection info see http://www.dmo.ca/blog/detecting-virtualization-on-linux/
+TMP=`dmesg | grep -i virtualbox`
+IS_VIRTUALBOX_GUEST=`[[ "$TMP" == "" ]] && echo 0 || echo 1`
+
 function printMsg {
     echo "SANAGER: $@"
 }
@@ -58,7 +62,7 @@ function essential {
 }
 
 function desktopDisplayEtc {
-    PACKAGES="pulseaudio"
+    PACKAGES="pulseaudio dconf-cli"
     XORG="xorg"
     DESKTOP="mate mate-desktop-environment mate-desktop-environment-extras"
     DISPLAY="lightdm"
@@ -82,8 +86,16 @@ function desktopDisplayEtc {
     ininalityFonts
 }
 
+function virtualboxGuest {
+    if ! [[ $IS_VIRTUALBOX_GUEST ]]; then
+        exit
+    fi
+
+    aptInstall virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms
+}
+
 function userEssential {
-	PACKAGES="curl vim htop firefox chromium disk-manager"
+    PACKAGES="curl vim htop firefox chromium disk-manager"
 
     # enables bash histroy search by PageUp and PageDown keys
     function enableHistorySearch {
@@ -109,7 +121,7 @@ function userEssential {
 
     function restoreMateConfig {
         # passing DBUS_SESSION_BUS_ADDRESS might seem meaningless but it is needed to make dconf work with sudo
-        sudo -u ondratra DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS dconf load /org/mate/ < "$SCRIPT_DIR/data/mate/config.txt"
+        sudo -u $SCRIPT_EXECUTING_USER DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS dconf load /org/mate/ < "$SCRIPT_DIR/data/mate/config.txt"
     }
 
     aptInstall $PACKAGES
@@ -119,11 +131,11 @@ function userEssential {
 }
 
 function work {
-	PACKAGES="git meld virtualbox gimp"
-	JAVASCRIPT="nodejs"
+    PACKAGES="git meld virtualbox gimp"
+    JAVASCRIPT="nodejs"
     OFFICE="thunderbird libreoffice"
 
-	function sublimeText {
+    function sublimeText {
         OPT_DIR="$SANAGER_INSTALL_DIR/sublimeText"
         DEB_FILE="sublime-text_build-3126_amd64.deb"
         PACKAGE_CONTROL_DOWNLOAD_URL="https://packagecontrol.io/Package%20Control.sublime-package"
@@ -183,7 +195,7 @@ function work {
 }
 
 function fun {
-	PACKAGES="vlc transmission easytag"
+    PACKAGES="vlc transmission easytag"
     PLAY_ON_LINUX="playonlinux ttf-mscorefonts-installer"
 
     function steam {
@@ -208,12 +220,13 @@ function fun {
         aptInstall $PACKAGES
     }
 
-	aptInstall $PACKAGES $PLAY_ON_LINUX
+    aptInstall $PACKAGES $PLAY_ON_LINUX
     rhythmbox
 }
 
 essential
 desktopDisplayEtc
+virtualboxGuest
 userEssential
 work
 fun
