@@ -58,7 +58,8 @@ function essential {
 }
 
 function desktopDisplayEtc {
-    PACKAGES="xorg pulseaudio"
+    PACKAGES="pulseaudio"
+    XORG="xorg"
     DESKTOP="mate mate-desktop-environment mate-desktop-environment-extras"
     DISPLAY="lightdm"
     DESKTOP_APPS="network-manager network-manager-gnome"
@@ -76,6 +77,7 @@ function desktopDisplayEtc {
         fi
     }
 
+    aptInstall $XORG # run this first separately to prevent D-bus init problems
     aptInstall $PACKAGES $DESKTOP $DISPLAY $DESKTOP_APPS
     ininalityFonts
 }
@@ -105,8 +107,14 @@ function userEssential {
         fi
     }
 
+    function restoreMateConfig {
+        # passing DBUS_SESSION_BUS_ADDRESS might seem meaningless but it is needed to make dconf work with sudo
+        sudo -u ondratra DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS dconf load /org/mate/ < "$SCRIPT_DIR/data/mate/config.txt"
+    }
+
     aptInstall $PACKAGES
     enableHistorySearch
+    restoreMateConfig
     dropbox
 }
 
@@ -175,7 +183,7 @@ function work {
 }
 
 function fun {
-	PACKAGES="vlc transmission"
+	PACKAGES="vlc transmission easytag"
     PLAY_ON_LINUX="playonlinux ttf-mscorefonts-installer"
 
     function steam {

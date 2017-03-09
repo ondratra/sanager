@@ -6,7 +6,7 @@ Installs all applications and libraries used by autor on local computer. Script 
 but should provide similar(hopefully identical) environmnent of all on all Debian-based distributions.
 
 # Prerequisites
-1) Install minimal Debian distribution (known as "net install") from https://www.debian.org/CD/http-ftp/ . 
+1) Install minimal Debian distribution (known as "net install") from https://www.debian.org/CD/http-ftp/ .
 More robust installation medium is also ok.
 
 2) Put this to /etc/apt/sources.list
@@ -55,9 +55,19 @@ Script has limited to no error handeling, when problem occurs fix it manually an
 All script are meant to be quite by default; messages to stderr are enabled always.
 
 # Troubleshooting
-When somethings goes wrong try to rerun `systemInstall.sh`. 
+When somethings goes wrong try to rerun `systemInstall.sh`.
 Additionally you can delete content of some config folders before rerun.
 ```
 rm -rf /etc/apt/sources.list.d/* # dont run this if you manually added some sources
 rm -rf /opt/sanagerInstall/*
 ```
+
+# Updating configuration
+
+## Mate
+```
+dconf dump /org/mate/ > ...sanagerPath/data/mate/config.txt
+# this dumps current profile; if you need to dump old backup you can set db path by prepending `DCONF_PROFILE=~/oldMateBackupPath`
+```
+Then commit changes to git -> running `systemInstall.sh` sets mate configuration to state saved in Sanager.
+This process might be destructing if you made changes to your mate and didn't update them in Sanager files.
