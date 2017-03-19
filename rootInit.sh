@@ -1,10 +1,19 @@
 #!/bin/bash
 
+###############################################################################
+# Permission lock - only root user is allowed
+###############################################################################
+
 # 1>&2 # write to stderr
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 1>&2
    exit 1
 fi
+
+
+###############################################################################
+# Argument check
+###############################################################################
 
 TMP_USERNAME=`id -u "$NON_ROOT_USERNAME" 2> /dev/null`
 if [[ $TMP_USERNAME == "" ]] || [[ $TMP_USERNAME == "root" ]]; then
@@ -12,6 +21,10 @@ if [[ $TMP_USERNAME == "" ]] || [[ $TMP_USERNAME == "root" ]]; then
    exit 1
 fi
 
+
+###############################################################################
+# Main procedure
+###############################################################################
 
 # acting as root run
 echo "SANAGER: Updating apt cache and installing sudo package";

@@ -1,9 +1,9 @@
 #!/bin/bash
 # see README.md for script description
 
-# used when importing ubuntu packages
-NOWADAYS_UBUNTU_VERSION="xenial"
-SANAGER_INSTALL_DIR="/opt/sanagerInstall"
+###############################################################################
+# Permission lock - only regular user using `sude -E` is allowed
+###############################################################################
 
 if [[ "$SUDO_USER" == "" ]]; then
     TMP='`sudo -E '$0'`'
@@ -11,6 +11,15 @@ if [[ "$SUDO_USER" == "" ]]; then
     echo "It's the only way to use your ssh keys for git auth, etc."
     exit 1;
 fi
+
+
+###############################################################################
+# Settings and helpers
+###############################################################################
+
+# used when importing ubuntu packages
+NOWADAYS_UBUNTU_VERSION="xenial"
+SANAGER_INSTALL_DIR="/opt/sanagerInstall"
 
 SCRIPT_EXECUTING_USER=$SUDO_USER
 SCRIPT_DIR="`dirname \"$0\"`" # relative
@@ -35,28 +44,49 @@ function aptUpdate {
 
 function aptInstall {
     printMsg "Installing packages: $@"
-    DEBIAN_FRONTEND="noninteractive" apt-get install "$VERBOSE_APT_FLAG" -y $@
+    DEBIAN_FRONTEND="noninteractive" apt-get install "$VERBOSE_APT_FLAG" -y "$@"
 }
 
 function dpkgInstall {
     printMsg "Installing packages(dpkg): $@"
     if [ $VERBOSE_SCRIPT ]; then
-        dpkg -i $@
+        dpkg -i "$@"
     else
-        dpkg -i $@ > /dev/null
+        dpkg -i "$@" > /dev/null
     fi
 }
 
 function wgetDownload {
     printMsg "Downloading files via wget: $@"
-    wget --no-hsts $VERBOSE_WGET_FLAG $@
+    wget --no-hsts $VERBOSE_WGET_FLAG "$@"
+}
+
+# use:
+# applyPatch pathToFileToBePatched < patchString
+function applyPatch {
+    FILE_TO_BE_PATCHED=$1
+    PATCH_FILE_PATH=`cat -` # read whole input from stdinfwp
+
+    PATCH_RESULT="`patch $FILE_TO_BE_PATCHED --forward <<< $PATCH_FILE_PATH`"
+    grep -q "Reversed (or previously applied) patch detected!" <<< "$PATCH_RESULT"
+    NOT_APPLIED_YET=$?
+
+    if [[ "$NOT_APPLIED_YET" == "1" ]]; then
+        printMsg "Patching file $FILE_TO_BE_PATCHED"
+        return 0
+    else
+        printMsg "Patch already applied to $FILE_TO_BE_PATCHED"
+        return 1
+    fi
 }
 
 
-
+###############################################################################
+# Definitions of functions installing system components
+###############################################################################
 
 function essential {
-    PACKAGES="apt-transport-https aptitude wget"
+    PACKAGES="apt-transport-https aptitude wget net-tools bash-completion"
 
     aptInstall $PACKAGES
 }
@@ -66,7 +96,6 @@ function desktopDisplayEtc {
     XORG="xorg"
     DESKTOP="mate mate-desktop-environment mate-desktop-environment-extras"
     DISPLAY="lightdm"
-    DESKTOP_APPS="network-manager network-manager-gnome"
 
     function ininalityFonts {
         PACKAGES="fontconfig-infinality"
@@ -81,14 +110,28 @@ function desktopDisplayEtc {
         fi
     }
 
+    function networkManager {
+        PACKAGES="network-manager network-manager-gnome"
+
+        # see https://wiki.debian.org/NetworkManager#Wired_Networks_are_Unmanaged
+        applyPatch /etc/NetworkManager/NetworkManager.conf < $SCRIPT_DIR/data/misc/NetworkManager.conf.diff
+        PATCH_PROBLEM=$?
+
+        if [[ "$PATCH_PROBLEM" == "0" ]]; then
+            systemctl restart network-manager
+        fi
+        aptInstall $PACKAGES
+    }
+
     aptInstall $XORG # run this first separately to prevent D-bus init problems
-    aptInstall $PACKAGES $DESKTOP $DISPLAY $DESKTOP_APPS
+    aptInstall $PACKAGES $DESKTOP $DISPLAY
     ininalityFonts
+    networkManager
 }
 
 function virtualboxGuest {
-    if ! [[ $IS_VIRTUALBOX_GUEST ]]; then
-        exit
+    if [[ "$IS_VIRTUALBOX_GUEST" == "0" ]]; then
+        return
     fi
 
     aptInstall virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms
@@ -102,6 +145,11 @@ function userEssential {
         # works system wide (changing /etc/inputrc)
         sed -e '/.*\(history-search-backward\|history-search-forward\)/s/^# //g' /etc/inputrc > tmpSadReplacementFile && mv tmpSadReplacementFile /etc/inputrc
     }
+
+    function enableBashCompletion {
+        applyPatch /etc/bash.bashrc < $SCRIPT_DIR/data/misc/bash.bashrc.diff
+    }
+
 
     function dropbox {
         PACKAGES="lsb-release"
@@ -126,12 +174,13 @@ function userEssential {
 
     aptInstall $PACKAGES
     enableHistorySearch
+    enableBashCompletion
     restoreMateConfig
     dropbox
 }
 
 function work {
-    PACKAGES="git meld virtualbox gimp"
+    PACKAGES="git subversion meld virtualbox gimp youtube-dl"
     JAVASCRIPT="nodejs"
     OFFICE="thunderbird libreoffice"
 
@@ -141,30 +190,42 @@ function work {
         PACKAGE_CONTROL_DOWNLOAD_URL="https://packagecontrol.io/Package%20Control.sublime-package"
         CONFIG_DIR=~/.config/sublime-text-3
 
-        mkdir $OPT_DIR -p
-        cd $OPT_DIR
+        function ensureSublimeInstall {
+            # download and install package if absent
+            if [ ! -f $DEB_FILE ]; then
+                wgetDownload "https://download.sublimetext.com/$DEB_FILE"
+                dpkgInstall $DEB_FILE
+            fi
+        }
 
-        if [ ! -f $DEB_FILE ]; then
-            wgetDownload "https://download.sublimetext.com/$DEB_FILE"
-            dpkgInstall $DEB_FILE
-
+        function refreshSublimeConfiguration {
             INSTALLED_PACKAGES_DIR="$CONFIG_DIR/Installed Packages"
             PACKAGE_LOCAL_NAME="Ondratra"
             FILES_TO_SYMLINK=("Preferences.sublime-settings" "Default (Linux).sublime-keymap" "SideBarEnhancements")
 
             # download editor's configuration and setup everything
             sudo -u $SCRIPT_EXECUTING_USER mkdir $CONFIG_DIR -p
-            mkdir $INSTALLED_PACKAGES_DIR -p
+            mkdir "$INSTALLED_PACKAGES_DIR" -p
             mkdir "$CONFIG_DIR/Packages/User" -p
-            cp "$SCRIPT_DIR/data/sublimeText" "$CONFIG_DIR/Packages/$PACKAGE_LOCAL_NAME" -r
+            cp "$SCRIPT_DIR/data/sublimeText" "$CONFIG_DIR/Packages/$PACKAGE_LOCAL_NAME" -rT
             for TMP_FILE in "${FILES_TO_SYMLINK[@]}"; do
-                ln -s "../$PACKAGE_LOCAL_NAME/$TMP_FILE" "$CONFIG_DIR/Packages/User/$TMP_FILE"
+                ln -sf "../$PACKAGE_LOCAL_NAME/$TMP_FILE" "$CONFIG_DIR/Packages/User/$TMP_FILE"
             done
-            # download package control for sublime text -> it will download all other packages on first run
-            wgetDownload --directory-prefix "$INSTALLED_PACKAGES_DIR" $PACKAGE_CONTROL_DOWNLOAD_URL
+
+            # download package control when absent
+            if [ ! -f "$INSTALLED_PACKAGES_DIR/Package Control.sublime-package" ]; then
+                # download package control for sublime text -> it will download all other packages on first run
+                wgetDownload --directory-prefix "$INSTALLED_PACKAGES_DIR" $PACKAGE_CONTROL_DOWNLOAD_URL
+            fi
+
             # pass folder permission to relevant user
             chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_DIR
-        fi
+        }
+
+        mkdir $OPT_DIR -p
+        cd $OPT_DIR
+        ensureSublimeInstall
+        refreshSublimeConfiguration
     }
 
     function yarnpkg {
@@ -182,16 +243,40 @@ function work {
 
     # Linux Apache MySQL PHP
     function lamp {
-       PACKAGES="mysql-server apache2 php libapache2-mod-php php-curl php-gd php-mysql php-json php-soap"
+        # subversion(svn) is needed by some composer(https://getcomposer.org/) packages, etc.
+        # it must be installed even when not directly used by system users
+        PACKAGES="mysql-server apache2 php libapache2-mod-php subversion"
+        PHP_EXTENSIONS="php-curl php-gd php-mysql php-json php-soap php-apcu php-xml php-mbstring php-yaml"
 
-       aptInstall $PACKAGES
-       a2enmod rewrite && a2enmod vhost_alias
+        function wordpressCli {
+            which wp-cli > /dev/null
+            CLI_ABSENT=$?
+
+            if [[ "$CLI_ABSENT" == "1" ]]; then
+                PHAR_URL="https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"
+                wgetDownload --directory-prefix $SANAGER_INSTALL_DIR $PHAR_URL
+
+                chmod +x $SANAGER_INSTALL_DIR/wp-cli.phar
+                mv $SANAGER_INSTALL_DIR/wp-cli.phar /usr/local/bin/wp-cli
+            fi
+        }
+
+        aptInstall $PACKAGES $PHP_EXTENSIONS
+        a2enmod rewrite && a2enmod vhost_alias
+    }
+
+    function openvpn {
+        PACKAGES="openvpn network-manager-openvpn network-manager-openvpn-gnome network-manager-pptp  network-manager-pptp-gnome"
+
+        aptInstall $PACKAGES
+        wordpressCli
     }
 
     aptInstall $PACKAGES $JAVASCRIPT $OFFICE
     sublimeText
     yarnpkg
     lamp
+    openvpn
 }
 
 function fun {
@@ -231,6 +316,10 @@ userEssential
 work
 fun
 
+
+###############################################################################
+# Post run cleansing
+###############################################################################
 
 apt-get $VERBOSE_APT_FLAG -f install # make sure all dependencies are met
 apt-get $VERBOSE_APT_FLAG autoremove # remove any unused packages
