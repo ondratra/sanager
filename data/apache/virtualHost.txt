@@ -1,0 +1,13 @@
+<VirtualHost *:80>
+    DocumentRoot #DOCUMENT_ROOT#
+    ServerName #SERVER_NAME#
+
+    Options Indexes FollowSymLinks
+    <Directory #DOCUMENT_ROOT#>
+        AllowOverride All
+        Options Indexes FollowSymLinks
+
+        #directive needed for apache >2.4
+        Require all granted
+    </Directory>
+</VirtualHost>
