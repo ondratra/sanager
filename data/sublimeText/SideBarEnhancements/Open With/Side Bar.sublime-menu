@@ -25,7 +25,20 @@
 									"extensions":"" //open all even folders
 								},
 				"open_automatically" : false // will close the view/tab and launch the application
+			},
+			{
+				"caption": "Chromium",
+				"id": "side-bar-files-open-with-chromium",
+
+				"command": "side_bar_files_open_with",
+				"args": {
+									"paths": [],
+									"application": "chromium",
+									"extensions":"" //open all even folders
+								},
+				"open_automatically" : false // will close the view/tab and launch the application
 			}
 		]
 	}
 ]
+
