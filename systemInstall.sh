@@ -181,7 +181,6 @@ function userEssential {
 
 function work {
     PACKAGES="git subversion meld virtualbox gimp youtube-dl"
-    JAVASCRIPT="nodejs"
     OFFICE="thunderbird libreoffice"
 
     function sublimeText {
@@ -228,13 +227,27 @@ function work {
         refreshSublimeConfiguration
     }
 
+    # newest version of nodejs (not among Debian packages yet)
+    function nodejs {
+        PACKAGES="nodejs"
+        REPO_ROW="deb https://deb.nodesource.com/node_7.x jessie main"
+        SOURCE_LIST_PATH="/etc/apt/sources.list.d/nodejs.list"
+
+        if [ ! -f $SOURCE_LIST_PATH ]; then
+            wgetDownload -qO - "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" | apt-key add -
+            echo $REPO_ROW > $SOURCE_LIST_PATH
+            aptUpdate
+            aptInstall $PACKAGES
+        fi
+    }
+
     function yarnpkg {
         PACKAGES="yarn"
         REPO_ROW="deb https://dl.yarnpkg.com/debian/ stable main"
         SOURCE_LIST_PATH="/etc/apt/sources.list.d/yarn.list"
 
         if [ ! -f $SOURCE_LIST_PATH ]; then
-            curl -sS "https://dl.yarnpkg.com/debian/pubkey.gpg" | apt-key add -
+            wgetDownload -qO - "https://dl.yarnpkg.com/debian/pubkey.gpg" | apt-key add -
             echo $REPO_ROW > $SOURCE_LIST_PATH
             aptUpdate
             aptInstall $PACKAGES
@@ -272,8 +285,9 @@ function work {
         wordpressCli
     }
 
-    aptInstall $PACKAGES $JAVASCRIPT $OFFICE
+    aptInstall $PACKAGES $OFFICE
     sublimeText
+    nodejs
     yarnpkg
     lamp
     openvpn
