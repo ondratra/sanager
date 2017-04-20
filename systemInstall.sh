@@ -47,6 +47,11 @@ function aptInstall {
     DEBIAN_FRONTEND="noninteractive" apt-get install "$VERBOSE_APT_FLAG" -y "$@"
 }
 
+function aptRemove {
+    printMsg "Removing packages: $@"
+    DEBIAN_FRONTEND="noninteractive" apt-get remove "$VERBOSE_APT_FLAG" -y "$@"
+}
+
 function dpkgInstall {
     printMsg "Installing packages(dpkg): $@"
     if [ $VERBOSE_SCRIPT ]; then
@@ -237,8 +242,11 @@ function work {
             wgetDownload -qO - "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" | apt-key add -
             echo $REPO_ROW > $SOURCE_LIST_PATH
             aptUpdate
-            aptInstall $PACKAGES
         fi
+
+        # there exists some 'yarn' command in 'cmdtest' package - not used so get rid of it
+        aptRemove cmdtest
+        aptInstall $PACKAGES
     }
 
     function yarnpkg {
@@ -250,8 +258,9 @@ function work {
             wgetDownload -qO - "https://dl.yarnpkg.com/debian/pubkey.gpg" | apt-key add -
             echo $REPO_ROW > $SOURCE_LIST_PATH
             aptUpdate
-            aptInstall $PACKAGES
         fi
+
+        aptInstall $PACKAGES
     }
 
     # Linux Apache MySQL PHP
