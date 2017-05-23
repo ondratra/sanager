@@ -294,12 +294,20 @@ function work {
         wordpressCli
     }
 
+    # screen capture
+    function obsStudio {
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F425E228 # key can be found at https://launchpad.net/~obsproject/+archive/ubuntu/obs-studio
+        aptUpdate
+        aptInstall obs-studio
+    }
+
     aptInstall $PACKAGES $OFFICE
     sublimeText
     nodejs
     yarnpkg
     lamp
     openvpn
+    obsStudio
 }
 
 function fun {
