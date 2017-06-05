@@ -304,7 +304,7 @@ function work {
     function rabbitVCS {
         PACKAGES="rabbitvcs-core python-caja"
         aptInstall $PACKAGES
-        cp "$SCRIPT_DIR/data/caja/RabbitVCS.py" "~/.local/share/caja-python/extensions/"
+        cp "$SCRIPT_DIR/data/caja/RabbitVCS.py" ~/.local/share/caja-python/extensions/
     }
 
     aptInstall $PACKAGES $OFFICE
