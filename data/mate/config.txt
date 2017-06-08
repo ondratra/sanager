@@ -113,7 +113,7 @@ default-visible-columns=['name', 'size', 'type', 'date_modified']
 default-column-order=['name', 'size', 'type', 'date_modified', 'date_accessed', 'selinux_context', 'permissions', 'octal_permissions', 'group', 'mime_type', 'where', 'owner']
 
 [panel/general]
-object-id-list=['menu-bar', 'show-desktop', 'window-list', 'workspace-switcher', 'object-1', 'object-2', 'object-4', 'object-3', 'object-5', 'object-6', 'object-7', 'object-8', 'object-9', 'object-10', 'object-11', 'object-13', 'object-0', 'object-12']
+object-id-list=['menu-bar', 'show-desktop', 'window-list', 'workspace-switcher', 'object-1', 'object-2', 'object-4', 'object-3', 'object-5', 'object-6', 'object-7', 'object-8', 'object-9', 'object-10', 'object-11', 'object-13', 'object-0', 'object-12', 'object-14']
 toplevel-id-list=['top', 'bottom']
 
 [panel/toplevels/bottom]
@@ -225,6 +225,14 @@ toplevel-id='bottom'
 position=1470
 object-type='applet'
 panel-right-stick=false
+
+[panel/objects/object-14]
+launcher-location='/usr/share/applications/unity-editor.desktop'
+toplevel-id='top'
+position=891
+object-type='launcher'
+panel-right-stick=false
+object-id-list=['menu-bar', 'show-desktop', 'window-list', 'workspace-switcher', 'object-1', 'object-2', 'object-4', 'object-3', 'object-5', 'object-6', 'object-7', 'object-8', 'object-9', 'object-10', 'object-11', 'object-13', 'object-0', 'object-12', 'object-14']
 
 [panel/objects/window-list]
 applet-iid='WnckletFactory::WindowListApplet'

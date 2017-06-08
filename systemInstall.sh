@@ -44,6 +44,11 @@ function aptUpdate {
 
 function aptInstall {
     printMsg "Installing packages: $@"
+    DEBIAN_FRONTEND="noninteractive" apt install "$VERBOSE_APT_FLAG" -y "$@"
+}
+
+function aptGetInstall {
+    printMsg "Installing packages: $@"
     DEBIAN_FRONTEND="noninteractive" apt-get install "$VERBOSE_APT_FLAG" -y "$@"
 }
 
@@ -93,7 +98,7 @@ function applyPatch {
 function essential {
     PACKAGES="apt-transport-https aptitude wget net-tools bash-completion"
 
-    aptInstall $PACKAGES
+    aptGetInstall $PACKAGES
 }
 
 function desktopDisplayEtc {
@@ -111,7 +116,7 @@ function desktopDisplayEtc {
             apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E985B27B # key can be found at https://launchpad.net/~no1wantdthisname/+archive/ubuntu/ppa
             echo $REPO_ROW > $SOURCE_LIST_PATH
             aptUpdate
-            aptInstall $PACKAGES
+            aptGetInstall $PACKAGES
         fi
     }
 
@@ -125,11 +130,11 @@ function desktopDisplayEtc {
         if [[ "$PATCH_PROBLEM" == "0" ]]; then
             systemctl restart network-manager
         fi
-        aptInstall $PACKAGES
+        aptGetInstall $PACKAGES
     }
 
-    aptInstall $XORG # run this first separately to prevent D-bus init problems
-    aptInstall $PACKAGES $DESKTOP $DISPLAY
+    aptGetInstall $XORG # run this first separately to prevent D-bus init problems
+    aptGetInstall $PACKAGES $DESKTOP $DISPLAY
     ininalityFonts
     networkManager
 }
@@ -139,7 +144,7 @@ function virtualboxGuest {
         return
     fi
 
-    aptInstall virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms
+    aptGetInstall virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms
 }
 
 function userEssential {
@@ -165,7 +170,7 @@ function userEssential {
         cd $OPT_DIR
 
         if [ ! -f $DEB_FILE ]; then
-            aptInstall lsb-release
+            aptGetInstall lsb-release
             wgetDownload "https://www.dropbox.com/download?dl=packages/debian/$DEB_FILE" -O $DEB_FILE
             dpkgInstall $DEB_FILE
             dropbox start -i
@@ -177,7 +182,7 @@ function userEssential {
         sudo -u $SCRIPT_EXECUTING_USER DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS dconf load /org/mate/ < "$SCRIPT_DIR/data/mate/config.txt"
     }
 
-    aptInstall $PACKAGES
+    aptGetInstall $PACKAGES
     enableHistorySearch
     enableBashCompletion
     restoreMateConfig
@@ -246,7 +251,7 @@ function work {
 
         # there exists some 'yarn' command in 'cmdtest' package - not used so get rid of it
         aptRemove cmdtest
-        aptInstall $PACKAGES
+        aptGetInstall $PACKAGES
     }
 
     function yarnpkg {
@@ -260,7 +265,7 @@ function work {
             aptUpdate
         fi
 
-        aptInstall $PACKAGES
+        aptGetInstall $PACKAGES
     }
 
     # Linux Apache MySQL PHP
@@ -283,14 +288,14 @@ function work {
             fi
         }
 
-        aptInstall $PACKAGES $PHP_EXTENSIONS
+        aptGetInstall $PACKAGES $PHP_EXTENSIONS
         a2enmod rewrite && a2enmod vhost_alias
     }
 
     function openvpn {
         PACKAGES="openvpn network-manager-openvpn network-manager-openvpn-gnome network-manager-pptp  network-manager-pptp-gnome"
 
-        aptInstall $PACKAGES
+        aptGetInstall $PACKAGES
         wordpressCli
     }
 
@@ -298,16 +303,28 @@ function work {
     function obsStudio {
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F425E228 # key can be found at https://launchpad.net/~obsproject/+archive/ubuntu/obs-studio
         aptUpdate
-        aptInstall obs-studio
+        aptGetInstall obs-studio
     }
 
     function rabbitVCS {
         PACKAGES="rabbitvcs-core python-caja"
-        aptInstall $PACKAGES
+        aptGetInstall $PACKAGES
         cp "$SCRIPT_DIR/data/caja/RabbitVCS.py" ~/.local/share/caja-python/extensions/
     }
 
-    aptInstall $PACKAGES $OFFICE
+    function unity3d {
+        DEB_FILE="unity-editor_amd64-5.6.1xf1Linux.deb"
+        OPT_DIR="$SANAGER_INSTALL_DIR/unity3d"
+
+        mkdir $OPT_DIR -p
+        cd $OPT_DIR
+        if [ ! -f "$OPT_DIR/$DEB_FILE" ]; then
+            wgetDownload "http://beta.unity3d.com/download/6a86e542cf5c/$DEB_FILE" -O "$OPT_DIR/$DEB_FILE"
+        fi
+        aptInstall "$OPT_DIR/$DEB_FILE"
+    }
+
+    aptGetInstall $PACKAGES $OFFICE
     sublimeText
     nodejs
     yarnpkg
@@ -315,6 +332,7 @@ function work {
     openvpn
     obsStudio
     rabbitVCS
+    unity3d
 }
 
 function fun {
@@ -325,7 +343,7 @@ function fun {
         PACKAGES="steam"
 
         dpkg --add-architecture i386
-        aptInstall $PACKAGES
+        aptGetInstall $PACKAGES
     }
 
     function rhythmbox {
@@ -337,13 +355,13 @@ function fun {
             apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F4FE239D # key can be found at https://launchpad.net/~fossfreedom/+archive/ubuntu/rhythmbox
             echo $REPO_ROW > $SOURCE_LIST_PATH
             aptUpdate
-            aptInstall $PACKAGES
+            aptGetInstall $PACKAGES
         fi
 
-        aptInstall $PACKAGES
+        aptGetInstall $PACKAGES
     }
 
-    aptInstall $PACKAGES $PLAY_ON_LINUX
+    aptGetInstall $PACKAGES $PLAY_ON_LINUX
     rhythmbox
 }
 
