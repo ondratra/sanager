@@ -71,3 +71,13 @@ dconf dump /org/mate/ > ...sanagerPath/data/mate/config.txt
 ```
 Then commit changes to git -> running `systemInstall.sh` sets mate configuration to state saved in Sanager.
 This process might be destructing if you made changes to your mate and didn't update them in Sanager files.
+
+
+
+
+
+
+TODO:
+http://guacamole.incubator.apache.org/
+https://discussion.dreamhost.com/thread-133929
+
