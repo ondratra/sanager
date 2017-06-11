@@ -34,54 +34,25 @@ TMP=`dmesg | grep -i virtualbox`
 IS_VIRTUALBOX_GUEST=`[[ "$TMP" == "" ]] && echo 0 || echo 1`
 
 
-source ./utilities.sh
+source ./src/lowLevel/utilities.sh
 
 ###############################################################################
 # Definitions of functions installing system components
 ###############################################################################
 
-source ./cookbook.sh
+source ./src/lowLevel/cookbook.sh
 
 
 ###############################################################################
 # Main procedure
 ###############################################################################
 
-essential
-#desktopDisplayEtc
-#
-desktopDisplayEtc
-ininalityFonts
-networkManager
-#
-virtualboxGuest
-#userEssential
-#
-userEssential
-enableHistorySearch
-enableBashCompletion
-restoreMateConfig
-dropbox
-#
-#work
-#
-work
-sublimeText
-nodejs
-yarnpkg
-lamp
-openvpn
-obsStudio
-rabbitVCS
-unity3d
-#
-#fun
-#
-multimedia
-steam
-rhythmbox
-playOnLinux
-#
+
+source ./src/highLevel/pc.sh
+runHighLevel
+
+# TODO: script parameters for loading different procedures
+# source ./src/highLevel/generalUseVps.sh
 
 
 ###############################################################################

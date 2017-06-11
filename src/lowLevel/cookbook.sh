@@ -227,11 +227,22 @@ function unity3d {
 }
 
 
-function work {
-    PACKAGES="git subversion meld virtualbox gimp youtube-dl"
-    OFFICE="thunderbird libreoffice"
+function versioningAndTools {
+    PACKAGES="git subversion meld gimp youtube-dl"
 
-    aptGetInstall $PACKAGES $OFFICE
+    aptGetInstall $PACKAGES
+}
+
+function officePack {
+    PACKAGES="libreoffice thunderbird"
+
+    aptGetInstall $PACKAGES
+}
+
+function virtualbox {
+    PACKAGES="virtualbox"
+
+    aptGetInstall $PACKAGES
 }
 
 function steam {
