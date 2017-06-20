@@ -12,7 +12,6 @@ if [[ "$SUDO_USER" == "" ]]; then
     exit 1;
 fi
 
-
 ###############################################################################
 # Settings and helpers
 ###############################################################################
@@ -36,6 +35,7 @@ IS_VIRTUALBOX_GUEST=`[[ "$TMP" == "" ]] && echo 0 || echo 1`
 
 source ./src/lowLevel/utilities.sh
 
+
 ###############################################################################
 # Definitions of functions installing system components
 ###############################################################################
@@ -47,12 +47,22 @@ source ./src/lowLevel/cookbook.sh
 # Main procedure
 ###############################################################################
 
+if [[ $# -ne 1 ]]; then
+    echo "Invalid parameter count."
+    echo "Select installation blueprint in first parameter. (For example \"pc\")"
+    exit 1;
+fi
 
-source ./src/highLevel/pc.sh
+BLUEPRINT_PATH="$SCRIPT_DIR/src/highLevel/$1.sh"
+if [[ ! -f $BLUEPRINT_PATH ]]; then
+    echo "Installation blueprint \"$1\" not found."
+    exit 1;
+fi
+
+
+source $BLUEPRINT_PATH
+virtualboxGuest # always try to install virtualbox guest features (will have no effect in non-virtualized environments)
 runHighLevel
-
-# TODO: script parameters for loading different procedures
-# source ./src/highLevel/generalUseVps.sh
 
 
 ###############################################################################

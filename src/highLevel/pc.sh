@@ -3,10 +3,6 @@
 
 function runHighLevel {
     pc_all
-
-    # virtualbox
-    virtualbox
-    virtualboxGuest
 }
 
 function pc_all {
