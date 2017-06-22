@@ -216,14 +216,19 @@ function openvpn {
 
 # screen capture
 function obsStudio {
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F425E228 # key can be found at https://launchpad.net/~obsproject/+archive/ubuntu/obs-studio
-    aptUpdate
+    dpkg -s obs-studio
+    NOT_INSTALLED=$?
+    if [[ "$NOT_INSTALLED" == "1" ]]; then
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F425E228 # key can be found at https://launchpad.net/~obsproject/+archive/ubuntu/obs-studio
+        aptUpdate
+    fi
     aptGetInstall obs-studio
 }
 
 function rabbitVCS {
     PACKAGES="rabbitvcs-core python-caja"
     EXTENSION_DIR=~/.local/share/caja-python/extensions/
+    FILENAME="RabbitVCS.py"
 
     aptGetInstall $PACKAGES
 
@@ -231,7 +236,7 @@ function rabbitVCS {
     if [ ! -f $EXTENSION_DIR ]; then
         mkdir $EXTENSION_DIR -p
     fi
-    cp "$SCRIPT_DIR/data/caja/RabbitVCS.py" $EXTENSION_DIR/
+    cp "$SCRIPT_DIR/data/caja/$FILENAME.template" "$EXTENSION_DIR/$FILENAME"
 }
 
 function unity3d {
