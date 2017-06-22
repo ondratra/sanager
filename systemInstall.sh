@@ -33,14 +33,14 @@ TMP=`dmesg | grep -i virtualbox`
 IS_VIRTUALBOX_GUEST=`[[ "$TMP" == "" ]] && echo 0 || echo 1`
 
 
-source ./src/lowLevel/utilities.sh
+source $SCRIPT_DIR/src/lowLevel/utilities.sh
 
 
 ###############################################################################
 # Definitions of functions installing system components
 ###############################################################################
 
-source ./src/lowLevel/cookbook.sh
+source $SCRIPT_DIR/src/lowLevel/cookbook.sh
 
 
 ###############################################################################

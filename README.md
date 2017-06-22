@@ -3,7 +3,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
 Installs all applications and libraries used by autor on local computer. Script targets Debian unstable distribution
-but should provide similar(hopefully identical) environmnent of all on all Debian-based distributions.
+but should provide similar(hopefully identical) environmnent on all Debian-based distributions.
 
 # Prerequisites
 1) Install minimal Debian distribution (known as "net install") from https://www.debian.org/CD/http-ftp/ .

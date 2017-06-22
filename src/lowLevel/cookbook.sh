@@ -3,8 +3,9 @@
 
 function essential {
     PACKAGES="apt-transport-https aptitude wget net-tools bash-completion"
+    DIRMNGR="dirmngr" # there might be glitches with gpg without dirmngr -> ensure it's presence
 
-    aptGetInstall $PACKAGES
+    aptGetInstall $PACKAGES $DIRMNGR
 }
 
 
@@ -19,6 +20,10 @@ function ininalityFonts {
         aptUpdate
         aptGetInstall $PACKAGES
     fi
+
+    # in some situation you might need to run manually
+    # sudo bash /etc/fonts/infinality/infctl.sh setstyle
+    # and select 3) linux from the menu
 }
 
 
@@ -44,6 +49,14 @@ function desktopDisplayEtc {
 
     aptGetInstall $XORG # run this first separately to prevent D-bus init problems
     aptGetInstall $PACKAGES $DESKTOP $DISPLAY
+}
+
+
+function amdDrivers {
+    PACKAGES="firmware-linux-nonfree xserver-xorg-video-ati"
+    #firmware-linux-nonfree is proprietary microcode - needed in current version of debian for free driver to work
+
+    aptGetInstall $PACKAGES
 }
 
 
@@ -210,8 +223,15 @@ function obsStudio {
 
 function rabbitVCS {
     PACKAGES="rabbitvcs-core python-caja"
+    EXTENSION_DIR=~/.local/share/caja-python/extensions/
+
     aptGetInstall $PACKAGES
-    cp "$SCRIPT_DIR/data/caja/RabbitVCS.py" ~/.local/share/caja-python/extensions/
+
+    # copy python extension to th right place
+    if [ ! -f $EXTENSION_DIR ]; then
+        mkdir $EXTENSION_DIR -p
+    fi
+    cp "$SCRIPT_DIR/data/caja/RabbitVCS.py" $EXTENSION_DIR/
 }
 
 function unity3d {
@@ -245,10 +265,16 @@ function virtualbox {
     aptGetInstall $PACKAGES
 }
 
+# STEAM NOT WORKING RIGHT NOW - as proprietary licence you need to explicitly agree with licence -> without interactive mode it's auto decline
 function steam {
     PACKAGES="steam"
 
-    dpkg --add-architecture i386
+    TMP=`dpkg --print-foreign-architectures`
+    if [[ "$TMP" != "i386" ]]; then
+        dpkg --add-architecture i386
+        aptUpdate
+    fi
+
     aptGetInstall $PACKAGES
 }
 
