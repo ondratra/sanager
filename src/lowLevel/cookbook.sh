@@ -205,13 +205,13 @@ function lamp {
 
     aptGetInstall $PACKAGES $PHP_EXTENSIONS
     a2enmod rewrite && a2enmod vhost_alias
+    wordpressCli
 }
 
 function openvpn {
     PACKAGES="openvpn network-manager-openvpn network-manager-openvpn-gnome network-manager-pptp  network-manager-pptp-gnome"
 
     aptGetInstall $PACKAGES
-    wordpressCli
 }
 
 # screen capture

@@ -75,22 +75,6 @@ session-start=1489066255
 [desktop/interface]
 gtk-color-scheme='bg_color_dark:#3f3f3f\ntext_color_dark:#FFF'
 
-[pluma]
-history-replace-with=['aptInstall']
-highlight-current-line=true
-display-right-margin=false
-bracket-matching=true
-display-line-numbers=true
-wrap-mode='GTK_WRAP_NONE'
-insert-spaces=true
-history-search-for=['ench', 'apt-get install', 'font', 'musicAwardsVotes', 'music', 'musicAwardsVotes_', 'wp_options', 'votes', 'musicawa']
-statusbar-visible=true
-
-[pluma/plugins/filebrowser/on-load]
-virtual-root='file:///mnt/work/sanager'
-tree-view=true
-root='file:///'
-
 [marco/general]
 theme='Menta'
 num-workspaces=7
@@ -113,7 +97,7 @@ default-visible-columns=['name', 'size', 'type', 'date_modified']
 default-column-order=['name', 'size', 'type', 'date_modified', 'date_accessed', 'selinux_context', 'permissions', 'octal_permissions', 'group', 'mime_type', 'where', 'owner']
 
 [panel/general]
-object-id-list=['menu-bar', 'show-desktop', 'window-list', 'workspace-switcher', 'object-1', 'object-2', 'object-4', 'object-3', 'object-5', 'object-6', 'object-7', 'object-8', 'object-9', 'object-10', 'object-11', 'object-13', 'object-0', 'object-12', 'object-14']
+object-id-list=['menu-bar', 'show-desktop', 'window-list', 'workspace-switcher', 'object-1', 'object-2', 'object-4', 'object-3', 'object-5', 'object-6', 'object-7', 'object-8', 'object-9', 'object-10', 'object-11', 'object-13', 'object-0', 'object-12', 'object-14', 'object-15']
 toplevel-id-list=['top', 'bottom']
 
 [panel/toplevels/bottom]
@@ -240,6 +224,13 @@ locked=true
 toplevel-id='bottom'
 position=20
 object-type='applet'
+
+[panel/objects/object-15]
+launcher-location='/usr/share/applications/mate-system-monitor.desktop'
+toplevel-id='top'
+position=735
+object-type='launcher'
+panel-right-stick=false
 
 [panel/objects/show-desktop]
 applet-iid='WnckletFactory::ShowDesktopApplet'
