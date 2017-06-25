@@ -24,7 +24,7 @@ SCRIPT_EXECUTING_USER=$SUDO_USER
 SCRIPT_DIR="`dirname \"$0\"`" # relative
 SCRIPT_DIR="`( cd \"$SCRIPT_DIR\" && pwd )`"  # absolutized and normalized
 
-VERBOSE_SCRIPT=`[[ "$1" == "--verbose" ]] && echo 1 || echo 0`
+VERBOSE_SCRIPT=`[[ "$2" == "--verbose" ]] && echo 1 || echo 0`
 VERBOSE_APT_FLAG=`[[ "$VERBOSE_SCRIPT" == "1" ]] && echo "" || echo "-qq"`
 VERBOSE_WGET_FLAG=`[[ "$VERBOSE_SCRIPT" == "0" ]] && echo "" || echo "-q"`
 
@@ -47,9 +47,14 @@ source $SCRIPT_DIR/src/lowLevel/cookbook.sh
 # Main procedure
 ###############################################################################
 
-if [[ $# -ne 1 ]]; then
+if [[ $# -eq 0 ]]; then
     echo "Invalid parameter count."
     echo "Select installation blueprint in first parameter. (For example \"pc\")"
+    echo "Existing blueprints:"
+    ls $SCRIPT_DIR/src/highLevel | while read tmpFilename 
+    do
+        echo "    ${tmpFilename%%.*}"
+    done
     exit 1;
 fi
 

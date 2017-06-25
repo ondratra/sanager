@@ -164,8 +164,6 @@ function nodejs {
         aptUpdate
     fi
 
-    # there exists some 'yarn' command in 'cmdtest' package - not used so get rid of it
-    aptRemove cmdtest
     aptGetInstall $PACKAGES
 }
 
@@ -180,6 +178,8 @@ function yarnpkg {
         aptUpdate
     fi
 
+    # there exists some 'yarn' command in 'cmdtest' package - not used so get rid of it
+    aptRemove cmdtest
     aptGetInstall $PACKAGES
 }
 
@@ -203,9 +203,44 @@ function lamp {
         fi
     }
 
+    MYSQL_NEEDS_RESET="1"
+    if isInstalled "mysql-server"; then
+        MYSQL_NEEDS_RESET="0"
+    fi
+
     aptGetInstall $PACKAGES $PHP_EXTENSIONS
     a2enmod rewrite && a2enmod vhost_alias
     wordpressCli
+    usermod -a -G www-data $SCRIPT_EXECUTING_USER
+
+    if [[ $MYSQL_NEEDS_RESET == "1" ]]; then
+        changeMysqlPassword ""
+    fi
+}
+
+function changeMysqlPassword {
+    NEW_PASSWORD="$1"
+    echo "newPassword: '$1'"
+    TMP_FILE="$SANAGER_INSTALL_DIR/tmp.sql"
+    SQL_QUERY="FLUSH PRIVILEGES; ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$NEW_PASSWORD'; FLUSH PRIVILEGES; SHUTDOWN;";
+
+    systemctl stop mysql > /dev/null 2> /dev/null
+
+    mkdir -p /var/run/mysqld
+    chown mysql:mysql /var/run/mysqld
+    mysqld_safe --skip-grant-tables &
+
+    # make sure query is accpeted by server(aka server is running)
+    TMP="1"
+    echo $TMP
+    while [[ "$TMP" != "0" ]]; do
+        printMsg "waiting for MySQL server"
+        mysql <<< $SQL_QUERY
+        TMP="$?"
+        sleep 1
+    done
+    systemctl start mysql
+
 }
 
 function openvpn {
@@ -216,9 +251,7 @@ function openvpn {
 
 # screen capture
 function obsStudio {
-    dpkg -s obs-studio
-    NOT_INSTALLED=$?
-    if [[ "$NOT_INSTALLED" == "1" ]]; then
+    if isInstalled obs-studio; then
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F425E228 # key can be found at https://launchpad.net/~obsproject/+archive/ubuntu/obs-studio
         aptUpdate
     fi

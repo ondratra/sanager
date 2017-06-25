@@ -32,6 +32,16 @@ function dpkgInstall {
     fi
 }
 
+# returns 0 when installed, 1 otherwise
+function isInstalled {
+    dpkg -s $1 > /dev/null
+    NOT_INSTALLED=$?
+    if [[ "$NOT_INSTALLED" == "0" ]]; then
+        return 0
+    fi
+    return 1
+}
+
 function wgetDownload {
     printMsg "Downloading files via wget: $@"
     wget --no-hsts $VERBOSE_WGET_FLAG "$@"

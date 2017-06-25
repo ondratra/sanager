@@ -35,7 +35,9 @@ NON_ROOT_USERNAME=ondratra su -c ./rootInit.sh
 
 # following command must be run as regular user($NON_ROOT_USERNAME)
 # it install all packages and restores all configurations from Sanager
-sudo -E ./systemInstall.sh
+# you can select from various bluenprints in 1st parameter('pc' in example)
+sudo -E ./systemInstall.sh pc
+
 
 # you can now restart pc(preferred) or start graphical interface via
 lightdm
@@ -45,7 +47,7 @@ Running this script on regular user account with `sudo -E` ensuring your git key
 ## Logging
 If you need to log system install run command with additional parameter `--verbose`.
 ```
-sudo -E ./systemInstall.sh --verbose | sudo tee systemInstall.log
+sudo -E ./systemInstall.sh pc --verbose | sudo -E tee systemInstall.log
 ```
 
 
