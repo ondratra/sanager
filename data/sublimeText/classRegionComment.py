@@ -9,10 +9,13 @@ textOffset = 1
 class ClassRegionCommentCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
-        region = self.view.sel()[0] # the current selection 'Region'
-        line = self.view.line(region);
+        for region in self.view.sel():
+            line = self.view.line(region);
+            self.processLine(edit, line)
+
+    def processLine(self, edit, line):
         originalLineContent = self.view.substr(line) # the text within the 'Region'
-        lineContent = originalLineContent.strip();
+        lineContent = originalLineContent.strip(" " + brushCharacter);
         leadingSpaces = len(originalLineContent) - len(originalLineContent.lstrip())
 
 
