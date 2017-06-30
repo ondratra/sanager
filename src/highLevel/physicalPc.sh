@@ -17,6 +17,7 @@ function physicalPc_all {
 }
 
 function physicalPc_drivers {
+    newestLinuxKernel
     amdDrivers
 }
 

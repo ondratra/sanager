@@ -10,5 +10,12 @@ function runHighLevel {
     nodejs
     yarnpkg
     lamp
+
+    # TODO:
+    # - gitlab (including Mattermost)
+    # - svn ? (legacy reasons)
+    # - mail server (postfix, dovecot)
+    # - certbot + cronjobs for him
+
 }
 

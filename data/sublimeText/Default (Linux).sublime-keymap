@@ -4,5 +4,6 @@
     { "keys": ["f1"], "command": "goto_documentation" },
     { "keys": ["f2"], "command": "side_bar_move" },
     { "keys": ["ctrl+shift+l"], "command": "delete_trailing_spaces" },
-    { "keys": ["ctrl+e"], "command": "goto_definition" }
+    { "keys": ["ctrl+e"], "command": "goto_definition" },
+    { "keys": ["ctrl+shift+m"], "command": "class_region_comment" }
 ]

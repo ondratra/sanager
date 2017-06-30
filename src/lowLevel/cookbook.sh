@@ -89,7 +89,7 @@ function dropbox {
     cd $OPT_DIR
 
     if [ ! -f $DEB_FILE ]; then
-        aptGetInstall lsb-release
+        aptGetInstall $PACKAGES
         wgetDownload "https://www.dropbox.com/download?dl=packages/debian/$DEB_FILE" -O $DEB_FILE
         dpkgInstall $DEB_FILE
         dropbox start -i
@@ -241,6 +241,8 @@ function changeMysqlPassword {
     done
     systemctl start mysql
 
+    # fix tables after dirty MySQL import (copying /var/lib/mysql folder instead of using `mysqldump`)
+    # mysqlcheck -u [username] -p --all-databases --check-upgrade --auto-repair
 }
 
 function openvpn {
@@ -340,4 +342,11 @@ function multimedia {
     PACKAGES="vlc transmission easytag"
 
     aptGetInstall $PACKAGES
+}
+
+function newestLinuxKernel {
+    PACKAGES="linux-image-4.11.0-1-amd64 linux-headers-4.11.0-1-amd64"
+
+    aptGetInstall $PACKAGES
+
 }
