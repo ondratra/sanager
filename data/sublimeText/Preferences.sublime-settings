@@ -10,6 +10,7 @@
 	[
 		"Vintage"
 	],
+	"file_exclude_patterns": ["*.pyc", "*.pyo", "*.exe", "*.dll", "*.obj","*.o", "*.a", "*.lib", "*.so", "*.dylib", "*.ncb", "*.sdf", "*.suo", "*.pdb", "*.idb", ".DS_Store", "*.class", "*.psd", "*.db", "*.sublime-workspace", "*.meta"],
 	"scroll_speed": 0,
 	"show_encoding": true,
 	"tab_completion": true,
