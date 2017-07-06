@@ -67,7 +67,7 @@ fi
 
 source $BLUEPRINT_PATH
 virtualboxGuest # always try to install virtualbox guest features (will have no effect in non-virtualized environments)
-runHighLevel
+runHighLevel "${@:2}"
 
 
 ###############################################################################

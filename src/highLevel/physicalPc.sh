@@ -12,6 +12,7 @@ function physicalPc_all {
     physicalPc_drivers
     physicalPc_virtualization
 
+    hardwareAnalysis
     restoreMateConfig # restore config (there might be icons for newly installed programs)
     changeMysqlPassword ""
 }

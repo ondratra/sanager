@@ -334,7 +334,14 @@ function rhythmbox {
 }
 
 function playOnLinux {
-    PACKAGES="playonlinux ttf-mscorefonts-installer"
+    PACKAGES="playonlinux ttf-mscorefonts-installer libsm6:i386 libfreetype6:i386 libldap-2.4-2:i386"
+
+    TMP=`dpkg --print-foreign-architectures`
+    if [[ "$TMP" != "i386" ]]; then
+        dpkg --add-architecture i386
+        aptUpdate
+    fi
+
     aptGetInstall $PACKAGES
 }
 
@@ -348,5 +355,10 @@ function newestLinuxKernel {
     PACKAGES="linux-image-4.11.0-1-amd64 linux-headers-4.11.0-1-amd64"
 
     aptGetInstall $PACKAGES
+}
 
+function hardwareAnalysis {
+    PACKAGES="hardinfo"
+
+    aptGetInstall $PACKAGES
 }
