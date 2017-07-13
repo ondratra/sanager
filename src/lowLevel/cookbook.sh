@@ -334,7 +334,7 @@ function rhythmbox {
 }
 
 function playOnLinux {
-    PACKAGES="playonlinux ttf-mscorefonts-installer libsm6:i386 libfreetype6:i386 libldap-2.4-2:i386"
+    PACKAGES="playonlinux ttf-mscorefonts-installer libsm6:i386 libfreetype6:i386 libldap-2.4-2:i386 pulseaudio0:i386"
 
     TMP=`dpkg --print-foreign-architectures`
     if [[ "$TMP" != "i386" ]]; then
