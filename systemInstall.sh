@@ -74,5 +74,6 @@ runHighLevel "${@:2}"
 # Post run cleansing
 ###############################################################################
 
+printMsg "Cleaning up"
 apt-get $VERBOSE_APT_FLAG -f install # make sure all dependencies are met
 apt-get $VERBOSE_APT_FLAG autoremove # remove any unused packages

@@ -23,6 +23,11 @@ function aptRemove {
     DEBIAN_FRONTEND="noninteractive" apt-get remove "$VERBOSE_APT_FLAG" -y "$@"
 }
 
+function aptDistUpgrade {
+    printMsg "Upgrading distribution"
+    DEBIAN_FRONTEND="noninteractive" apt-get dist-upgrade "$VERBOSE_APT_FLAG" -y
+}
+
 function dpkgInstall {
     printMsg "Installing packages(dpkg): $@"
     if [ $VERBOSE_SCRIPT ]; then

@@ -1,4 +1,6 @@
 
+# wrapper for lowLevel routines -> enables calling of individual lowLevel routines
+
 function runHighLevel {
 
     if [[ $# -eq 0 ]]; then
@@ -35,17 +37,13 @@ function lowLevel_printExistingRoutines {
 
 function lowLevel_getExistingRoutines {
     UGLY_NAMES=(`cat $SCRIPT_DIR/src/lowLevel/*.sh | grep -E '^[[:space:]]*([[:alnum:]_]+[[:space:]]*\(\)|function[[:space:]]+[[:alnum:]_]+)'`)
-    #declare -a NICE_NAMES
+    declare -a NICE_NAMES
     for UGLY_NAME in "${UGLY_NAMES[@]}"; do
         TMP_A=`echo "${UGLY_NAME#function }" | xargs`
         if [[ $TMP_A == "{" ]] || [[ $TMP_A == "function" ]]; then
             continue;
         fi
-        #TMP_B="${TMP_A% {}"
         NICE_NAMES+=("$UGLY_NAME")
-
-        #echo "$UGLY_NAME"
-        #echo "$TMP_B"
     done
 
 

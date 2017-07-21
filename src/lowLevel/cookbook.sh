@@ -362,3 +362,8 @@ function hardwareAnalysis {
 
     aptGetInstall $PACKAGES
 }
+
+function distroUpgrade {
+    aptUpdate
+    aptDistUpgrade
+}
