@@ -278,12 +278,31 @@ function unity3d {
     DEB_FILE="unity-editor_amd64-5.6.1xf1Linux.deb"
     OPT_DIR="$SANAGER_INSTALL_DIR/unity3d"
 
+    # TODO: this is not finished
+    function androidSdk {
+        PACKAGES="libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386"
+        JAVA="default-jdk"
+        SDK_ZIP_FILE="android-studio-ide-162.4069837-linux.zip"
+        URL="https://dl.google.com/dl/android/studio/ide-zips/2.3.3.0/$SDK_ZIP_FILE"
+
+        #http://dl-ssl.google.com/android/repository/tools_r25.2.5-linux.zip
+        #https://docs.unity3d.com/Manual/AttachingMonoDevelopDebuggerToAnAndroidDevice.html
+
+        if [ ! -f "$OPT_DIR/$SDK_ZIP_FILE" ]; then
+            wgetDownload $URL -O "$OPT_DIR/$SDK_ZIP_FILE"
+        fi
+
+        aptInstall $PACKAGES $JAVA
+    }
+
     mkdir $OPT_DIR -p
     cd $OPT_DIR
     if [ ! -f "$OPT_DIR/$DEB_FILE" ]; then
         wgetDownload "http://beta.unity3d.com/download/6a86e542cf5c/$DEB_FILE" -O "$OPT_DIR/$DEB_FILE"
     fi
     aptInstall "$OPT_DIR/$DEB_FILE"
+
+    androidSdk
 }
 
 
@@ -363,7 +382,23 @@ function hardwareAnalysis {
     aptGetInstall $PACKAGES
 }
 
-function distroUpgrade {
+function distUpgrade {
     aptUpdate
     aptDistUpgrade
+}
+
+# f.lux
+function flux {
+    PACKAGES="fluxgui"
+    REPO_ROW="deb http://ppa.launchpad.net/nathan-renniewaldock/flux/ubuntu $NOWADAYS_UBUNTU_VERSION main"
+    SOURCE_LIST_PATH="/etc/apt/sources.list.d/f.lux.list"
+
+    if [ ! -f $SOURCE_LIST_PATH ]; then
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 29A4B41A # key can be found at https://launchpad.net/~fossfreedom/+archive/ubuntu/rhythmbox
+        echo $REPO_ROW > $SOURCE_LIST_PATH
+        aptUpdate
+        aptGetInstall $PACKAGES
+    fi
+
+    aptGetInstall $PACKAGES
 }

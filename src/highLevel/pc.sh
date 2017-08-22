@@ -9,6 +9,7 @@ function pc_all {
     pc_essentials
 
     pc_userMinimum
+    pc_userRobust
     pc_work
     pc_fun
 }
@@ -26,6 +27,9 @@ function pc_userMinimum {
     enableHistorySearch
     enableBashCompletion
     restoreMateConfig
+}
+
+function pc_userRobust {
     dropbox
 }
 
