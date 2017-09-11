@@ -275,7 +275,13 @@ function rabbitVCS {
 }
 
 function unity3d {
-    DEB_FILE="unity-editor_amd64-5.6.1xf1Linux.deb"
+    #DEB_FILE="unity-editor_amd64-5.6.1xf1Linux.deb"
+    #DOWNLOAD_HASH="6a86e542cf5c"
+
+    DEB_FILE="unity-editor_amd64-2017.1.1xf1Linux.deb"
+    DOWNLOAD_HASH="f4fc8fd4067d"
+
+
     OPT_DIR="$SANAGER_INSTALL_DIR/unity3d"
 
     # TODO: this is not finished
@@ -298,7 +304,7 @@ function unity3d {
     mkdir $OPT_DIR -p
     cd $OPT_DIR
     if [ ! -f "$OPT_DIR/$DEB_FILE" ]; then
-        wgetDownload "http://beta.unity3d.com/download/6a86e542cf5c/$DEB_FILE" -O "$OPT_DIR/$DEB_FILE"
+        wgetDownload "http://beta.unity3d.com/download/$DOWNLOAD_HASH/$DEB_FILE" -O "$OPT_DIR/$DEB_FILE"
     fi
     aptInstall "$OPT_DIR/$DEB_FILE"
 
@@ -346,7 +352,6 @@ function rhythmbox {
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F4FE239D # key can be found at https://launchpad.net/~fossfreedom/+archive/ubuntu/rhythmbox
         echo $REPO_ROW > $SOURCE_LIST_PATH
         aptUpdate
-        aptGetInstall $PACKAGES
     fi
 
     aptGetInstall $PACKAGES
