@@ -278,8 +278,11 @@ function unity3d {
     #DEB_FILE="unity-editor_amd64-5.6.1xf1Linux.deb"
     #DOWNLOAD_HASH="6a86e542cf5c"
 
-    DEB_FILE="unity-editor_amd64-2017.1.1xf1Linux.deb"
-    DOWNLOAD_HASH="f4fc8fd4067d"
+    #DEB_FILE="unity-editor_amd64-2017.1.1xf1Linux.deb"
+    #DOWNLOAD_HASH="f4fc8fd4067d"
+
+    DEB_FILE="unity-editor_amd64-5.5.1xf1Linux.deb"
+    DOWNLOAD_HASH="f5287bef00ff"
 
 
     OPT_DIR="$SANAGER_INSTALL_DIR/unity3d"
@@ -376,7 +379,8 @@ function multimedia {
 }
 
 function newestLinuxKernel {
-    PACKAGES="linux-image-4.11.0-1-amd64 linux-headers-4.11.0-1-amd64"
+    KERNEL_VERSION="4.13.0-1"
+    PACKAGES="linux-image-$KERNEL_VERSION-amd64 linux-headers-$KERNEL_VERSION-amd64"
 
     aptGetInstall $PACKAGES
 }
