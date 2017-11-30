@@ -19,6 +19,7 @@ fi
 # used when importing ubuntu packages
 NOWADAYS_UBUNTU_VERSION="xenial"
 SANAGER_INSTALL_DIR="/opt/sanagerInstall"
+SANAGER_INSTALL_TEMP_DIR="/opt/sanagerInstall/tmp"
 
 SCRIPT_EXECUTING_USER=$SUDO_USER
 SCRIPT_DIR="`dirname \"$0\"`" # relative

@@ -2,7 +2,7 @@
 # see README.md for script description
 
 function essential {
-    PACKAGES="apt-transport-https aptitude wget net-tools bash-completion"
+    PACKAGES="apt-transport-https aptitude wget net-tools bash-completion p7zip-full"
     DIRMNGR="dirmngr" # there might be glitches with gpg without dirmngr -> ensure it's presence
 
     aptGetInstall $PACKAGES $DIRMNGR
@@ -314,6 +314,31 @@ function unity3d {
     androidSdk
 }
 
+function godotEngine {
+    APP_FILENAME="Godot_v2.1.4-stable_x11.64"
+    ZIP_FILENAME="$APP_FILENAME.zip"
+    OPT_DIR="$SANAGER_INSTALL_DIR/godot"
+    OPT_TEMP_DIR="$SANAGER_INSTALL_TEMP_DIR/godot"
+    VERSION="2.1.4"
+    RESULT_APP_NAME="godotEngine_$VERSION"
+
+    APP_PATH="$OPT_DIR/$APP_FILENAME"
+    ZIP_PATH="$OPT_TEMP_DIR/$ZIP_FILENAME"
+
+    mkdir $OPT_DIR -p
+    mkdir $OPT_TEMP_DIR -p
+
+    if [ ! -f "$ZIP_PATH" ]; then
+        wgetDownload "https://downloads.tuxfamily.org/godotengine/$VERSION/$ZIP_FILENAME" -O "$ZIP_PATH"
+    fi
+
+    if [ ! -f "$APP_PATH" ]; then
+        DESKTOP_DIR=$(xdg-user-dir DESKTOP)
+        7z x "$ZIP_PATH" -o"$OPT_DIR"
+        chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $OPT_DIR
+        ln -s "$APP_PATH" "$DESKTOP_DIR/$RESULT_APP_NAME"
+    fi
+}
 
 function versioningAndTools {
     PACKAGES="git subversion meld gimp youtube-dl"
@@ -343,11 +368,12 @@ function steam {
         aptUpdate
     fi
 
-    aptGetInstall $PACKAGES
+    #aptGetInstall $PACKAGES
 }
 
 function rhythmbox {
-    PACKAGES="rhythmbox rhythmbox-plugin-llyrics"
+    # package rhythmbox-plugins is needed now because llyrics plugin itself doesn't install all dependencies needed for it to work
+    PACKAGES="rhythmbox rhythmbox-plugins rhythmbox-plugin-llyrics"
     REPO_ROW="deb http://ppa.launchpad.net/fossfreedom/rhythmbox-plugins/ubuntu $NOWADAYS_UBUNTU_VERSION main"
     SOURCE_LIST_PATH="/etc/apt/sources.list.d/rhytmbox-plugins.list"
 
@@ -361,7 +387,11 @@ function rhythmbox {
 }
 
 function playOnLinux {
-    PACKAGES="playonlinux ttf-mscorefonts-installer libsm6:i386 libfreetype6:i386 libldap-2.4-2:i386 pulseaudio0:i386"
+    PACKAGES="playonlinux ttf-mscorefonts-installer libsm6:i386 libfreetype6:i386 libldap-2.4-2:i386 pulseaudio:i386"
+
+    #lutris
+    # echo "deb http://download.opensuse.org/repositories/home:/strycore/Debian_9.0/ ./" | sudo tee /etc/apt/sources.list.d/lutris.list
+    # libsqlite3-0:i386
 
     TMP=`dpkg --print-foreign-architectures`
     if [[ "$TMP" != "i386" ]]; then

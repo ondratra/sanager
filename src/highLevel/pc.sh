@@ -44,6 +44,7 @@ function pc_work {
     obsStudio
     rabbitVCS
     unity3d
+    godotEngine
 }
 
 function pc_fun {
