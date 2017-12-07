@@ -387,7 +387,8 @@ function rhythmbox {
 }
 
 function playOnLinux {
-    PACKAGES="playonlinux ttf-mscorefonts-installer libsm6:i386 libfreetype6:i386 libldap-2.4-2:i386 pulseaudio:i386"
+    #PACKAGES="playonlinux ttf-mscorefonts-installer libsm6:i386 libfreetype6:i386 libldap-2.4-2:i386 pulseaudio:i386"
+    PACKAGES="playonlinux ttf-mscorefonts-installer libsm6:i386 libfreetype6:i386 libldap-2.4-2:i386"
 
     #lutris
     # echo "deb http://download.opensuse.org/repositories/home:/strycore/Debian_9.0/ ./" | sudo tee /etc/apt/sources.list.d/lutris.list
