@@ -43,7 +43,7 @@ function pc_work {
     openvpn
     obsStudio
     rabbitVCS
-    unity3d
+    #unity3d
     godotEngine
 }
 
