@@ -372,7 +372,7 @@ function datovka {
     SOURCE_LIST_PATH="/etc/apt/sources.list.d/home:CZ-NIC:datovka-latest.list"
 
     if [ ! -f $SOURCE_LIST_PATH ]; then
-        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F9C59A45 # key can be found at https://launchpad.net/~fossfreedom/+archive/ubuntu/rhythmbox
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F9C59A45 # key can be found at https://launchpad.net/~cz.nic-labs/+archive/ubuntu/datovka
         echo $REPO_ROW > $SOURCE_LIST_PATH
         aptUpdate
     fi
