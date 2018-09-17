@@ -218,6 +218,32 @@ function lamp {
     fi
 }
 
+function mongodb {
+    PACKAGES="mongodb"
+
+    aptGetInstall $PACKAGES
+}
+
+function heroku {
+    PACKAGES="heroku"
+    REPO_ROW="deb https://cli-assets.heroku.com/apt ./"
+    SOURCE_LIST_PATH="/etc/apt/sources.list.d/heroku.list"
+
+    if [ ! -f $SOURCE_LIST_PATH ]; then
+        curl https://cli-assets.heroku.com/apt/release.key | apt-key add - # TODO: improve security
+        echo $REPO_ROW > $SOURCE_LIST_PATH
+        aptUpdate
+    fi
+
+    aptInstall $PACKAGES
+}
+
+function pdfshuffle {
+    PACKAGES="pdfshuffle"
+
+    aptGetInstall $PACKAGES
+}
+
 function changeMysqlPassword {
     NEW_PASSWORD="$1"
     echo "newPassword: '$1'"
@@ -338,6 +364,20 @@ function godotEngine {
         chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $OPT_DIR
         ln -s "$APP_PATH" "$DESKTOP_DIR/$RESULT_APP_NAME"
     fi
+}
+
+function datovka {
+    PACKAGES="datovka"
+    REPO_ROW="deb http://ppa.launchpad.net/cz.nic-labs/datovka/ubuntu $NOWADAYS_UBUNTU_VERSION main"
+    SOURCE_LIST_PATH="/etc/apt/sources.list.d/home:CZ-NIC:datovka-latest.list"
+
+    if [ ! -f $SOURCE_LIST_PATH ]; then
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F9C59A45 # key can be found at https://launchpad.net/~fossfreedom/+archive/ubuntu/rhythmbox
+        echo $REPO_ROW > $SOURCE_LIST_PATH
+        aptUpdate
+    fi
+
+    aptGetInstall $PACKAGES
 }
 
 function versioningAndTools {

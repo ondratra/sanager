@@ -12,6 +12,7 @@ function pc_all {
     pc_userRobust
     pc_work
     pc_fun
+    pc_misc
 }
 
 
@@ -31,6 +32,8 @@ function pc_userMinimum {
 
 function pc_userRobust {
     dropbox
+    pdfshuffle
+    datovka
 }
 
 function pc_work {
@@ -43,8 +46,11 @@ function pc_work {
     openvpn
     obsStudio
     rabbitVCS
+
+
     #unity3d
     godotEngine
+    heroku
 }
 
 function pc_fun {
