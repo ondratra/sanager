@@ -18,6 +18,7 @@ fi
 
 # used when importing ubuntu packages
 NOWADAYS_UBUNTU_VERSION="xenial"
+NOWADAYS_DEBIAN_VERSION="stretch"
 SANAGER_INSTALL_DIR="/opt/sanagerInstall"
 SANAGER_INSTALL_TEMP_DIR="/opt/sanagerInstall/tmp"
 

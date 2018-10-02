@@ -238,6 +238,18 @@ function heroku {
     aptInstall $PACKAGES
 }
 
+function firebase {
+    npm install -g firebase-tools
+}
+
+function docker {
+    PACKAGES="docker-compose"
+    # TODO
+    #curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+    #echo "deb [arch=amd64] https://download.docker.com/linux/debian $NOWADAYS_DEBIAN_VERSION stable" | sudo tee -a /etc/apt/sources.list.d/docker.list
+    #addUserToGroup $SCRIPT_EXECUTING_USER docker
+}
+
 function pdfshuffle {
     PACKAGES="pdfshuffle"
 

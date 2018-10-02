@@ -70,3 +70,12 @@ function applyPatch {
         return 1
     fi
 }
+
+# use:
+# addUserToGroup myUser myGroup
+function addUserToGroup {
+    USERNAME=$1
+    GROUPNAME=$2
+
+    usermod -a -G $2 $1
+}
