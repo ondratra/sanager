@@ -49,8 +49,8 @@ function pc_work {
 
 
     #unity3d
-    godotEngine
-    heroku
+    #godotEngine
+    #heroku
 }
 
 function pc_fun {
