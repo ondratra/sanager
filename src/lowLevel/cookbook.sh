@@ -378,6 +378,36 @@ function godotEngine {
     fi
 }
 
+# requires manual wizard walk-through
+function androidStudio {
+    PACKAGES="lib32stdc++6"
+    APP_FILENAME="android-studio-ide-181.5056338-linux"
+    ZIP_FILENAME="$APP_FILENAME.zip"
+    OPT_DIR="$SANAGER_INSTALL_DIR/androidStudio"
+    OPT_TEMP_DIR="$SANAGER_INSTALL_TEMP_DIR/androidStudio"
+    VERSION="3.2.1.0"
+
+    APP_PATH="$OPT_DIR/android-studio"
+    ZIP_PATH="$OPT_TEMP_DIR/$ZIP_FILENAME"
+
+    mkdir $OPT_DIR -p
+    mkdir $OPT_TEMP_DIR -p
+
+    aptInstall $PACKAGES
+
+    if [ ! -f "$ZIP_PATH" ]; then
+        wgetDownload "https://dl.google.com/dl/android/studio/ide-zips/$VERSION/$ZIP_FILENAME" -O "$ZIP_PATH"
+    fi
+
+    if [ ! -d "$APP_PATH" ]; then
+        7z x "$ZIP_PATH" -o"$OPT_DIR"
+        chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $OPT_DIR
+    fi
+
+    # run this manually
+    # "$APP_PATH/bin/studio.sh"
+}
+
 function datovka {
     PACKAGES="datovka"
     REPO_ROW="deb http://ppa.launchpad.net/cz.nic-labs/datovka/ubuntu $NOWADAYS_UBUNTU_VERSION main"
