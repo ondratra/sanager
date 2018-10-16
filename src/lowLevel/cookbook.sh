@@ -455,7 +455,7 @@ function steam {
 
 function rhythmbox {
     # package rhythmbox-plugins is needed now because llyrics plugin itself doesn't install all dependencies needed for it to work
-    PACKAGES="rhythmbox rhythmbox-plugins rhythmbox-plugin-llyrics"
+    PACKAGES="rhythmbox rhythmbox-plugins rhythmbox-plugin-llyrics libflac8 flac"
     REPO_ROW="deb http://ppa.launchpad.net/fossfreedom/rhythmbox-plugins/ubuntu $NOWADAYS_UBUNTU_VERSION main"
     SOURCE_LIST_PATH="/etc/apt/sources.list.d/rhytmbox-plugins.list"
 
