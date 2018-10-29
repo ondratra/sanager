@@ -42,7 +42,7 @@ function pc_work {
     sublimeText
     nodejs
     yarnpkg
-    lamp
+    #lamp # no need for lamp lately
     openvpn
     obsStudio
     rabbitVCS
