@@ -1,3 +1,6 @@
+# easy way to fill the parameters
+# cat virtualHost.txt | sed "s/#DOCUMENT_ROOT#/\/path\/to\/folder/g" | sed "s/#SERVER_NAME#/myhost.local/g"
+
 <VirtualHost *:80>
     DocumentRoot #DOCUMENT_ROOT#
     ServerName #SERVER_NAME#
