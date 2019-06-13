@@ -12,6 +12,12 @@ export interface I$1State {
 
 export class $1 extends Component<I$1Props, I$1State> {
 
+    public constructor(props) {
+        super(props)
+        this.state = {
+        }
+    }
+
     public render(): ComponentChild {
         return
     }
