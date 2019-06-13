@@ -1,0 +1,20 @@
+<snippet>
+    <content>
+<![CDATA[import {h, Component, ComponentChild} from 'preact'
+
+export interface I$1Props {
+
+}
+
+export interface I$1State {
+
+}
+
+export class $1 extends Component<I$1Props, I$1State> {
+
+}
+]]>
+</content>
+    <tabTrigger>rcomponent</tabTrigger>
+    <description>React component base</description>
+</snippet>
