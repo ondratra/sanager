@@ -1,17 +1,21 @@
 {
-	"bootstrapped": true,
 	"in_process_packages":
 	[
 	],
 	"installed_packages":
 	[
 		"All Autocomplete",
+		"Dockerfile Syntax Highlighting",
+		"Ethereum",
+		"JSX",
 		"LESS",
 		"LoremIpsum",
-		"Markdown Preview",
+		"MarkdownPreview",
 		"Nette",
+		"Nodejs",
 		"Package Control",
 		"PHP-Twig",
+		"React IDE",
 		"ScopeHunter",
 		"SideBarEnhancements",
 		"SublimeCodeIntel",
@@ -20,6 +24,6 @@
 		"SyncedSideBar",
 		"Theme - Soda",
 		"TrailingSpaces",
-		"Typescript"
+		"TypeScript"
 	]
 }
