@@ -485,6 +485,20 @@ function playOnLinux {
     aptGetInstall $PACKAGES
 }
 
+function lutris {
+    PACKAGES="lutris"
+    REPO_ROW="deb http://download.opensuse.org/repositories/home:/strycore/Debian_9.0/ ./"
+    SOURCE_LIST_PATH="/etc/apt/sources.list.d/lutris.list"
+
+    if [ ! -f $SOURCE_LIST_PATH ]; then
+        wgetDownload -qO - "https://download.opensuse.org/repositories/home:/strycore/Debian_9.0/Release.key" | apt-key add -
+        echo $REPO_ROW > $SOURCE_LIST_PATH
+        aptUpdate
+    fi
+
+    aptGetInstall $PACKAGES
+}
+
 function multimedia {
     PACKAGES="vlc transmission easytag"
 
