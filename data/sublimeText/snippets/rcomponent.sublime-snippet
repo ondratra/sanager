@@ -1,27 +1,17 @@
 <snippet>
     <content>
-<![CDATA[import {h, Component, ComponentChild} from 'preact'
+<![CDATA[import {h} from 'preact'
+import * as styles from './$1.css'
+
 
 export interface I$1Props {
 
 }
 
-export interface I$1State {
-
+export function $1(props: I$1Props): h.JSX.Element {
+    return null
 }
 
-export class $1 extends Component<I$1Props, I$1State> {
-
-    public constructor(props) {
-        super(props)
-        this.state = {
-        }
-    }
-
-    public render(): ComponentChild {
-        return
-    }
-}
 ]]>
 </content>
     <tabTrigger>rcomponent</tabTrigger>
