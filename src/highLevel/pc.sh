@@ -19,7 +19,7 @@ function pc_all {
 function pc_essentials {
     essential
     desktopDisplayEtc
-    ininalityFonts
+    infinalityFonts
     networkManager
 }
 

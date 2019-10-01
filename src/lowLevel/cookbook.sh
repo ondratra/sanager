@@ -8,11 +8,10 @@ function essential {
     aptGetInstall $PACKAGES $DIRMNGR
 }
 
-
-function ininalityFonts {
+function infinalityFonts {
     PACKAGES="fontconfig-infinality"
     REPO_ROW="deb http://ppa.launchpad.net/no1wantdthisname/ppa/ubuntu $NOWADAYS_UBUNTU_VERSION main"
-    SOURCE_LIST_PATH="/etc/apt/sources.list.d/ininality-fonts.list"
+    SOURCE_LIST_PATH="/etc/apt/sources.list.d/infinality-fonts.list"
 
     if [ ! -f $SOURCE_LIST_PATH ]; then
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E985B27B # key can be found at https://launchpad.net/~no1wantdthisname/+archive/ubuntu/ppa
@@ -486,7 +485,8 @@ function playOnLinux {
 }
 
 function lutris {
-    PACKAGES="lutris"
+    PACKAGES="lutris dxvk wine-mono"
+    RECOMMANDED_PACKAGES="sudo apt-get install libgnutls30:i386 libldap-2.4-2:i386 libgpg-error0:i386 libxml2:i386 libasound2-plugins:i386 libsdl2-2.0-0:i386 libfreetype6:i386 libdbus-1-3:i386 libsqlite3-0:i386"
     REPO_ROW="deb http://download.opensuse.org/repositories/home:/strycore/Debian_9.0/ ./"
     SOURCE_LIST_PATH="/etc/apt/sources.list.d/lutris.list"
 
@@ -496,7 +496,7 @@ function lutris {
         aptUpdate
     fi
 
-    aptGetInstall $PACKAGES
+    aptGetInstall $PACKAGES $RECOMMANDED_PACKAGES
 }
 
 function multimedia {
