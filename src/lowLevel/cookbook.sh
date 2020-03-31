@@ -471,10 +471,6 @@ function playOnLinux {
     #PACKAGES="playonlinux ttf-mscorefonts-installer libsm6:i386 libfreetype6:i386 libldap-2.4-2:i386 pulseaudio:i386"
     PACKAGES="playonlinux ttf-mscorefonts-installer libsm6:i386 libfreetype6:i386 libldap-2.4-2:i386"
 
-    #lutris
-    # echo "deb http://download.opensuse.org/repositories/home:/strycore/Debian_9.0/ ./" | sudo tee /etc/apt/sources.list.d/lutris.list
-    # libsqlite3-0:i386
-
     TMP=`dpkg --print-foreign-architectures`
     if [[ "$TMP" != "i386" ]]; then
         dpkg --add-architecture i386
@@ -487,11 +483,11 @@ function playOnLinux {
 function lutris {
     PACKAGES="lutris dxvk wine-mono"
     RECOMMANDED_PACKAGES="sudo apt-get install libgnutls30:i386 libldap-2.4-2:i386 libgpg-error0:i386 libxml2:i386 libasound2-plugins:i386 libsdl2-2.0-0:i386 libfreetype6:i386 libdbus-1-3:i386 libsqlite3-0:i386"
-    REPO_ROW="deb http://download.opensuse.org/repositories/home:/strycore/Debian_9.0/ ./"
+    REPO_ROW="deb http://download.opensuse.org/repositories/home:/strycore/Debian_Unstable/ ./"
     SOURCE_LIST_PATH="/etc/apt/sources.list.d/lutris.list"
 
     if [ ! -f $SOURCE_LIST_PATH ]; then
-        wgetDownload -qO - "https://download.opensuse.org/repositories/home:/strycore/Debian_9.0/Release.key" | apt-key add -
+        wgetDownload -qO - "https://download.opensuse.org/repositories/home:/strycore/Debian_Unstable/Release.key" | apt-key add -
         echo $REPO_ROW > $SOURCE_LIST_PATH
         aptUpdate
     fi
