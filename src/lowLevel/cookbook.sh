@@ -154,7 +154,7 @@ function sublimeText {
 # newest version of nodejs (not among Debian packages yet)
 function nodejs {
     PACKAGES="nodejs"
-    REPO_ROW="deb https://deb.nodesource.com/node_9.x jessie main"
+    REPO_ROW="deb https://deb.nodesource.com/node_12.x $NOWADAYS_DEBIAN_VERSION main"
     SOURCE_LIST_PATH="/etc/apt/sources.list.d/nodejs.list"
 
     if [ ! -f $SOURCE_LIST_PATH ]; then
