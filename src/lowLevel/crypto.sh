@@ -18,3 +18,13 @@ function tor {
     # #ExitPolicy reject *:* # no exits allowed
     systemctl restart tor
 }
+
+function monero {
+    PACKAGES="monero-wallet-gui libxcb-image0 libxcb-iccm4 libxcb-keysims1 libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11 libxkbcommon-x11-0"
+
+    wget https://www.whonix.org/patrick.asc
+    sudo apt-key --keyring /etc/apt/trusted.gpg.d/whonix.gpg add ~/patrick.asc
+    echo "deb https://deb.whonix.org buster main contrib non-free" | sudo tee /etc/apt/sources.list.d/whonix.list
+    sudo apt-get update
+    sudo apt-get install monero-gui
+}
