@@ -502,7 +502,7 @@ function multimedia {
 }
 
 function newestLinuxKernel {
-    KERNEL_VERSION="4.19.0-1"
+    KERNEL_VERSION="5.10.0-4"
     PACKAGES="linux-image-$KERNEL_VERSION-amd64 linux-headers-$KERNEL_VERSION-amd64"
 
     aptGetInstall $PACKAGES
