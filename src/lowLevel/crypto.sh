@@ -28,3 +28,7 @@ function monero {
     sudo apt-get update
     sudo apt-get install monero-gui
 }
+
+function trezorBridge {
+    https://wallet.trezor.io/#/bridge
+}
