@@ -101,7 +101,7 @@ function restoreMateConfig {
 }
 
 function userEssential {
-    PACKAGES="curl vim htop firefox chromium disk-manager"
+    PACKAGES="curl vim htop firefox chromium gnome-disk-utility"
 
     aptGetInstall $PACKAGES
 }
