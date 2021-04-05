@@ -82,7 +82,7 @@ function enableBashCompletion {
 function dropbox {
     PACKAGES="lsb-release"
     OPT_DIR="$SANAGER_INSTALL_DIR/dropbox"
-    DEB_FILE="dropbox_2015.10.28_amd64.deb"
+    DEB_FILE="dropbox_2020.03.04_amd64.deb"
 
     mkdir $OPT_DIR -p
     cd $OPT_DIR
