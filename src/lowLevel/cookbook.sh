@@ -428,7 +428,7 @@ function versioningAndTools {
 }
 
 function officePack {
-    PACKAGES="libreoffice thunderbird"
+    PACKAGES="libreoffice libreoffice-gtk3 thunderbird"
 
     aptGetInstall $PACKAGES
 }
