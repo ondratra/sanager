@@ -58,7 +58,7 @@ function applyPatch {
     FILE_TO_BE_PATCHED=$1
     PATCH_FILE_PATH=`cat -` # read whole input from stdinfwp
 
-    PATCH_RESULT="`patch $FILE_TO_BE_PATCHED --forward <<< $PATCH_FILE_PATH`"
+    PATCH_RESULT="`patch $FILE_TO_BE_PATCHED --forward <<< $PATCH_FILE_PATH`" TODO!!!!!!!!!!
     grep -q "Reversed (or previously applied) patch detected!" <<< "$PATCH_RESULT"
     NOT_APPLIED_YET=$?
 

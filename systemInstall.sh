@@ -1,6 +1,9 @@
 #!/bin/bash
 # see README.md for script description
 
+# escape on error
+set -e
+
 ###############################################################################
 # Permission lock - only regular user using `sude -E` is allowed
 ###############################################################################

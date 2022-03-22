@@ -60,11 +60,13 @@ function amdDrivers {
 
 
 function virtualboxGuest {
+    #PACKAGES="virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms"
+    PACKAGES="virtualbox-guest-utils virtualbox-guest-x11"
     if [[ "$IS_VIRTUALBOX_GUEST" == "0" ]]; then
         return
     fi
 
-    aptGetInstall virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms
+    aptGetInstall $PACKAGES
 }
 
 
