@@ -22,8 +22,10 @@ fi
 # used when importing ubuntu packages
 NOWADAYS_UBUNTU_VERSION="xenial"
 NOWADAYS_DEBIAN_VERSION="buster"
-SANAGER_INSTALL_DIR="/opt/sanagerInstall"
-SANAGER_INSTALL_TEMP_DIR="/opt/sanagerInstall/tmp"
+SANAGER_MAIN_DIR="/opt/__sanager"
+SANAGER_INSTALL_DIR="$SANAGER_MAIN_DIR/install"
+SANAGER_INSTALL_TEMP_DIR="$SANAGER_MAIN_DIR/tmp"
+SANAGER_GPG_KEY_DIR="$SANAGER_MAIN_DIR/gpgKeys"
 
 SCRIPT_EXECUTING_USER=$SUDO_USER
 SCRIPT_DIR="`dirname \"$0\"`" # relative
@@ -34,7 +36,7 @@ VERBOSE_APT_FLAG=`[[ "$VERBOSE_SCRIPT" == "1" ]] && echo "" || echo "-qq"`
 VERBOSE_WGET_FLAG=`[[ "$VERBOSE_SCRIPT" == "0" ]] && echo "" || echo "-q"`
 
 # for detection info see http://www.dmo.ca/blog/detecting-virtualization-on-linux/
-TMP=`dmesg | grep -i virtualbox`
+TMP=`dmesg | grep -i virtualbox || echo ""`
 IS_VIRTUALBOX_GUEST=`[[ "$TMP" == "" ]] && echo 0 || echo 1`
 
 

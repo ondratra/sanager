@@ -31,7 +31,7 @@ function pc_userMinimum {
 
 function pc_userRobust {
     dropbox
-    pdfshuffle
+    #pdfshuffle # TODO: this packages is likely gone - find substitute (?)
     datovka
 }
 

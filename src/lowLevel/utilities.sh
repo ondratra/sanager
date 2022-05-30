@@ -1,6 +1,6 @@
 
 function printMsg {
-    echo "SANAGER: $@"
+    echo "SANAGER: $@" >&2
 }
 
 function aptUpdate {
@@ -47,6 +47,65 @@ function isInstalled {
     return 1
 }
 
+# use:
+# addGpgKey https://myrepo.example/myrepo.asc myRepoName
+# addGpgKey https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xF425E228 myRepoName
+function addGpgKey {
+    KEY_URL=$1
+    KEY_NAME=$2
+
+    TMP=`sed 's#.*\/##' <<< $KEY_URL | sed 's#\?.*$##'`
+    KEY_FILE_EXTENSION=`[ $TMP == "asc" ] && echo "asc" || echo "gpg"`
+
+    KEY_FILE_PATH="$SANAGER_GPG_KEY_DIR/$KEY_NAME.$KEY_FILE_EXTENSION"
+
+    if [ -f $KEY_FILE_PATH ]; then
+        printMsg "Skipping adding of GPG key for repo: $KEY_NAME"
+        echo $KEY_FILE_PATH
+        return 0
+    fi
+
+    printMsg "Adding GPG key for repo: $KEY_NAME"
+
+    mkdir -p $SANAGER_GPG_KEY_DIR # ensure gpg keys directory
+    wget --no-hsts -qO - "$KEY_URL" > $KEY_FILE_PATH
+
+    echo $KEY_FILE_PATH
+}
+
+# use
+# addAptRepository repoName "deb https://myrepo.example/someRepo stable main" https://myrepo.example/myrepo.asc
+function addAptRepository {
+    REPO_NAME=$1
+    REPO_ROW=$2
+    KEY_URL=$3
+
+    SOURCE_LIST_PATH="/etc/apt/sources.list.d/__sanager_${REPO_NAME}.list"
+
+    if [ -f $SOURCE_LIST_PATH ]; then
+        printMsg "Skipping adding of apt repository: $REPO_NAME"
+        return 0
+    fi
+
+    printMsg "Adding apt repository: $REPO_NAME"
+
+    # add key
+    KEY_FILE_PATH=`addGpgKey $KEY_URL $REPO_NAME`
+    FINAL_REPO_ROW=`sed -e "s#deb#deb [signed-by=$KEY_FILE_PATH]#" <<< $REPO_ROW`
+    echo "$FINAL_REPO_ROW" > $SOURCE_LIST_PATH
+
+    aptUpdate
+}
+
+# use
+# gpgKeyUrlFromKeyring keyserver.ubuntu.com F425E228
+function gpgKeyUrlFromKeyring {
+    KEY_SERVER=$1
+    PUBKEY=$2
+
+    echo "https://${KEY_SERVER}/pks/lookup?op=get&search=0x${PUBKEY}"
+}
+
 function wgetDownload {
     printMsg "Downloading files via wget: $@"
     wget --no-hsts $VERBOSE_WGET_FLAG "$@"
@@ -56,9 +115,9 @@ function wgetDownload {
 # applyPatch pathToFileToBePatched < patchString
 function applyPatch {
     FILE_TO_BE_PATCHED=$1
-    PATCH_FILE_PATH=`cat -` # read whole input from stdinfwp
+    PATCH_FILE_PATH=`cat -` # read whole input from stdin
 
-    PATCH_RESULT="`patch $FILE_TO_BE_PATCHED --forward <<< $PATCH_FILE_PATH`" TODO!!!!!!!!!!
+    ! PATCH_RESULT="`patch $FILE_TO_BE_PATCHED --forward <<< $PATCH_FILE_PATH`"
     grep -q "Reversed (or previously applied) patch detected!" <<< "$PATCH_RESULT"
     NOT_APPLIED_YET=$?
 

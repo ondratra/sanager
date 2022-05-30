@@ -11,14 +11,10 @@ function essential {
 function infinalityFonts {
     PACKAGES="fontconfig-infinality"
     REPO_ROW="deb http://ppa.launchpad.net/no1wantdthisname/ppa/ubuntu $NOWADAYS_UBUNTU_VERSION main"
-    SOURCE_LIST_PATH="/etc/apt/sources.list.d/infinality-fonts.list"
+    REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com E985B27B` # key can be found at https://launchpad.net/~no1wantdthisname/+archive/ubuntu/ppa
 
-    if [ ! -f $SOURCE_LIST_PATH ]; then
-        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E985B27B # key can be found at https://launchpad.net/~no1wantdthisname/+archive/ubuntu/ppa
-        echo $REPO_ROW > $SOURCE_LIST_PATH
-        aptUpdate
-        aptGetInstall $PACKAGES
-    fi
+    addAptRepository infinalityFonts "$REPO_ROW" $REPO_KEY_URL
+    aptGetInstall $PACKAGES
 
     # in some situation you might need to run manually
     # sudo bash /etc/fonts/infinality/infctl.sh setstyle
@@ -30,12 +26,12 @@ function networkManager {
     PACKAGES="network-manager network-manager-gnome"
 
     # see https://wiki.debian.org/NetworkManager#Wired_Networks_are_Unmanaged
-    applyPatch /etc/NetworkManager/NetworkManager.conf < $SCRIPT_DIR/data/misc/NetworkManager.conf.diff
-    PATCH_PROBLEM=$?
+    applyPatch /etc/NetworkManager/NetworkManager.conf < $SCRIPT_DIR/data/misc/NetworkManager.conf.diff || PATCH_PROBLEM=$?
 
     if [[ "$PATCH_PROBLEM" == "0" ]]; then
-        systemctl restart network-manager
+        systemctl restart NetworkManager
     fi
+
     aptGetInstall $PACKAGES
 }
 
@@ -78,7 +74,7 @@ function enableHistorySearch {
 }
 
 function enableBashCompletion {
-    applyPatch /etc/bash.bashrc < $SCRIPT_DIR/data/misc/bash.bashrc.diff
+    applyPatch /etc/bash.bashrc < $SCRIPT_DIR/data/misc/bash.bashrc.diff || true
 }
 
 function dropbox {
@@ -157,30 +153,21 @@ function sublimeText {
 function nodejs {
     PACKAGES="nodejs"
     REPO_ROW="deb https://deb.nodesource.com/node_12.x $NOWADAYS_DEBIAN_VERSION main"
-    SOURCE_LIST_PATH="/etc/apt/sources.list.d/nodejs.list"
+    REPO_KEY_URL="https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
 
-    if [ ! -f $SOURCE_LIST_PATH ]; then
-        wgetDownload -qO - "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" | apt-key add -
-        echo $REPO_ROW > $SOURCE_LIST_PATH
-        aptUpdate
-    fi
-
+    addAptRepository nodejs "$REPO_ROW" $REPO_KEY_URL
     aptGetInstall $PACKAGES
 }
 
 function yarnpkg {
     PACKAGES="yarn"
     REPO_ROW="deb https://dl.yarnpkg.com/debian/ stable main"
-    SOURCE_LIST_PATH="/etc/apt/sources.list.d/yarn.list"
-
-    if [ ! -f $SOURCE_LIST_PATH ]; then
-        wgetDownload -qO - "https://dl.yarnpkg.com/debian/pubkey.gpg" | apt-key add -
-        echo $REPO_ROW > $SOURCE_LIST_PATH
-        aptUpdate
-    fi
+    REPO_KEY_URL="https://dl.yarnpkg.com/debian/pubkey.gpg"
 
     # there exists some 'yarn' command in 'cmdtest' package - not used so get rid of it
     aptRemove cmdtest
+
+    addAptRepository nodejs "$REPO_ROW" $REPO_KEY_URL
     aptGetInstall $PACKAGES
 }
 
@@ -228,13 +215,9 @@ function mongodb {
 function heroku {
     PACKAGES="heroku"
     REPO_ROW="deb https://cli-assets.heroku.com/apt ./"
-    SOURCE_LIST_PATH="/etc/apt/sources.list.d/heroku.list"
+    REPO_KEY_URL="https://cli-assets.heroku.com/apt/release.key"
 
-    if [ ! -f $SOURCE_LIST_PATH ]; then
-        curl https://cli-assets.heroku.com/apt/release.key | apt-key add - # TODO: improve security
-        echo $REPO_ROW > $SOURCE_LIST_PATH
-        aptUpdate
-    fi
+    addAptRepository heroku "$REPO_ROW" $REPO_KEY_URL
 
     aptInstall $PACKAGES
 }
@@ -251,11 +234,11 @@ function docker {
     #addUserToGroup $SCRIPT_EXECUTING_USER docker
 }
 
-function pdfshuffle {
-    PACKAGES="pdfshuffle"
-
-    aptGetInstall $PACKAGES
-}
+#function pdfshuffle {
+#    PACKAGES="pdfshuffle"
+#
+#    aptGetInstall $PACKAGES
+#}
 
 function changeMysqlPassword {
     NEW_PASSWORD="$1"
@@ -268,14 +251,11 @@ function changeMysqlPassword {
     mkdir -p /var/run/mysqld
     chown mysql:mysql /var/run/mysqld
     mysqld_safe --skip-grant-tables &
-
     # make sure query is accpeted by server(aka server is running)
     TMP="1"
-    echo $TMP
     while [[ "$TMP" != "0" ]]; do
         printMsg "waiting for MySQL server"
-        mysql <<< $SQL_QUERY
-        TMP="$?"
+        (mysql <<< $SQL_QUERY && TMP="0") || TMP="1"
         sleep 1
     done
     systemctl start mysql
@@ -292,15 +272,13 @@ function openvpn {
 
 # screen capture
 function obsStudio {
-    if isInstalled obs-studio; then
-        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F425E228 # key can be found at https://launchpad.net/~obsproject/+archive/ubuntu/obs-studio
-        aptUpdate
-    fi
-    aptGetInstall obs-studio
+    PACKAGES="obs-studio"
+
+    aptGetInstall $PACKAGES
 }
 
 function rabbitVCS {
-    PACKAGES="rabbitvcs-core python-caja"
+    PACKAGES="rabbitvcs-core python3-caja"
     EXTENSION_DIR=~/.local/share/caja-python/extensions/
     FILENAME="RabbitVCS.py"
 
@@ -412,13 +390,9 @@ function androidStudio {
 function datovka {
     PACKAGES="datovka"
     REPO_ROW="deb http://ppa.launchpad.net/cz.nic-labs/datovka/ubuntu $NOWADAYS_UBUNTU_VERSION main"
-    SOURCE_LIST_PATH="/etc/apt/sources.list.d/home:CZ-NIC:datovka-latest.list"
+    REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com F9C59A45` # key can be found at https://launchpad.net/~cz.nic-labs/+archive/ubuntu/datovka
 
-    if [ ! -f $SOURCE_LIST_PATH ]; then
-        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F9C59A45 # key can be found at https://launchpad.net/~cz.nic-labs/+archive/ubuntu/datovka
-        echo $REPO_ROW > $SOURCE_LIST_PATH
-        aptUpdate
-    fi
+    addAptRepository datovka "$REPO_ROW" $REPO_KEY_URL
 
     aptGetInstall $PACKAGES
 }
@@ -458,13 +432,9 @@ function rhythmbox {
     # package rhythmbox-plugins is needed now because llyrics plugin itself doesn't install all dependencies needed for it to work
     PACKAGES="rhythmbox rhythmbox-plugins rhythmbox-plugin-llyrics libflac8 flac"
     REPO_ROW="deb http://ppa.launchpad.net/fossfreedom/rhythmbox-plugins/ubuntu $NOWADAYS_UBUNTU_VERSION main"
-    SOURCE_LIST_PATH="/etc/apt/sources.list.d/rhytmbox-plugins.list"
+    REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com F4FE239D` # key can be found at https://launchpad.net/~fossfreedom/+archive/ubuntu/rhythmbox
 
-    if [ ! -f $SOURCE_LIST_PATH ]; then
-        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F4FE239D # key can be found at https://launchpad.net/~fossfreedom/+archive/ubuntu/rhythmbox
-        echo $REPO_ROW > $SOURCE_LIST_PATH
-        aptUpdate
-    fi
+    addAptRepository rhytmbox-plugins "$REPO_ROW" $REPO_KEY_URL
 
     aptGetInstall $PACKAGES
 }
@@ -486,13 +456,9 @@ function lutris {
     PACKAGES="lutris dxvk wine-mono"
     RECOMMANDED_PACKAGES="sudo apt-get install libgnutls30:i386 libldap-2.4-2:i386 libgpg-error0:i386 libxml2:i386 libasound2-plugins:i386 libsdl2-2.0-0:i386 libfreetype6:i386 libdbus-1-3:i386 libsqlite3-0:i386"
     REPO_ROW="deb http://download.opensuse.org/repositories/home:/strycore/Debian_Unstable/ ./"
-    SOURCE_LIST_PATH="/etc/apt/sources.list.d/lutris.list"
+    REPO_KEY_URL="https://download.opensuse.org/repositories/home:/strycore/Debian_Unstable/Release.key"
 
-    if [ ! -f $SOURCE_LIST_PATH ]; then
-        wgetDownload -qO - "https://download.opensuse.org/repositories/home:/strycore/Debian_Unstable/Release.key" | apt-key add -
-        echo $REPO_ROW > $SOURCE_LIST_PATH
-        aptUpdate
-    fi
+    addAptRepository lutris "$REPO_ROW" $REPO_KEY_URL
 
     aptGetInstall $PACKAGES $RECOMMANDED_PACKAGES
 }
@@ -504,7 +470,7 @@ function multimedia {
 }
 
 function newestLinuxKernel {
-    KERNEL_VERSION="5.10.0-4"
+    KERNEL_VERSION="5.17.0-3"
     PACKAGES="linux-image-$KERNEL_VERSION-amd64 linux-headers-$KERNEL_VERSION-amd64"
 
     aptGetInstall $PACKAGES
@@ -521,22 +487,6 @@ function distUpgrade {
     aptDistUpgrade
 }
 
-# f.lux
-function flux {
-    PACKAGES="fluxgui"
-    REPO_ROW="deb http://ppa.launchpad.net/nathan-renniewaldock/flux/ubuntu $NOWADAYS_UBUNTU_VERSION main"
-    SOURCE_LIST_PATH="/etc/apt/sources.list.d/f.lux.list"
-
-    if [ ! -f $SOURCE_LIST_PATH ]; then
-        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 29A4B41A # key can be found at https://launchpad.net/~fossfreedom/+archive/ubuntu/rhythmbox
-        echo $REPO_ROW > $SOURCE_LIST_PATH
-        aptUpdate
-        aptGetInstall $PACKAGES
-    fi
-
-    aptGetInstall $PACKAGES
-}
-
 function redshift {
     PACKAGES="redshift-gtk"
     CONFIG_FILE_PATH="~/config/redshift.conf"
@@ -547,3 +497,14 @@ function redshift {
 
     aptGetInstall $PACKAGES
 }
+
+# TODO: install
+# - reenable lamp (maybe a fix for mysql password init problems will be needed)
+# - brave
+# - iridium
+# - keybase
+# - mongodb
+# - Element instant messaging
+# - signal
+# - slack
+# - teamviewer (?)

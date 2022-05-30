@@ -47,7 +47,7 @@ Running this script on regular user account with `sudo -E` ensuring your git key
 ## Logging
 If you need to log system install run command with additional parameter `--verbose`.
 ```
-sudo -E ./systemInstall.sh pc --verbose | sudo -E tee systemInstall.log
+sudo -E ./systemInstall.sh pc --verbose |& sudo -E tee systemInstall.log
 ```
 
 
@@ -61,7 +61,12 @@ When somethings goes wrong try to rerun `systemInstall.sh`.
 Additionally you can delete content of some config folders before rerun.
 ```
 rm -rf /etc/apt/sources.list.d/* # dont run this if you manually added some sources
-rm -rf /opt/sanagerInstall/*
+rm -rf /opt/sanager/*
+# or selectively
+rm -rf /opt/sanager/install
+rm -rf /opt/sanager/gpgKeys
+rm -rf /opt/sanager/tmp
+
 ```
 
 # Updating configuration
