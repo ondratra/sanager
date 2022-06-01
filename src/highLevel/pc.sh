@@ -11,6 +11,7 @@ function pc_all {
     pc_userMinimum
     pc_userRobust
     pc_work
+    pc_workInstantMessaging
     pc_fun
     pc_userRobust
 }
@@ -33,6 +34,8 @@ function pc_userRobust {
     dropbox
     #pdfshuffle # TODO: this packages is likely gone - find substitute (?)
     datovka
+    brave
+    #iridium
 }
 
 function pc_work {
@@ -50,6 +53,11 @@ function pc_work {
     #unity3d
     #godotEngine
     #heroku
+}
+
+function pc_workInstantMessaging {
+    keybase
+    slack
 }
 
 function pc_fun {

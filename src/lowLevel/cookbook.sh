@@ -85,12 +85,17 @@ function dropbox {
     mkdir $OPT_DIR -p
     cd $OPT_DIR
 
+    if isInstalled "dropbox"; then
+        return 0
+    fi
+
     if [ ! -f $DEB_FILE ]; then
         aptGetInstall $PACKAGES
         wgetDownload "https://www.dropbox.com/download?dl=packages/debian/$DEB_FILE" -O $DEB_FILE
-        dpkgInstall $DEB_FILE
-        dropbox start -i
     fi
+
+    dpkgInstall $DEB_FILE
+    dropbox start -i
 }
 
 function restoreMateConfig {
@@ -498,11 +503,47 @@ function redshift {
     aptGetInstall $PACKAGES
 }
 
+function brave {
+    PACKAGES="brave-browser"
+    REPO_ROW="deb https://brave-browser-apt-release.s3.brave.com/ stable main"
+    REPO_KEY_URL="https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg"
+
+    addAptRepository brave "$REPO_ROW" $REPO_KEY_URL
+    aptGetInstall $PACKAGES
+}
+
+function keybase {
+    PACKAGES="keybase"
+    REPO_ROW="deb http://prerelease.keybase.io/deb stable main"
+    REPO_KEY_URL="https://keybase.io/docs/server_security/code_signing_key.asc"
+
+    addAptRepository keybase "$REPO_ROW" $REPO_KEY_URL
+    aptGetInstall $PACKAGES
+}
+
+function iridium {
+    PACKAGES="iridium-browser"
+    REPO_ROW="deb https://downloads.iridiumbrowser.de/deb/ stable main"
+    REPO_KEY_URL="https://downloads.iridiumbrowser.de/ubuntu/iridium-release-sign-01.pub"
+
+    addAptRepository iridium "$REPO_ROW" $REPO_KEY_URL
+    aptGetInstall $PACKAGES
+}
+
+function slack {
+    PACKAGES="slack-desktop"
+    REPO_ROW="deb https://packagecloud.io/slacktechnologies/slack/debian/ jessie main"
+    REPO_KEY_URL="https://slack.com/gpg/slack_pubkey_20210901.gpg"
+    REPO_KEY_URL=`gpgKeyUrlFromKeyring pgpkeys.mit.edu C6ABDCF64DB9A0B2`
+
+    addAptRepository slack "$REPO_ROW" $REPO_KEY_URL
+    aptGetInstall $PACKAGES
+}
+
 # TODO: install
+# - create apt policy file in preferences.d/ for each added repository
 # - reenable lamp (maybe a fix for mysql password init problems will be needed)
-# - brave
-# - iridium
-# - keybase
+# - iridium - update to some 2022 version
 # - mongodb
 # - Element instant messaging
 # - signal

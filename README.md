@@ -60,7 +60,7 @@ All script are meant to be quite by default; messages to stderr are enabled alwa
 When somethings goes wrong try to rerun `systemInstall.sh`.
 Additionally you can delete content of some config folders before rerun.
 ```
-rm -rf /etc/apt/sources.list.d/* # dont run this if you manually added some sources
+rm -rf /etc/apt/sources.list.d/__sanager*
 rm -rf /opt/sanager/*
 # or selectively
 rm -rf /opt/sanager/install

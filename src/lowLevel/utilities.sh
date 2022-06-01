@@ -68,7 +68,7 @@ function addGpgKey {
     printMsg "Adding GPG key for repo: $KEY_NAME"
 
     mkdir -p $SANAGER_GPG_KEY_DIR # ensure gpg keys directory
-    wget --no-hsts -qO - "$KEY_URL" > $KEY_FILE_PATH
+    wget --no-hsts -qO - "$KEY_URL" | gpg --dearmor > $KEY_FILE_PATH
 
     echo $KEY_FILE_PATH
 }
@@ -91,7 +91,7 @@ function addAptRepository {
 
     # add key
     KEY_FILE_PATH=`addGpgKey $KEY_URL $REPO_NAME`
-    FINAL_REPO_ROW=`sed -e "s#deb#deb [signed-by=$KEY_FILE_PATH]#" <<< $REPO_ROW`
+    FINAL_REPO_ROW=`sed -e "s#deb#deb [arch=amd64 signed-by=$KEY_FILE_PATH]#" <<< $REPO_ROW`
     echo "$FINAL_REPO_ROW" > $SOURCE_LIST_PATH
 
     aptUpdate
