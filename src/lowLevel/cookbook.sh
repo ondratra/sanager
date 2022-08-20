@@ -228,11 +228,9 @@ function firebase {
 }
 
 function docker {
-    PACKAGES="docker-compose"
-    # TODO
-    #curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-    #echo "deb [arch=amd64] https://download.docker.com/linux/debian $NOWADAYS_DEBIAN_VERSION stable" | sudo tee -a /etc/apt/sources.list.d/docker.list
-    #addUserToGroup $SCRIPT_EXECUTING_USER docker
+    PACKAGES="docker.io"
+
+    addUserToGroup "$SCRIPT_EXECUTING_USER" docker
 }
 
 #function pdfshuffle {
