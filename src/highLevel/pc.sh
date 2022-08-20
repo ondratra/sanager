@@ -64,5 +64,5 @@ function pc_fun {
     multimedia
     steam
     rhythmbox
-    playOnLinux
+    lutris
 }
