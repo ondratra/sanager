@@ -29,11 +29,11 @@ function aptDistUpgrade {
 }
 
 function dpkgInstall {
-    printMsg "Installing packages(dpkg): $@"
+    printMsg "Installing packages(dpkg/gdebi): $@"
     if [ $VERBOSE_SCRIPT ]; then
-        dpkg -i "$@"
+        gdebi "$@"
     else
-        dpkg -i "$@" > /dev/null
+        gdebi "$@" > /dev/null
     fi
 }
 

@@ -78,7 +78,7 @@ function enableBashCompletion {
 }
 
 function dropbox {
-    PACKAGES="lsb-release"
+    PACKAGES_DEPENDENCIES="lsb-release"
     OPT_DIR="$SANAGER_INSTALL_DIR/dropbox"
     DEB_FILE="dropbox_2020.03.04_amd64.deb"
 
@@ -89,8 +89,9 @@ function dropbox {
         return 0
     fi
 
+    aptGetInstall $PACKAGES_DEPENDENCIES
+
     if [ ! -f $DEB_FILE ]; then
-        aptGetInstall $PACKAGES
         wgetDownload "https://www.dropbox.com/download?dl=packages/debian/$DEB_FILE" -O $DEB_FILE
     fi
 
@@ -552,6 +553,29 @@ function signal {
     addAptRepository signal "$REPO_ROW" $REPO_KEY_URL
     aptGetInstall $PACKAGES
 }
+
+function zoom {
+    PACKAGES_DEPENDENCIES=""
+    OPT_DIR="$SANAGER_INSTALL_DIR/zoom"
+    DEB_FILE="zoom_amd64.deb"
+
+    mkdir $OPT_DIR -p
+    cd $OPT_DIR
+
+    if isInstalled "zoom"; then
+        return 0
+    fi
+
+    aptGetInstall $PACKAGES_DEPENDENCIES
+
+    if [ ! -f $DEB_FILE ]; then
+        wgetDownload "https://zoom.us/client/latest/$DEB_FILE" -O $DEB_FILE
+    fi
+
+    # install package and auto-accept license (-n means non-interactive install)
+    dpkgInstall -n $DEB_FILE
+}
+
 
 # TODO: install
 # - create apt policy file in preferences.d/ for each added repository
