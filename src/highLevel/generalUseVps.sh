@@ -8,7 +8,7 @@ function runHighLevel {
 
     versioningAndTools
     nodejs
-    yarnpkg
+    yarn
     lamp
 
     # TODO:

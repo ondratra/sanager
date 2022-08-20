@@ -43,7 +43,7 @@ function pc_work {
     officePack
     sublimeText
     nodejs
-    yarnpkg
+    yarn
     #lamp # no need for lamp lately
     openvpn
     obsStudio

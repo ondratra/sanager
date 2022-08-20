@@ -164,16 +164,12 @@ function nodejs {
     aptGetInstall $PACKAGES
 }
 
-function yarnpkg {
-    PACKAGES="yarn"
-    REPO_ROW="deb https://dl.yarnpkg.com/debian/ stable main"
-    REPO_KEY_URL="https://dl.yarnpkg.com/debian/pubkey.gpg"
+function yarn {
+    PACKAGES="yarnpkg"
 
-    # there exists some 'yarn' command in 'cmdtest' package - not used so get rid of it
-    aptRemove cmdtest
-
-    addAptRepository nodejs "$REPO_ROW" $REPO_KEY_URL
     aptGetInstall $PACKAGES
+
+    alias yarn=yarnpkg
 }
 
 # Linux Apache MySQL PHP
