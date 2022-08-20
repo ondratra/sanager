@@ -177,7 +177,7 @@ function lamp {
     # subversion(svn) is needed by some composer(https://getcomposer.org/) packages, etc.
     # it must be installed even when not directly used by system users
     PACKAGES="mysql-server apache2 php libapache2-mod-php subversion"
-    PHP_EXTENSIONS="php-curl php-gd php-mysql php-json php-soap php-apcu php-xml php-mbstring php-yaml"
+    PHP_EXTENSIONS="php-curl php-gd php-mysql php-pdo-pgsql php-json php-soap php-apcu php-xml php-mbstring php-yaml"
 
     function wordpressCli {
         which wp-cli > /dev/null
