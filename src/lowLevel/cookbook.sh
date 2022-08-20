@@ -483,7 +483,7 @@ function multimedia {
 }
 
 function newestLinuxKernel {
-    KERNEL_VERSION="5.17.0-3"
+    KERNEL_VERSION="5.18.0-4"
     PACKAGES="linux-image-$KERNEL_VERSION-amd64 linux-headers-$KERNEL_VERSION-amd64"
 
     aptGetInstall $PACKAGES
