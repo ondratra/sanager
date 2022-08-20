@@ -430,7 +430,15 @@ function steam {
         aptUpdate
     fi
 
-    #aptGetInstall $PACKAGES
+    # pre-accept license
+    echo steam steam/question select "I AGREE" | sudo debconf-set-selections
+    echo steam steam/license note '' | sudo debconf-set-selections
+
+    aptGetInstall $PACKAGES
+
+    # remove license pre-acceptance
+    echo UNREGISTER steam/question | sudo debconf-communicate steam > /dev/null
+    echo UNREGISTER steam/license | sudo debconf-communicate steam > /dev/null
 }
 
 function rhythmbox {
