@@ -2,7 +2,7 @@
 # see README.md for script description
 
 function essential {
-    PACKAGES="apt-transport-https aptitude wget net-tools bash-completion p7zip-full build-essential"
+    PACKAGES="apt-transport-https aptitude wget net-tools bash-completion p7zip-full build-essential gdebi"
     DIRMNGR="dirmngr" # there might be glitches with gpg without dirmngr -> ensure it's presence
 
     aptGetInstall $PACKAGES $DIRMNGR
