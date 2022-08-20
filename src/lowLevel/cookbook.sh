@@ -534,22 +534,30 @@ function iridium {
     aptGetInstall $PACKAGES
 }
 
+
 function slack {
     PACKAGES="slack-desktop"
     REPO_ROW="deb https://packagecloud.io/slacktechnologies/slack/debian/ jessie main"
     REPO_KEY_URL="https://slack.com/gpg/slack_pubkey_20210901.gpg"
-    REPO_KEY_URL=`gpgKeyUrlFromKeyring pgpkeys.mit.edu C6ABDCF64DB9A0B2`
+    #REPO_KEY_URL=`gpgKeyUrlFromKeyring pgpkeys.mit.edu C6ABDCF64DB9A0B2` # TODO - automatically search for online keyservers
+    REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com C6ABDCF64DB9A0B2`
 
     addAptRepository slack "$REPO_ROW" $REPO_KEY_URL
+    aptGetInstall $PACKAGES
+}
+
+function signal {
+    PACKAGES="signal-desktop"
+    REPO_ROW="deb https://updates.signal.org/desktop/apt xenial main"
+    REPO_KEY_URL="https://updates.signal.org/desktop/apt/keys.asc" # TODO - save and check key's checksum
+
+    addAptRepository signal "$REPO_ROW" $REPO_KEY_URL
     aptGetInstall $PACKAGES
 }
 
 # TODO: install
 # - create apt policy file in preferences.d/ for each added repository
 # - reenable lamp (maybe a fix for mysql password init problems will be needed)
-# - iridium - update to some 2022 version
-# - mongodb
+# - iridium - update to some 2022 version (?)
 # - Element instant messaging
-# - signal
-# - slack
 # - teamviewer (?)
