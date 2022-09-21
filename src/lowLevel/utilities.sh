@@ -30,10 +30,13 @@ function aptDistUpgrade {
 
 function dpkgInstall {
     printMsg "Installing packages(dpkg/gdebi): $@"
+
+    local VERBOSE_GDEBI_FLAG=${VERBOSE_APT_FLAG:+--quiet}
+
     if [ $VERBOSE_SCRIPT ]; then
-        gdebi "$@"
+        gdebi --non-interactive $VERBOSE_GDEBI_FLAG "$@"
     else
-        gdebi "$@" > /dev/null
+        gdebi --non-interactive $VERBOSE_GDEBI_FLAG "$@" > /dev/null
     fi
 }
 

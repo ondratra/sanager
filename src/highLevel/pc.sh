@@ -31,9 +31,11 @@ function pc_userMinimum {
 }
 
 function pc_userRobust {
-    dropbox
-    #pdfshuffle # TODO: this packages is likely gone - find substitute (?)
-    datovka
+    # TODO: make dropbox work - it unpredictably throws http error 404 when downloading install package and that breaks tests
+    #  dropboxPackage
+    pdfarranger
+    # TODO: make datovka work - it currently depends on obsolete `libssl1.0.0` that is no longer available in Debian sid
+    #datovka
     brave
     #iridium
 }
@@ -62,7 +64,9 @@ function pc_workInstantMessaging {
 
 function pc_fun {
     multimedia
-    steam
+    # TODO: uncomment this when steam works - currently there is some incompatibility with `libedit2` in sid
+    #steam
     rhythmbox
-    lutris
+    # TODO: uncomment this when steam works - currently there is some incompatibility with `libasound-plugins:386` in sid
+    #lutris
 }

@@ -3,6 +3,7 @@
 
 # escape on error
 set -e
+set -x
 
 ###############################################################################
 # Permission lock - only regular user using `sude -E` is allowed
@@ -21,7 +22,8 @@ fi
 
 # used when importing ubuntu packages
 NOWADAYS_UBUNTU_VERSION="xenial"
-NOWADAYS_DEBIAN_VERSION="buster"
+NOWADAYS_DEBIAN_VERSION="bullseye"
+TARGET_DEBIAN_VERSION="sid"
 SANAGER_MAIN_DIR="/opt/__sanager"
 SANAGER_INSTALL_DIR="$SANAGER_MAIN_DIR/install"
 SANAGER_INSTALL_TEMP_DIR="$SANAGER_MAIN_DIR/tmp"
@@ -70,7 +72,6 @@ if [[ ! -f $BLUEPRINT_PATH ]]; then
     echo "Installation blueprint \"$1\" not found."
     exit 1;
 fi
-
 
 source $BLUEPRINT_PATH
 virtualboxGuest # always try to install virtualbox guest features (will have no effect in non-virtualized environments)
