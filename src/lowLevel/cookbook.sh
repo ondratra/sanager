@@ -458,7 +458,7 @@ function multimedia {
 }
 
 function newestLinuxKernel {
-    KERNEL_VERSION="5.18.0-4"
+    KERNEL_VERSION="5.19.0-1"
     PACKAGES="linux-image-$KERNEL_VERSION-amd64 linux-headers-$KERNEL_VERSION-amd64"
 
     aptGetInstall $PACKAGES
