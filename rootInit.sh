@@ -3,6 +3,10 @@
 # escape on error
 set -e
 
+# set to "-y" to install/update packages without manually confirming
+# used mainly by test script
+AUTO_ACCEPT_FLAG=${AUTO_ACCEPT_FLAG:=""}
+
 ###############################################################################
 # Permission lock - only root user is allowed
 ###############################################################################
@@ -31,7 +35,7 @@ fi
 
 # acting as root run
 echo "SANAGER: Updating apt cache and installing sudo package";
-apt-get update -qq
-apt-get install sudo -qq
+apt-get update -qq $AUTO_ACCEPT_FLAG
+apt-get install sudo -qq $AUTO_ACCEPT_FLAG
 echo "SANAGER: Adding user $NON_ROOT_USERNAME privileges to sudo. (relogin on all terminals to make effect)";
 adduser $NON_ROOT_USERNAME sudo

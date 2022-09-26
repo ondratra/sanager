@@ -28,6 +28,16 @@ function aptDistUpgrade {
     DEBIAN_FRONTEND="noninteractive" apt-get dist-upgrade "$VERBOSE_APT_FLAG" -y
 }
 
+function aptFixDependencies {
+    printMsg "Auto-removing packages"
+    DEBIAN_FRONTEND="noninteractive" apt-get -f install "$VERBOSE_APT_FLAG" -y
+}
+
+function aptCleanup {
+    printMsg "Fixing packages dependencies"
+    DEBIAN_FRONTEND="noninteractive" apt-get autoremove "$VERBOSE_APT_FLAG" -y
+}
+
 function dpkgInstall {
     printMsg "Installing packages(dpkg/gdebi): $@"
 

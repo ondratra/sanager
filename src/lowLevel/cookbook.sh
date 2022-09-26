@@ -475,6 +475,11 @@ function distUpgrade {
     aptDistUpgrade
 }
 
+function distCleanup {
+    aptFixDependencies
+    aptCleanup
+}
+
 function redshift {
     PACKAGES="redshift-gtk"
     CONFIG_FILE_PATH="~/config/redshift.conf"

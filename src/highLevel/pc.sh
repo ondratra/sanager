@@ -1,6 +1,8 @@
 
 # (my) personal computer
 
+source $SCRIPT_DIR/src/highLevel/graphicalDesktop.sh
+
 function runHighLevel {
     pc_all
 }
@@ -17,7 +19,8 @@ function pc_all {
 }
 
 function pc_essentials {
-    essential
+    graphicalDesktop_all
+
     desktopDisplayEtc
     infinalityFonts
     networkManager

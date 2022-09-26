@@ -56,25 +56,31 @@ source $SCRIPT_DIR/src/lowLevel/cookbook.sh
 # Main procedure
 ###############################################################################
 
-if [[ $# -eq 0 ]]; then
-    echo "Invalid parameter count."
-    echo "Select installation blueprint in first parameter. (For example \"pc\")"
+function printExistingBlueprints {
     echo "Existing blueprints:"
-    ls $SCRIPT_DIR/src/highLevel | while read tmpFilename 
+    ls $SCRIPT_DIR/src/highLevel | while read tmpFilename
     do
         echo "    ${tmpFilename%%.*}"
     done
+}
+
+if [[ $# -eq 0 ]]; then
+    echo "Invalid parameter count."
+    echo "Select installation blueprint in first parameter. (For example \"pc\")"
+    printExistingBlueprints
     exit 1;
 fi
 
 BLUEPRINT_PATH="$SCRIPT_DIR/src/highLevel/$1.sh"
 if [[ ! -f $BLUEPRINT_PATH ]]; then
     echo "Installation blueprint \"$1\" not found."
+    printExistingBlueprints
     exit 1;
 fi
 
 source $BLUEPRINT_PATH
-virtualboxGuest # always try to install virtualbox guest features (will have no effect in non-virtualized environments)
+# TODO: uncomment this when guest additions are used again
+#virtualboxGuest # always try to install virtualbox guest features (will have no effect in non-virtualized environments)
 runHighLevel "${@:2}"
 
 
@@ -82,6 +88,6 @@ runHighLevel "${@:2}"
 # Post run cleansing
 ###############################################################################
 
+# make sure all dependencies are met and remove any unused packages
 printMsg "Cleaning up"
-apt-get $VERBOSE_APT_FLAG -f install # make sure all dependencies are met
-apt-get $VERBOSE_APT_FLAG autoremove # remove any unused packages
+distCleanup
