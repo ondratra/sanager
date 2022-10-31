@@ -11,6 +11,7 @@ function physicalPc_all {
     pc_all
     physicalPc_drivers
     physicalPc_virtualization
+    physicalPc_screen
 
     hardwareAnalysis
     restoreMateConfig # restore config (there might be icons for newly installed programs)
@@ -24,4 +25,8 @@ function physicalPc_drivers {
 
 function physicalPc_virtualization {
     virtualbox
+}
+
+function physicalPc_screen {
+    redshift
 }

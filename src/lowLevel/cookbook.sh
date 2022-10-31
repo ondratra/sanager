@@ -482,7 +482,7 @@ function distCleanup {
 
 function redshift {
     PACKAGES="redshift-gtk"
-    CONFIG_FILE_PATH="~/config/redshift.conf"
+    CONFIG_FILE_PATH=~/.config/redshift.conf
 
     if [ ! -f $CONFIG_FILE_PATH ]; then
         cp $SCRIPT_DIR/data/misc/redshift.conf $CONFIG_FILE_PATH
