@@ -158,6 +158,10 @@ function nodejs {
     aptGetInstall $PACKAGES
 }
 
+function rust {
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+}
+
 function yarn {
     PACKAGES="yarnpkg"
 
@@ -452,7 +456,7 @@ function lutris {
 }
 
 function multimedia {
-    PACKAGES="vlc transmission easytag"
+    PACKAGES="vlc transmission easytag ardour"
 
     aptGetInstall $PACKAGES
 }

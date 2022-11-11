@@ -44,16 +44,23 @@ function pc_userRobust {
 }
 
 function pc_work {
+    # essentials
     versioningAndTools
     officePack
     sublimeText
-    nodejs
-    yarn
-    #lamp # no need for lamp lately
+
+    # networking
     openvpn
-    obsStudio
+
+    # programming
+    yarn
+    rust
+    nodejs
+    #lamp # no need for lamp lately
     rabbitVCS
 
+    # video
+    obsStudio
 
     #unity3d
     #godotEngine
@@ -70,6 +77,6 @@ function pc_fun {
     # TODO: uncomment this when steam works - currently there is some incompatibility with `libedit2` in sid
     #steam
     rhythmbox
-    # TODO: uncomment this when steam works - currently there is some incompatibility with `libasound-plugins:386` in sid
+    # TODO: uncomment this when lutris works - currently there is some incompatibility with `libasound-plugins:386` in sid
     #lutris
 }
