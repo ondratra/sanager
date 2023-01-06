@@ -568,6 +568,22 @@ function zoom {
     dpkgInstall -n $DEB_FILE
 }
 
+function obsidian {
+    LATEST_VERSION="1.1.9"
+    DEB_FILE=obsidian_${LATEST_VERSION}_amd64.deb
+    OPT_DIR="$SANAGER_INSTALL_DIR/obsidian"
+
+    mkdir $OPT_DIR -p
+    cd $OPT_DIR
+
+    if [ ! -f $DEB_FILE ]; then
+        PACKAGE_URL="https://github.com/obsidianmd/obsidian-releases/releases/download/v${LATEST_VERSION}/$DEB_FILE"
+        wgetDownload $PACKAGE_URL -O $DEB_FILE
+    fi
+
+    dpkgInstall $DEB_FILE
+}
+
 
 # TODO: install
 # - create apt policy file in preferences.d/ for each added repository
