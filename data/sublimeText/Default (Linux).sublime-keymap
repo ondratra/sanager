@@ -1,5 +1,13 @@
 [
     { "keys": ["ctrl+space"], "command": "auto_complete" },
+    {
+        "keys": ["ctrl+shift+space"],
+        "command": "typescript_signature_popup",
+        "context": [
+            { "key": "selector", "operator": "equal", "operand": "source.ts, source.tsx, source.js, source.jsx" },
+            { "key": "tooltip_supported", "operator": "equal", "operand": true}
+        ]
+    },
     { "keys": ["ctrl+alt+p"], "command": "show_panel", "args": {"panel": "console", "toggle": true}},
     { "keys": ["f1"], "command": "goto_documentation" },
     { "keys": ["f2"], "command": "side_bar_move" },
