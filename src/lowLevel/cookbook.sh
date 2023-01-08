@@ -105,7 +105,7 @@ function userEssential {
 
 function sublimeText {
     OPT_DIR="$SANAGER_INSTALL_DIR/sublimeText"
-    DEB_FILE="sublime-text_build-4126_amd64.deb"
+    DEB_FILE="sublime-text_build-4143_amd64.deb"
     PACKAGE_CONTROL_DOWNLOAD_URL="https://packagecontrol.io/Package%20Control.sublime-package"
     CONFIG_DIR=~/.config/sublime-text-3
 
