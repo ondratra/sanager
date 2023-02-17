@@ -70,7 +70,7 @@ function virtualboxGuest {
 # enables bash histroy search by PageUp and PageDown keys
 function enableHistorySearch {
     # works system wide (changing /etc/inputrc)
-    sed -e '/.*\(history-search-backward\|history-search-forward\)/s/^# //g' /etc/inputrc > tmpSadReplacementFile && mv tmpSadReplacementFile /etc/inputrc
+    sed -e '/.*\(history-search-backward\|history-search-forward\)/s/^# //g' /etc/inputrc > tmpSedReplacementFile && mv tmpSedReplacementFile /etc/inputrc
 }
 
 function enableBashCompletion {
@@ -98,7 +98,7 @@ function restoreMateConfig {
 }
 
 function userEssential {
-    PACKAGES="curl vim htop firefox chromium gnome-disk-utility"
+    PACKAGES="curl vim htop iotop-c firefox chromium gnome-disk-utility"
 
     aptGetInstall $PACKAGES
 }
@@ -591,3 +591,7 @@ function obsidian {
 # - iridium - update to some 2022 version (?)
 # - Element instant messaging
 # - teamviewer (?)
+# - check `logseq` if it's valid replacement to obsidian
+# - NextCloud or OwnCloud or something similar
+# - consider using `wmctrl` to create script(s) for starting all usual programs on specific desktop workspace(s)
+# - opendoas + rework this script to use it - should be simple, but replacement for `sudo -E` usage must be found first
