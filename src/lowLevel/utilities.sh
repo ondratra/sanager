@@ -151,3 +151,20 @@ function addUserToGroup {
 
     usermod -a -G $2 $1
 }
+
+# use:
+# addAlias myNewAliasName existingCommand
+function addAlias {
+    NEW_ALIAS_NAME=$1
+    EXISTING_COMMAND=$2
+
+    ALIAS_LINE="alias $NEW_ALIAS_NAME=$EXISTING_COMMAND"
+
+    if ! grep -q "^$ALIAS_LINE" ~/.bash_aliases; then
+        sudo -u $SCRIPT_EXECUTING_USER sh -c "echo $ALIAS_LINE >> ~/.bash_aliases"
+    fi
+    source ~/.bash_aliases
+
+    # TODO: it would be nice this function could make systemInstall write message **at the end of running the script**,
+    #       informing user that they need to run `source ~/.bash_aliases` manually in their shell
+}

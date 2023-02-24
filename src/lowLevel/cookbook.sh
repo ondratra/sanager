@@ -167,9 +167,11 @@ function yarn {
 
     aptGetInstall $PACKAGES
 
-    alias yarn=yarnpkg
+    addAlias yarn yarnpkg
 
     function disableTelemetry {
+        # TODO: check the status and prevent this setup of unnecessary tmp repository if telemetry is already disabled
+
         # NOTE: setup of dummy yarn repository is needed to disable telemetry
         #       see https://github.com/yarnpkg/yarn/issues/8882#issuecomment-1443786491 for more info
         local YARN_TEMP_DIR="$SANAGER_INSTALL_TEMP_DIR/myTestRepo"
@@ -621,3 +623,4 @@ function obsidian {
 # - rename install functions in cookbook - there is a problem with a install function, for example, `yarn` and the utility of same name
 #   if you call `yarn` inside of cookbook, you will mistakenly call install function + you can cause infinite loop when calling
 #   `yarn` the utility inside of `yarn` the install function
+# - create utility function `runAsRegularUser userName commandToRun...` that will abstract `sudo -u ...` and `sudo -u sh -c ...`
