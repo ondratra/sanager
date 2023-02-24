@@ -243,7 +243,13 @@ function firebase {
 }
 
 function docker {
-    PACKAGES="docker.io"
+    PACKAGES="docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
+    REPO_ROW="deb https://download.docker.com/linux/debian $NOWADAYS_DEBIAN_VERSION stable"
+    REPO_KEY_URL="https://download.docker.com/linux/debian/gpg"
+
+    addAptRepository docker "$REPO_ROW" $REPO_KEY_URL
+
+    aptInstall $PACKAGES
 
     addUserToGroup "$SCRIPT_EXECUTING_USER" docker
 }
