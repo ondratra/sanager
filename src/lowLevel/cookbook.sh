@@ -67,7 +67,7 @@ function virtualboxGuest {
 
 
 
-# enables bash histroy search by PageUp and PageDown keys
+# enables bash history search by PageUp and PageDown keys
 function enableHistorySearch {
     # works system wide (changing /etc/inputrc)
     sed -e '/.*\(history-search-backward\|history-search-forward\)/s/^# //g' /etc/inputrc > tmpSedReplacementFile && mv tmpSedReplacementFile /etc/inputrc
@@ -168,6 +168,23 @@ function yarn {
     aptGetInstall $PACKAGES
 
     alias yarn=yarnpkg
+
+    function disableTelemetry {
+        # NOTE: setup of dummy yarn repository is needed to disable telemetry
+        #       see https://github.com/yarnpkg/yarn/issues/8882#issuecomment-1443786491 for more info
+        local YARN_TEMP_DIR="$SANAGER_INSTALL_TEMP_DIR/myTestRepo"
+        mkdir -p $YARN_TEMP_DIR
+        cd $YARN_TEMP_DIR
+        yarnpkg init -y
+        yarnpkg set version berry
+
+        # now telemetry can be finally disabled (other settings can be possibly set up here)
+        yarnpkg config set --home enableTelemetry false
+
+        rm -r $YARN_TEMP_DIR
+    }
+
+    disableTelemetry
 }
 
 # Linux Apache MySQL PHP
@@ -595,3 +612,6 @@ function obsidian {
 # - NextCloud or OwnCloud or something similar
 # - consider using `wmctrl` to create script(s) for starting all usual programs on specific desktop workspace(s)
 # - opendoas + rework this script to use it - should be simple, but replacement for `sudo -E` usage must be found first
+# - rename install functions in cookbook - there is a problem with a install function, for example, `yarn` and the utility of same name
+#   if you call `yarn` inside of cookbook, you will mistakenly call install function + you can cause infinite loop when calling
+#   `yarn` the utility inside of `yarn` the install function
