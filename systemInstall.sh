@@ -21,7 +21,7 @@ fi
 ###############################################################################
 
 # used when importing ubuntu packages
-NOWADAYS_UBUNTU_VERSION="xenial"
+NOWADAYS_UBUNTU_VERSION="lunar"
 NOWADAYS_DEBIAN_VERSION="bookworm"
 TARGET_DEBIAN_VERSION="sid"
 SANAGER_MAIN_DIR="/opt/__sanager"

@@ -14,6 +14,7 @@ function physicalPc_all {
     physicalPc_screen
 
     hardwareAnalysis
+    corectrl
     restoreMateConfig # restore config (there might be icons for newly installed programs)
     #changeMysqlPassword ""
 }

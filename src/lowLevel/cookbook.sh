@@ -609,6 +609,19 @@ function obsidian {
     dpkgInstall $DEB_FILE
 }
 
+function corectrl {
+    PACKAGES=""
+    REPO_ROW="deb https://ppa.launchpadcontent.net/ernstp/mesarc/ubuntu $NOWADAYS_UBUNTU_VERSION main"
+    REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com 9B2235DD` # key can be found at https://launchpad.net/~ernstp/+archive/ubuntu/mesarc
+
+    addAptRepository corectrl "$REPO_ROW" $REPO_KEY_URL
+
+    aptGetInstall $PACKAGES
+
+    # enable autostart
+    cp /usr/share/applications/org.corectrl.corectrl.desktop ~/.config/autostart/org.corectrl.corectrl.desktop
+}
+
 
 # TODO: install
 # - create apt policy file in preferences.d/ for each added repository
