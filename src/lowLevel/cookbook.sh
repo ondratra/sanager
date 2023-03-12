@@ -420,7 +420,7 @@ function datovka {
 }
 
 function versioningAndTools {
-    PACKAGES="git subversion meld gimp youtube-dl"
+    PACKAGES="git subversion meld gimp yt-dlp"
 
     aptGetInstall $PACKAGES
 }
