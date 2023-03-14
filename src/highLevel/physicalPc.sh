@@ -21,7 +21,10 @@ function physicalPc_all {
 
 function physicalPc_drivers {
     newestLinuxKernel
-    amdDrivers
+
+    # TODO: make cpu and gpu vendors configurable(?)
+    amdCpuDrivers
+    amdGpuDrivers
 }
 
 function physicalPc_virtualization {

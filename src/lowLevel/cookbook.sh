@@ -47,13 +47,18 @@ function desktopDisplayEtc {
 }
 
 
-function amdDrivers {
-    PACKAGES="firmware-linux-nonfree xserver-xorg-video-ati"
+function amdCpuDrivers {
+    PACKAGES="firmware-linux-nonfree"
     #firmware-linux-nonfree is proprietary microcode - needed in current version of debian for free driver to work
 
     aptGetInstall $PACKAGES
 }
 
+function amdGpuDrivers {
+    PACKAGES="xserver-xorg-video-ati mesa-va-drivers"
+
+    aptGetInstall $PACKAGES
+}
 
 function virtualboxGuest {
     #PACKAGES="virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms"
