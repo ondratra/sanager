@@ -32,3 +32,9 @@ See what packages depend on selected package
 ```
 apt-cache rdepends my-package-name
 ```
+
+List *non-free* packages and packages that rely on *non-free* packages (aka *contrib*)
+```
+aptitude search '~i ?section(non-free)
+aptitude search '~i ?section(contrib)
+```
