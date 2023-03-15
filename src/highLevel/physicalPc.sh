@@ -12,9 +12,9 @@ function physicalPc_all {
     physicalPc_drivers
     physicalPc_virtualization
     physicalPc_screen
+    physicalPc_cooling
 
     hardwareAnalysis
-    corectrl
     restoreMateConfig # restore config (there might be icons for newly installed programs)
     #changeMysqlPassword ""
 }
@@ -25,6 +25,11 @@ function physicalPc_drivers {
     # TODO: make cpu and gpu vendors configurable(?)
     amdCpuDrivers
     amdGpuDrivers
+}
+
+function physicalPc_cooling {
+    corectrl
+    coolercontrol
 }
 
 function physicalPc_virtualization {

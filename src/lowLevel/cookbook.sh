@@ -627,6 +627,19 @@ function corectrl {
     cp /usr/share/applications/org.corectrl.corectrl.desktop ~/.config/autostart/org.corectrl.corectrl.desktop
 }
 
+function coolercontrol {
+    PACKAGES="coolercontrol"
+    REPO_ROW="deb https://dl.cloudsmith.io/public/coolercontrol/coolercontrol/deb/debian $NOWADAYS_DEBIAN_VERSION main"
+    REPO_KEY_URL="https://dl.cloudsmith.io/public/coolercontrol/coolercontrol/gpg.668189E5007F5A8D.key"
+
+    addAptRepository coolercontrol "$REPO_ROW" $REPO_KEY_URL
+
+    aptGetInstall $PACKAGES
+
+    systemctl enable coolercontrold.service
+    systemctl start coolercontrold.service
+}
+
 
 # TODO: install
 # - create apt policy file in preferences.d/ for each added repository
