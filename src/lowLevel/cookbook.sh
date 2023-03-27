@@ -640,6 +640,20 @@ function coolercontrol {
     systemctl start coolercontrold.service
 }
 
+function discord {
+    DEB_FILE=discord.deb
+    OPT_DIR="$SANAGER_INSTALL_DIR/discord"
+
+    mkdir $OPT_DIR -p
+    cd $OPT_DIR
+
+    if [ ! -f $DEB_FILE ]; then
+        PACKAGE_URL="https://discord.com/api/download?platform=linux&format=deb"
+        wgetDownload $PACKAGE_URL -O $DEB_FILE
+    fi
+
+    dpkgInstall $DEB_FILE
+}
 
 # TODO: install
 # - create apt policy file in preferences.d/ for each added repository
@@ -655,3 +669,7 @@ function coolercontrol {
 #   if you call `yarn` inside of cookbook, you will mistakenly call install function + you can cause infinite loop when calling
 #   `yarn` the utility inside of `yarn` the install function
 # - create utility function `runAsRegularUser userName commandToRun...` that will abstract `sudo -u ...` and `sudo -u sh -c ...`
+# - unite wgetDownload calls - make it download files to sanager install dir, make calls use same number of parameters, etc.
+#   - add new feature that will check if file is already downloaded and skip the download if it's so - bacically move this
+#     this behaviour into the function instead of doing it on each/most call of this function
+# - NICE TO HAVE - autocomplete/suggestion in bash when calling `sudo -E ./systemInstall.sh XXX [YYY]`
