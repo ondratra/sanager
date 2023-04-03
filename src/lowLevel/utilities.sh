@@ -182,8 +182,25 @@ function addGlobalEnvVariable {
     fi
 
     # save variable definition
+    # NOTE: env variable must be set in all 3 following configuration places
+    # - /etc/environment.d/* is used by services started by systemd
+    # - /etc/profile.d/* is used by "login shell"
+    # - /etc/bash.bashrc is used by by both login and non-login shells
     echo "$VARIABLE_DEFINITION" > "/etc/environment.d/__sanager_$NAMESPACE.sh"
+    echo "$VARIABLE_DEFINITION" > "/etc/profile.d/__sanager_$NAMESPACE.sh"
+    SANAGER_GLOBAL_ENV_FILE="$SANAGER_INSTALL_DIR/bash.bashrc"
+    appendToFileIfNotPresent /etc/bash.bashrc ". $SANAGER_GLOBAL_ENV_FILE"
+    appendToFileIfNotPresent $SANAGER_GLOBAL_ENV_FILE "$VARIABLE_DEFINITION"
 
     # apply variable assignement in current shell
     eval "export $VARIABLE_DEFINITION"
+}
+
+# use
+# appendToFileIfNotPresent pathToFile textToBeAppended
+function appendToFileIfNotPresent {
+    FILE="$1"
+    TEXT="$2"
+
+    grep -q "$TEXT" "$FILE" || echo $TEXT >> $FILE
 }
