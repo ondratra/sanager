@@ -168,3 +168,22 @@ function addAlias {
     # TODO: it would be nice this function could make systemInstall write message **at the end of running the script**,
     #       informing user that they need to run `source ~/.bash_aliases` manually in their shell
 }
+
+# use
+# addGlobalEnvVariable "my_namespace" "MY_VARIABLE=my_value"
+function addGlobalEnvVariable {
+    NAMESPACE=$1
+    VARIABLE_DEFINITION=$2
+
+    # ensure VARIABLE_DEFINITION really contains variable definition - prevents misuse of eval
+    if ! [[ "$VARIABLE_DEFINITION" =~ ^[A-Za-z_][A-Za-z0-9_]*=[^=]+$ ]]; then
+        echo "Invalid variable definition passed to addGlobalEnvVariable!"
+        exit 1
+    fi
+
+    # save variable definition
+    echo "$VARIABLE_DEFINITION" > "/etc/environment.d/__sanager_$NAMESPACE.sh"
+
+    # apply variable assignement in current shell
+    eval "export $VARIABLE_DEFINITION"
+}

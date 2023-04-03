@@ -655,8 +655,23 @@ function discord {
     dpkgInstall $DEB_FILE
 }
 
-# TODO: install
-# - create apt policy file in preferences.d/ for each added repository
+function dotnet {
+    PACKAGES="dotnet-sdk-6.0"
+    #REPO_ROW="deb https://packages.microsoft.com/debian/11/prod bullseye main"
+    REPO_ROW="deb https://packages.microsoft.com/debian/11/prod $NOWADAYS_DEBIAN_VERSION main"
+    REPO_KEY_URL="https://packages.microsoft.com/keys/microsoft.asc"
+
+    # disable telemetry - needs to happen before package install
+    addGlobalEnvVariable dotnet "DOTNET_CLI_TELEMETRY_OPTOUT=true"
+
+    addAptRepository dotnet "$REPO_ROW" $REPO_KEY_URL
+    aptGetInstall $PACKAGES
+}
+
+# TODO:
+# - IMPORTANT!!!
+#   - create apt policy file in preferences.d/ for each added repository
+#   - save hash(es) (Merkle Tree?) of all used/downloaded gpg keys in this repository so any changes are spotted
 # - reenable lamp (maybe a fix for mysql password init problems will be needed)
 # - iridium - update to some 2022 version (?)
 # - Element instant messaging
