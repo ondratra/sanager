@@ -615,7 +615,7 @@ function obsidian {
 }
 
 function corectrl {
-    PACKAGES=""
+    PACKAGES="corectrl"
     REPO_ROW="deb https://ppa.launchpadcontent.net/ernstp/mesarc/ubuntu $NOWADAYS_UBUNTU_VERSION main"
     REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com 9B2235DD` # key can be found at https://launchpad.net/~ernstp/+archive/ubuntu/mesarc
 
