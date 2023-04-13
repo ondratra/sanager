@@ -666,6 +666,8 @@ function dotnet {
 
     addAptRepository dotnet "$REPO_ROW" $REPO_KEY_URL
     aptGetInstall $PACKAGES
+
+    dotnet tool install --global dotnet-ef
 }
 
 # TODO:
