@@ -657,7 +657,6 @@ function discord {
 
 function dotnet {
     PACKAGES="dotnet-sdk-6.0"
-    #REPO_ROW="deb https://packages.microsoft.com/debian/11/prod bullseye main"
     REPO_ROW="deb https://packages.microsoft.com/debian/11/prod $NOWADAYS_DEBIAN_VERSION main"
     REPO_KEY_URL="https://packages.microsoft.com/keys/microsoft.asc"
 
@@ -668,6 +667,15 @@ function dotnet {
     aptGetInstall $PACKAGES
 
     dotnet tool install --global dotnet-ef
+}
+
+function vscodium {
+    PACKAGES="codium codium-insiders"
+    REPO_ROW="deb https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs vscodium main"
+    REPO_KEY_URL="https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg"
+
+    addAptRepository vscodium "$REPO_ROW" $REPO_KEY_URL
+    aptGetInstall $PACKAGES
 }
 
 # TODO:
