@@ -7,6 +7,11 @@ See used ports
 netstat -tulpn
 ```
 
+Strip image metadata
+```
+mogrify -strip ./*.jpg
+```
+
 Generate SSH key
 ```
 ssh-keygen -t rsa -b 4096 -f myKey
