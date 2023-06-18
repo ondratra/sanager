@@ -678,6 +678,38 @@ function vscodium {
     aptGetInstall $PACKAGES
 }
 
+function nix {
+    INSTALL_FILE=install-nix.sh
+    OPT_DIR="$SANAGER_INSTALL_DIR/nix"
+    NIX_DIR="/nix"
+    NIX_ETC_DIR="/etc/nix/"
+    NIX_ETC_CONFIG="/etc/nix/nix.conf"
+
+    mkdir $OPT_DIR -p
+    cd $OPT_DIR
+
+    # ensure /nix folder exists
+    mkdir -m 0755 -p /nix
+    chown $SCRIPT_EXECUTING_USER /nix
+
+    if [ ! -f $INSTALL_FILE ]; then
+        PACKAGE_URL="https://nixos.org/nix/install"
+        wgetDownload $PACKAGE_URL -O $INSTALL_FILE
+
+        chmod +x $INSTALL_FILE
+        sudo -u $SCRIPT_EXECUTING_USER ./$INSTALL_FILE # run install file
+    fi
+
+    # setup flake feature
+    mkdir -p $NIX_ETC_DIR
+    > $NIX_ETC_CONFIG # create empty config file
+    echo "experimental-features = nix-command flakes" >> $NIX_ETC_CONFIG
+    echo "allow-import-from-derivation = true" >> $NIX_ETC_CONFIG
+
+    # manually add nix to current terminal
+    # . /home/ondratra/.nix-profile/etc/profile.d/nix.sh
+}
+
 # TODO:
 # - IMPORTANT!!!
 #   - create apt policy file in preferences.d/ for each added repository
