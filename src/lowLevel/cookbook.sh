@@ -656,6 +656,7 @@ function discord {
 }
 
 function dotnet {
+    #PACKAGES="dotnet-sdk-6.0 dotnet-sdk-7.0" # installing dotnet-sdk-7.0 is problematic when developing dotnet 6.0 app
     PACKAGES="dotnet-sdk-6.0"
     REPO_ROW="deb https://packages.microsoft.com/debian/11/prod $NOWADAYS_DEBIAN_VERSION main"
     REPO_KEY_URL="https://packages.microsoft.com/keys/microsoft.asc"
@@ -730,3 +731,4 @@ function nix {
 #   - add new feature that will check if file is already downloaded and skip the download if it's so - bacically move this
 #     this behaviour into the function instead of doing it on each/most call of this function
 # - NICE TO HAVE - autocomplete/suggestion in bash when calling `sudo -E ./systemInstall.sh XXX [YYY]`
+# - create helper function to handle `mkdir $OPT_DIR -p; cd $OPT_DIR` etc. calls for creating package's install dir (and downloading install file if needed)
