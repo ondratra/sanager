@@ -6,3 +6,5 @@ screen=0
 size=24
 x=0
 x-right=-1
+y=0
+y-centered=true

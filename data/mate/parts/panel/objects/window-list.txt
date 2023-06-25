@@ -2,5 +2,6 @@
 applet-iid='WnckletFactory::WindowListApplet'
 locked=true
 object-type='applet'
-position=20
+position=24
+relative-to-edge='start'
 toplevel-id='bottom'

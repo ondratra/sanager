@@ -1,0 +1,5 @@
+[calc]
+button-mode='basic'
+show-history=false
+source-units='degree'
+target-units='radian'

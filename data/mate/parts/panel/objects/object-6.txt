@@ -1,6 +1,5 @@
 [panel/objects/object-6]
-launcher-location='/usr/share/applications/caja-browser.desktop'
+launcher-location='htop-1.desktop'
 object-type='launcher'
-panel-right-stick=false
-position=506
+position=672
 toplevel-id='top'

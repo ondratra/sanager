@@ -1,6 +1,10 @@
 [system-monitor]
-current-tab=2
+current-tab=1
+disks-interval=5000
+graph-update-interval=1000
 maximized=false
 show-tree=true
+solaris-mode=false
+update-interval=3000
 view-as=0
-window-state=(843, 857, 114, 118)
+window-state=(1083, 857, 289, 123)

@@ -1,4 +1,4 @@
 [engrampa/ui]
 sidebar-width=200
-window-height=480
-window-width=600
+window-height=1027
+window-width=1892

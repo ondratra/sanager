@@ -1,6 +1,5 @@
 [panel/objects/object-2]
-launcher-location='/usr/share/applications/chromium.desktop'
+launcher-location='thunderbird.desktop'
 object-type='launcher'
-panel-right-stick=false
-position=234
+position=343
 toplevel-id='top'

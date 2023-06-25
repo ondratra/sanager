@@ -1,3 +1,3 @@
 [system-monitor/openfilestree]
-sort-col=0
-sort-order=0
+sort-col=2
+sort-order=1

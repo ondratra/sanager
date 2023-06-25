@@ -1,5 +1,5 @@
 [desktop/peripherals/mouse]
 accel-profile='default'
-cursor-theme='mate-black'
+cursor-theme='mate'
 locate-pointer=false
-motion-acceleration=6.0662251655629138
+motion-acceleration=5.8576158940397347

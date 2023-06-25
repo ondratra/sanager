@@ -3,5 +3,6 @@ applet-iid='NotificationAreaAppletFactory::NotificationArea'
 locked=true
 object-type='applet'
 panel-right-stick=false
-position=1470
+position=207
+relative-to-edge='end'
 toplevel-id='bottom'

@@ -1,3 +1,3 @@
 [caja/list-view]
-default-column-order=['name', 'size', 'type', 'date_modified', 'date_accessed', 'selinux_context', 'permissions', 'octal_permissions', 'group', 'mime_type', 'where', 'owner']
+default-column-order=['name', 'size', 'type', 'date_modified', 'date_accessed', 'selinux_context', 'permissions', 'octal_permissions', 'group', 'mime_type', 'where', 'owner', 'date_created', 'extension', 'size_on_disk']
 default-visible-columns=['name', 'size', 'type', 'date_modified']

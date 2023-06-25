@@ -1,4 +1,7 @@
 [power-manager]
+button-lid-ac='suspend'
+button-power='nothing'
+button-suspend='suspend'
 info-history-type='charge'
 info-last-device='wakeups'
 info-page-number=3

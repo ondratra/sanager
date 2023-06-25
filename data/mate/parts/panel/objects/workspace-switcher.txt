@@ -3,5 +3,6 @@ applet-iid='WnckletFactory::WorkspaceSwitcherApplet'
 locked=true
 object-type='applet'
 panel-right-stick=false
-position=1170
+position=415
+relative-to-edge='end'
 toplevel-id='bottom'

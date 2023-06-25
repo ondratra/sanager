@@ -1,0 +1,5 @@
+[panel/objects/object-18]
+launcher-location='obsidian.desktop'
+object-type='launcher'
+position=424
+toplevel-id='top'

@@ -1,6 +1,7 @@
 [panel/objects/show-desktop]
 applet-iid='WnckletFactory::ShowDesktopApplet'
-locked=true
+locked=false
 object-type='applet'
 position=0
+relative-to-edge='start'
 toplevel-id='bottom'
