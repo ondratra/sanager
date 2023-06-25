@@ -1,0 +1,2 @@
+[desktop/session/required-components]
+windowmanager='marco-glx'

@@ -1,0 +1,3 @@
+[system-monitor/memmapstree]
+sort-col=0
+sort-order=0

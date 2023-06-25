@@ -1,0 +1,2 @@
+[desktop/peripherals/keyboard]
+numlock-state='on'

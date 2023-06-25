@@ -1,0 +1,4 @@
+[caja/preferences]
+always-use-location-entry=true
+default-folder-viewer='list-view'
+show-hidden-files=true

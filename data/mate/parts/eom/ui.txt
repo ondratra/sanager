@@ -1,0 +1,5 @@
+[eom/ui]
+image-collection=false
+sidebar=false
+statusbar=true
+toolbar=true

@@ -1,0 +1,3 @@
+[system-monitor/disktreenew]
+col-6-width=301
+col-7-width=300

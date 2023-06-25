@@ -1,0 +1,7 @@
+[panel/objects/object-1]
+applet-iid='ClockAppletFactory::ClockApplet'
+locked=true
+object-type='applet'
+panel-right-stick=true
+position=128
+toplevel-id='bottom'

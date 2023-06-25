@@ -1,0 +1,6 @@
+[panel/objects/window-list]
+applet-iid='WnckletFactory::WindowListApplet'
+locked=true
+object-type='applet'
+position=20
+toplevel-id='bottom'

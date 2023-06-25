@@ -1,0 +1,6 @@
+[system-monitor]
+current-tab=2
+maximized=false
+show-tree=true
+view-as=0
+window-state=(843, 857, 114, 118)

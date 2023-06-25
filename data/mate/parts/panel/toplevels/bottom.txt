@@ -1,0 +1,10 @@
+[panel/toplevels/bottom]
+auto-hide=false
+expand=true
+orientation='bottom'
+screen=0
+size=24
+x-centered=true
+x-right=-1
+y=1055
+y-bottom=0

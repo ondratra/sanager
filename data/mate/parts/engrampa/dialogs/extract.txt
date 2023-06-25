@@ -1,0 +1,4 @@
+[engrampa/dialogs/extract]
+overwrite=true
+recreate-folders=true
+skip-newer=false

@@ -1,0 +1,2 @@
+[search-tool/select]
+contains-the-text=true

@@ -1,0 +1,8 @@
+[marco/general]
+action-double-click-titlebar='toggle_maximize'
+auto-raise-delay=500
+button-layout='menu:minimize,maximize,close'
+compositing-manager=false
+num-workspaces=9
+theme='Menta'
+titlebar-font='Cantarell Bold 11'

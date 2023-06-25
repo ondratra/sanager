@@ -1,0 +1,4 @@
+[notification-daemon]
+popup-location='top_right'
+theme='nodoka'
+use-active-monitor=false

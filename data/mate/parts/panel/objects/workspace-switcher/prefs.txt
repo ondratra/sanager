@@ -1,0 +1,3 @@
+[panel/objects/workspace-switcher/prefs]
+display-all-workspaces=true
+num-rows=1

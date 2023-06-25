@@ -1,0 +1,5 @@
+[power-manager]
+info-history-type='charge'
+info-last-device='wakeups'
+info-page-number=3
+info-stats-type='discharge-accuracy'

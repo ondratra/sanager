@@ -1,0 +1,7 @@
+[desktop/background]
+color-shading-type='vertical-gradient'
+picture-filename='/usr/share/backgrounds/mate/nature/Dune.jpg'
+picture-options='zoom'
+primary-color='rgb(88,145,188)'
+secondary-color='rgb(60,143,37)'
+show-desktop-icons=true

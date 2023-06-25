@@ -1,0 +1,6 @@
+[panel/objects/object-10]
+launcher-location='/usr/share/applications/thunderbird.desktop'
+object-type='launcher'
+panel-right-stick=false
+position=311
+toplevel-id='top'

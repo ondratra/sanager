@@ -1,0 +1,4 @@
+[panel/objects/window-list/prefs]
+display-all-workspaces=false
+group-windows='never'
+show-window-thumbnails=false

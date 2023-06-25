@@ -1,0 +1,6 @@
+[panel/objects/object-4]
+launcher-location='firefox.desktop'
+object-type='launcher'
+panel-right-stick=false
+position=207
+toplevel-id='top'

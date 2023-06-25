@@ -1,0 +1,6 @@
+[panel/objects/object-5]
+launcher-location='/usr/share/applications/mate-terminal.desktop'
+object-type='launcher'
+panel-right-stick=false
+position=634
+toplevel-id='top'

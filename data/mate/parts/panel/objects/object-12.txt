@@ -1,0 +1,6 @@
+[panel/objects/object-12]
+launcher-location='virtualbox.desktop'
+object-type='launcher'
+panel-right-stick=false
+position=820
+toplevel-id='top'

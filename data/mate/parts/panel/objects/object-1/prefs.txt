@@ -1,0 +1,5 @@
+[panel/objects/object-1/prefs]
+cities=['<location name="" city="Brno" timezone="Europe/Prague" latitude="49.150002" longitude="16.700001" code="LKTB" current="true"/>']
+custom-format=''
+expand-locations=true
+format='24-hour'

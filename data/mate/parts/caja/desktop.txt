@@ -1,0 +1,2 @@
+[caja/desktop]
+font='Cantarell 11'

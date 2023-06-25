@@ -1,0 +1,7 @@
+[panel/objects/workspace-switcher]
+applet-iid='WnckletFactory::WorkspaceSwitcherApplet'
+locked=true
+object-type='applet'
+panel-right-stick=false
+position=1170
+toplevel-id='bottom'

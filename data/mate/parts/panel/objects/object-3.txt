@@ -1,0 +1,6 @@
+[panel/objects/object-3]
+launcher-location='/usr/share/applications/sublime_text.desktop'
+object-type='launcher'
+panel-right-stick=false
+position=392
+toplevel-id='top'

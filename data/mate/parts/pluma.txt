@@ -1,0 +1,10 @@
+[pluma]
+active-plugins=['time', 'docinfo', 'spell', 'modelines', 'filebrowser']
+background-pattern='none'
+bottom-panel-size=140
+history-search-for=['created']
+side-panel-active-page=-1725528251
+side-panel-size=200
+size=(650, 500)
+state=128
+statusbar-visible=true

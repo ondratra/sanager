@@ -1,0 +1,5 @@
+[panel/objects/menu-bar]
+locked=true
+object-type='menu-bar'
+position=0
+toplevel-id='top'

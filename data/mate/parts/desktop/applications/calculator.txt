@@ -1,0 +1,2 @@
+[desktop/applications/calculator]
+exec='mate-calc'

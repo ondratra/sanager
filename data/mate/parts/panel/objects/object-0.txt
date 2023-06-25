@@ -1,0 +1,8 @@
+[panel/objects/object-0]
+action-type='lock'
+launcher-location='mate-system-monitor.desktop'
+locked=true
+object-type='action'
+panel-right-stick=false
+position=958
+toplevel-id='top'

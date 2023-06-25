@@ -98,6 +98,30 @@ function dropboxPackage {
 }
 
 function restoreMateConfig {
+    function recomposeConfig {
+        local PARTS_DIR="$1"
+        local OUTPUT_FILE="$2"
+
+        local FILE_PATHS=`find "$PARTS_DIR" -type f -name "*.txt" | sed -e "s/\.txt$//" | sort | sed -e "s/$/.txt/"`
+
+        echo -n "" > $OUTPUT_FILE
+        local FIRST_LINE="1"
+        for FILE in $FILE_PATHS; do
+            if [[ $FIRST_LINE == "1" ]]; then
+                FIRST_LINE="0"
+            else
+                echo >> $OUTPUT_FILE
+            fi
+
+            cat "${FILE}" >> $OUTPUT_FILE
+        done
+    }
+
+    local OUTPUT_FILE="$SCRIPT_DIR/data/mate/config.txt"
+    local PARTS_DIR="$SCRIPT_DIR/data/mate/parts"
+
+    recomposeConfig $PARTS_DIR $OUTPUT_FILE
+
     # passing DBUS_SESSION_BUS_ADDRESS might seem meaningless but it is needed to make dconf work with sudo
     sudo -u $SCRIPT_EXECUTING_USER DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS dconf load /org/mate/ < "$SCRIPT_DIR/data/mate/config.txt"
 }

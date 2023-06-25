@@ -1,0 +1,7 @@
+[panel/objects/object-11]
+applet-iid='NotificationAreaAppletFactory::NotificationArea'
+locked=true
+object-type='applet'
+panel-right-stick=false
+position=1559
+toplevel-id='bottom'

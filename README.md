@@ -73,12 +73,17 @@ rm -rf /opt/sanager/tmp
 
 ## Mate
 ```
-dconf dump /org/mate/ > ...sanagerPath/data/mate/config.txt
-# this dumps current profile; if you need to dump old backup you can set db path by prepending `DCONF_PROFILE=~/oldMateBackupPath`
-```
-Then commit changes to git -> running `systemInstall.sh` sets mate configuration to state saved in Sanager.
-This process might be destructing if you made changes to your mate and didn't update them in Sanager files.
+# export Mate configuration
+./utilities/exportMateConfig.sh
+# this dumps the current profile; if you need to dump the old backup, you can set the db path by prepending `DCONF_PROFILE=~/oldMateBackupPath`
 
+# import Mate configuration
+sudo -E ./systemInstall.sh lowLevel restoreMateConfig
+```
+After export, commit changes to git.
+
+Running one of the high-level installs via `systemInstall.sh` also sets Mate configuration to state saved in Sanager.
+This process might be destructive if you made changes to your Mate and didn't update them in Sanager files.
 
 
 

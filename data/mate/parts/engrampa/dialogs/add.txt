@@ -1,0 +1,9 @@
+[engrampa/dialogs/add]
+current-folder='file:///home/ondratra'
+exclude-files=''
+exclude-folders=''
+filename='file:///home/ondratra'
+include-files=''
+no-symlinks=false
+recursive=true
+update=false

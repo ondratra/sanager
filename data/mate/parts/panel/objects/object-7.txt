@@ -1,0 +1,6 @@
+[panel/objects/object-7]
+launcher-location='/usr/share/applications/htop.desktop'
+object-type='launcher'
+panel-right-stick=false
+position=696
+toplevel-id='top'

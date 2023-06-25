@@ -1,0 +1,3 @@
+[engrampa/dialogs/batch-add]
+default-extension='.zip'
+volume-size=0

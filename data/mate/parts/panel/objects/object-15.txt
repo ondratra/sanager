@@ -1,0 +1,6 @@
+[panel/objects/object-15]
+launcher-location='/usr/share/applications/mate-system-monitor.desktop'
+object-type='launcher'
+panel-right-stick=false
+position=735
+toplevel-id='top'
