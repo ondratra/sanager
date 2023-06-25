@@ -1,5 +1,5 @@
 [atril]
-document-directory=@ms 'file:///home/ondratra/Dropbox/ucetnictvi/danovePriznani/2018'
+document-directory=@ms 'file:///home/ondratra'
 
 [atril/default]
 window-ratio=(3.2847222222222223, 1.2248803827751196)
@@ -103,10 +103,10 @@ event-sounds=false
 theme-name='__no_sounds'
 
 [engrampa/dialogs/add]
-current-folder='file:///home/ondratra/Sta%C5%BEen%C3%A9/tmp/bunn/package'
+current-folder='file:///home/ondratra'
 exclude-files=''
 exclude-folders=''
-filename='file:///home/ondratra/Sta%C5%BEen%C3%A9/tmp/bunn/package'
+filename='file:///home/ondratra'
 include-files=''
 no-symlinks=false
 recursive=true
