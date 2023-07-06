@@ -1,5 +1,6 @@
 [panel/objects/object-12]
 launcher-location='virtualbox.desktop'
+locked=true
 object-type='launcher'
 panel-right-stick=false
 position=820

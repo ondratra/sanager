@@ -1,5 +1,7 @@
 [panel/objects/object-2]
 launcher-location='thunderbird.desktop'
+locked=true
 object-type='launcher'
-position=343
+panel-right-stick=false
+position=332
 toplevel-id='top'

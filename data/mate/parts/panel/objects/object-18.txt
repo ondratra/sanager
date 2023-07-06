@@ -1,5 +1,6 @@
 [panel/objects/object-18]
 launcher-location='obsidian.desktop'
+locked=true
 object-type='launcher'
 position=424
 toplevel-id='top'

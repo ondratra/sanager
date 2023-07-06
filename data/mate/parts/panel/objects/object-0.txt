@@ -4,5 +4,6 @@ launcher-location='mate-system-monitor.desktop'
 locked=true
 object-type='action'
 panel-right-stick=false
-position=958
+position=915
+relative-to-edge='start'
 toplevel-id='top'

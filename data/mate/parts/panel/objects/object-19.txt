@@ -1,0 +1,6 @@
+[panel/objects/object-19]
+launcher-location='firefox-1.desktop'
+locked=true
+object-type='launcher'
+position=246
+toplevel-id='top'

@@ -1,6 +1,6 @@
 [panel/objects/object-4]
-launcher-location='firefox.desktop'
+launcher-location='chromium.desktop'
+locked=true
 object-type='launcher'
-panel-right-stick=false
-position=207
+position=219
 toplevel-id='top'

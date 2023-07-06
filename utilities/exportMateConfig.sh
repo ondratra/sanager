@@ -47,6 +47,9 @@ function main {
 
     exportMateConfiguration $CONFIG_FILE_PATH
     splitIniFile $CONFIG_FILE_PATH
+
+    # comment this out in case you need to see/debug mate config as whole
+    rm $CONFIG_FILE_PATH
 }
 
 main

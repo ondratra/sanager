@@ -1,6 +1,7 @@
 [panel/objects/object-7]
 launcher-location='caja-browser-2.desktop'
 object-type='launcher'
+panel-right-stick=false
 position=505
 relative-to-edge='start'
 toplevel-id='top'

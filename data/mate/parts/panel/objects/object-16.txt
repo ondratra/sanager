@@ -1,0 +1,7 @@
+[panel/objects/object-16]
+launcher-location='/usr/share/applications/caja-browser.desktop'
+locked=true
+object-type='launcher'
+position=485
+relative-to-edge='start'
+toplevel-id='top'

@@ -1,5 +1,5 @@
 [caja/window-state]
-geometry='1150x682+453+45'
+geometry='1147x673+28+0'
 maximized=false
 sidebar-width=110
 start-with-location-bar=true

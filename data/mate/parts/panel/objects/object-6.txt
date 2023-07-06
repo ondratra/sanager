@@ -1,5 +1,6 @@
 [panel/objects/object-6]
 launcher-location='htop-1.desktop'
 object-type='launcher'
+panel-right-stick=false
 position=672
 toplevel-id='top'

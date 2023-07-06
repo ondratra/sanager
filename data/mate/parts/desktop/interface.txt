@@ -1,6 +1,7 @@
 [desktop/interface]
 document-font-name='Cantarell 11'
 font-name='Cantarell 11'
+gtk-color-scheme='bg_color_dark:#3f3f3f\ntext_color_dark:#FFF'
 gtk-decoration-layout='menu:minimize,maximize,close'
 gtk-theme='BlueMenta'
 icon-theme='menta'
