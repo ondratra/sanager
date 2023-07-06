@@ -1,5 +1,6 @@
 // Settings in here override those in "TrailingSpaces/trailing_spaces.sublime-settings"
 
 {
-    "trailing_spaces_highlight_color": "invalid"    
+    "scope_ignore": ["text.find-in-files", "source.build_output", "source.diff"],
+    "trailing_spaces_highlight_color": "invalid"
 }

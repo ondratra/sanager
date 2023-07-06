@@ -1,0 +1,6 @@
+{
+    "rust_syntax_checking": true,
+    "rust_phantom_style": "normal",
+    "rust_region_style": "outline",
+    "rust_message_theme": "solid"
+}

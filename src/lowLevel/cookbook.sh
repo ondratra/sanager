@@ -149,7 +149,7 @@ function sublimeText {
     function refreshSublimeConfiguration {
         INSTALLED_PACKAGES_DIR="$CONFIG_DIR/Installed Packages"
         PACKAGE_LOCAL_NAME="Ondratra"
-        FILES_TO_SYMLINK=("Preferences.sublime-settings" "Default (Linux).sublime-keymap" "SideBarEnhancements")
+        FILES_TO_SYMLINK=("Preferences.sublime-settings" "Default (Linux).sublime-keymap" "SideBarEnhancements" "Package Control.sublime-settings" "Package Control.user-ca-bundle")
 
         # download editor's configuration and setup everything
         sudo -u $SCRIPT_EXECUTING_USER mkdir $CONFIG_DIR -p
