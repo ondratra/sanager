@@ -2,7 +2,7 @@
 # see README.md for script description
 
 function essential {
-    PACKAGES="apt-transport-https aptitude wget net-tools bash-completion p7zip-full build-essential gdebi"
+    PACKAGES="apt-transport-https apt-listbugs aptitude wget net-tools bash-completion p7zip-full build-essential gdebi"
     DIRMNGR="dirmngr" # there might be glitches with gpg without dirmngr -> ensure it's presence
 
     aptGetInstall $PACKAGES $DIRMNGR
@@ -38,7 +38,7 @@ function networkManager {
 function desktopDisplayEtc {
     PACKAGES="pulseaudio dconf-cli"
     XORG="xorg"
-    DESKTOP="mate mate-desktop-environment mate-desktop-environment-extras"
+    DESKTOP="mate mate-desktop-environment mate-desktop-environment-extras mate-tweak"
     DISPLAY="lightdm"
 
 
