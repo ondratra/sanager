@@ -1,0 +1,16 @@
+{
+    "extends": "Soda Dark 3.sublime-theme",
+    "variables": {
+        "defaultFontSize": 16,
+    },
+    "rules": [
+        {
+            "class": "sidebar_label",
+            "font.size":  "var(defaultFontSize)",
+        },
+        {
+            "class": "sidebar_tree",
+            "row_padding": [8, 6],
+        },
+    ]
+}

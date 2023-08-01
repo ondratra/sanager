@@ -1,6 +1,5 @@
 {
     "always_show_minimap_viewport": true,
-    "color_scheme": "Packages/Ondratra/Ondratra.sublime-color-scheme",
     "dpi_scale": 2.0,
     "font_options":
     [
@@ -18,7 +17,8 @@
     "show_encoding": true,
     "tab_completion": true,
     "tab_size": 4,
-    "theme": "Soda Dark 3.sublime-theme",
+    "color_scheme": "Packages/Ondratra/Ondratra.sublime-color-scheme",
+    "theme": "Ondratra.sublime-theme",
     "translate_tabs_to_spaces": true,
     "use_tab_stops": false,
     "word_wrap": false
