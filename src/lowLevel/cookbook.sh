@@ -754,3 +754,5 @@ function nix {
 #     this behaviour into the function instead of doing it on each/most call of this function
 # - NICE TO HAVE - autocomplete/suggestion in bash when calling `sudo -E ./systemInstall.sh XXX [YYY]`
 # - create helper function to handle `mkdir $OPT_DIR -p; cd $OPT_DIR` etc. calls for creating package's install dir (and downloading install file if needed)
+# - ensure that `apt-get dist-upgrade -y` doesn't install broken packages as reported by `apt-listbugs` during `apt-get dist-upgrade`
+#   - create a new function that somehow upgrades everything except broken packages reported by `apt-listbugs`
