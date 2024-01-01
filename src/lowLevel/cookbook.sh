@@ -134,7 +134,7 @@ function userEssential {
 
 function sublimeText {
     OPT_DIR="$SANAGER_INSTALL_DIR/sublimeText"
-    DEB_FILE="sublime-text_build-4152_amd64.deb"
+    DEB_FILE="sublime-text_build-4169_amd64.deb"
     PACKAGE_CONTROL_DOWNLOAD_URL="https://packagecontrol.io/Package%20Control.sublime-package"
     CONFIG_DIR=~/.config/sublime-text-3
 
@@ -756,3 +756,4 @@ function nix {
 # - create helper function to handle `mkdir $OPT_DIR -p; cd $OPT_DIR` etc. calls for creating package's install dir (and downloading install file if needed)
 # - ensure that `apt-get dist-upgrade -y` doesn't install broken packages as reported by `apt-listbugs` during `apt-get dist-upgrade`
 #   - create a new function that somehow upgrades everything except broken packages reported by `apt-listbugs`
+# - save/load prefered applications / file associations and make it easily editable
