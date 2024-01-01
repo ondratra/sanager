@@ -733,6 +733,28 @@ function nix {
     # . /home/ondratra/.nix-profile/etc/profile.d/nix.sh
 }
 
+function zellij {
+    OPT_DIR="$SANAGER_INSTALL_DIR/zellij"
+    CONFIG_DIR=~/.config/zellij
+
+    INSTALL_FILE="zellij-x86_64-unknown-linux-musl.tar.gz"
+    BINARY_URL="https://github.com/zellij-org/zellij/releases/download/v0.39.2/$INSTALL_FILE"
+
+    mkdir $OPT_DIR -p
+    cd $OPT_DIR
+
+    if [ ! -f $INSTALL_FILE ]; then
+        wgetDownload $BINARY_URL -O $INSTALL_FILE
+
+        tar -xvf $INSTALL_FILE
+        chmod +x zellij
+        echo "export PATH=\$PATH:$OPT_DIR" >> ~/.profile
+
+        # setup configuration
+        cp "$SCRIPT_DIR/data/zellij" "$CONFIG_DIR" -rT
+    fi
+}
+
 # TODO:
 # - IMPORTANT!!!
 #   - create apt policy file in preferences.d/ for each added repository
