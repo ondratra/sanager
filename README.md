@@ -61,11 +61,11 @@ When somethings goes wrong try to rerun `systemInstall.sh`.
 Additionally you can delete content of some config folders before rerun.
 ```
 rm -rf /etc/apt/sources.list.d/__sanager*
-rm -rf /opt/sanager/*
+rm -rf /opt/__sanager/*
 # or selectively
-rm -rf /opt/sanager/install
-rm -rf /opt/sanager/gpgKeys
-rm -rf /opt/sanager/tmp
+rm -rf /opt/__sanager/install
+rm -rf /opt/__sanager/gpgKeys
+rm -rf /opt/__sanager/tmp
 
 ```
 
