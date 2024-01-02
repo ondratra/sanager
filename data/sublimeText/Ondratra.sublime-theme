@@ -1,16 +1,35 @@
 {
     "extends": "Soda Dark 3.sublime-theme",
     "variables": {
-        "defaultFontSize": 16,
+        "defaultFontSize": 13,
     },
     "rules": [
+        // sidebar
         {
             "class": "sidebar_label",
             "font.size":  "var(defaultFontSize)",
         },
         {
             "class": "sidebar_tree",
-            "row_padding": [8, 6],
+            "row_padding": [8, 4],
         },
+
+        // sidebar icons
+        {
+            "class": "icon_file_type",
+            "layer0.tint": [150, 150, 250],
+            "layer0.opacity": 0.6,
+            "content_margin": [8, 8]
+        },
+        {
+            "class": "icon_file_type",
+            "parents": [{"class": "tree_row", "attributes": ["hover"]}],
+            "layer0.opacity": 0.75
+        },
+        {
+            "class": "icon_file_type",
+            "parents": [{"class": "tree_row", "attributes": ["selected"]}],
+            "layer0.opacity": 0.9
+        }
     ]
 }
