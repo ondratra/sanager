@@ -24,7 +24,6 @@
 		"nginx",
 		"Nodejs",
 		"Package Control",
-		"PHP-Twig",
 		"Protobuf Syntax Hightlighting",
 		"Razor",
 		"React IDE",
@@ -37,5 +36,10 @@
 		"SyncedSideBar",
 		"Theme - Soda",
 		"TrailingSpaces",
+	],
+	"bootstrapped": true,
+	// Packages to not auto upgrade
+	"auto_upgrade_ignore": [
+		"Package Control"
 	],
 }
