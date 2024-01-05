@@ -14,6 +14,7 @@ slowkeys-beep-reject=false
 slowkeys-delay=300
 slowkeys-enable=false
 stickykeys-enable=false
+stickykeys-latch-to-lock=true
 stickykeys-modifier-beep=true
 stickykeys-two-key-off=true
 timeout=120

@@ -1,8 +1,14 @@
 [power-manager]
+backlight-battery-reduce=false
+brightness-ac=100.0
 button-lid-ac='suspend'
+button-lid-battery='blank'
 button-power='nothing'
 button-suspend='suspend'
+icon-policy='always'
+idle-dim-battery=false
 info-history-type='charge'
 info-last-device='wakeups'
 info-page-number=3
 info-stats-type='discharge-accuracy'
+kbd-backlight-battery-reduce=false

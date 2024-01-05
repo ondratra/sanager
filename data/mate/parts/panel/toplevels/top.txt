@@ -1,5 +1,6 @@
 [panel/toplevels/top]
 auto-hide=false
+enable-buttons=false
 expand=true
 orientation='left'
 screen=0

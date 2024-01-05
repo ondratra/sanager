@@ -2,5 +2,6 @@
 launcher-location='brave-browser-1.desktop'
 locked=true
 object-type='launcher'
+panel-right-stick=false
 position=273
 toplevel-id='top'

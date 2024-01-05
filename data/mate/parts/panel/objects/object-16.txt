@@ -2,6 +2,7 @@
 launcher-location='/usr/share/applications/caja-browser.desktop'
 locked=true
 object-type='launcher'
+panel-right-stick=false
 position=485
 relative-to-edge='start'
 toplevel-id='top'

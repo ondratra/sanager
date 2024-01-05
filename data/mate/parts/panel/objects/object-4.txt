@@ -2,5 +2,6 @@
 launcher-location='chromium.desktop'
 locked=true
 object-type='launcher'
+panel-right-stick=false
 position=219
 toplevel-id='top'

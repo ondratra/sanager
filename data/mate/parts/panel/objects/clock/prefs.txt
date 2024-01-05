@@ -1,0 +1,3 @@
+[panel/objects/clock/prefs]
+custom-format=''
+format='24-hour'
