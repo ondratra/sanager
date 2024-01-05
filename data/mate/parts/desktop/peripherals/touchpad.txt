@@ -1,0 +1,3 @@
+[desktop/peripherals/touchpad]
+three-finger-click=0
+two-finger-click=0
