@@ -1,2 +1,2 @@
 [caja/desktop]
-font='Cantarell 11'
+font='Cantarell 13'

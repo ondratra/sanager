@@ -1,9 +1,9 @@
 [desktop/interface]
-document-font-name='Cantarell 11'
-font-name='Cantarell 11'
+document-font-name='Cantarell 13'
+font-name='Cantarell 13'
 gtk-color-scheme='menu_bg: #21242b'
 gtk-decoration-layout='menu:minimize,maximize,close'
 gtk-theme='Arc-Darkest-Nord-Frost'
 icon-theme='menta'
-monospace-font-name='Monospace 13'
+monospace-font-name='Monospace 16'
 window-scaling-factor=2

@@ -5,4 +5,4 @@ button-layout='menu:minimize,maximize,close'
 compositing-manager=false
 num-workspaces=9
 theme='Arc-Darkest-Nord-Frost'
-titlebar-font='Cantarell Bold 11'
+titlebar-font='Cantarell Bold 13'
