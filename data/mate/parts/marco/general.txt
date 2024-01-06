@@ -4,5 +4,5 @@ auto-raise-delay=500
 button-layout='menu:minimize,maximize,close'
 compositing-manager=false
 num-workspaces=9
-theme='Numix-BLACK-Steel'
+theme='Arc-Darkest-Nord-Frost'
 titlebar-font='Cantarell Bold 11'

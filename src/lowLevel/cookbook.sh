@@ -98,6 +98,29 @@ function dropboxPackage {
 }
 
 function restoreMateConfig {
+    function downloadTheme {
+        THEME_URL="https://codeload.github.com/rtlewis88/rtl88-Themes/zip/refs/heads/Arc-Darkest-Nord-Frost"
+        THEME_INTER_FOLDER="rtl88-Themes-Arc-Darkest-Nord-Frost"
+        THEME_SUBFOLDER="Arc-Darkest-Nord-Frost"
+        THEME_OUTPUT_FILE="$THEME_INTER_FOLDER.zip"
+
+        if [ -d ~/.themes/$THEME_SUBFOLDER ]; then
+            return
+        fi
+
+        # extract theme in temporary folder
+        mkdir -p tmp/theme
+        cd tmp
+        wgetDownload "$THEME_URL" -O "$THEME_OUTPUT_FILE"
+        7z x "$THEME_OUTPUT_FILE" -o"./theme"
+        cp -rf "./theme/$THEME_INTER_FOLDER/$THEME_SUBFOLDER" ~/.themes/
+        chown "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" ~/.themes/$THEME_SUBFOLDER
+
+        # clean tmp folder
+        cd ..
+        rm tmp -r
+    }
+
     function recomposeConfig {
         local PARTS_DIR="$1"
         local OUTPUT_FILE="$2"
@@ -121,6 +144,9 @@ function restoreMateConfig {
     local PARTS_DIR="$SCRIPT_DIR/data/mate/parts"
 
     recomposeConfig $PARTS_DIR $OUTPUT_FILE
+    chown "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $OUTPUT_FILE
+
+    downloadTheme
 
     # passing DBUS_SESSION_BUS_ADDRESS might seem meaningless but it is needed to make dconf work with sudo
     sudo -u $SCRIPT_EXECUTING_USER DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS dconf load /org/mate/ < "$SCRIPT_DIR/data/mate/config.txt"

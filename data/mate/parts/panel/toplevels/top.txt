@@ -1,5 +1,5 @@
 [panel/toplevels/top]
-auto-hide=false
+auto-hide=true
 enable-buttons=false
 expand=true
 orientation='left'
