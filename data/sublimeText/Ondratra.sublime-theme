@@ -17,7 +17,7 @@
         // sidebar icons
         {
             "class": "icon_file_type",
-            "layer0.tint": [150, 150, 250],
+            "layer0.tint": "#9696fa",
             "layer0.opacity": 0.6,
             "content_margin": [8, 8]
         },
@@ -30,6 +30,20 @@
             "class": "icon_file_type",
             "parents": [{"class": "tree_row", "attributes": ["selected"]}],
             "layer0.opacity": 0.9
-        }
+        },
+        {
+            "class": "sidebar_container",
+            "layer0.texture": null,
+            "layer0.tint": "#212121",
+        },
+
+        {
+            "class": "tabset_control",
+            "layer0.tint": "#bbb",
+        },
+        {
+            "class": "tab_control",
+            "layer0.tint": "#bbb",
+        },
     ]
 }
