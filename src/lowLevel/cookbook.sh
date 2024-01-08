@@ -114,7 +114,7 @@ function restoreMateConfig {
         wgetDownload "$THEME_URL" -O "$THEME_OUTPUT_FILE"
         7z x "$THEME_OUTPUT_FILE" -o"./theme"
         cp -rf "./theme/$THEME_INTER_FOLDER/$THEME_SUBFOLDER" ~/.themes/
-        chown "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" ~/.themes/$THEME_SUBFOLDER
+        chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" ~/.themes/$THEME_SUBFOLDER
 
         # clean tmp folder
         cd ..
