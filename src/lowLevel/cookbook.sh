@@ -760,6 +760,7 @@ function nix {
 }
 
 function zellij {
+    PACKAGES="xclip"
     OPT_DIR="$SANAGER_INSTALL_DIR/zellij"
     CONFIG_DIR=~/.config/zellij
 
@@ -778,7 +779,12 @@ function zellij {
 
         # setup configuration
         cp "$SCRIPT_DIR/data/zellij" "$CONFIG_DIR" -rT
+
+        # pass folder permission to relevant user
+        chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_DIR
     fi
+
+    aptGetInstall $PACKAGES
 }
 
 # TODO:
@@ -805,3 +811,4 @@ function zellij {
 # - ensure that `apt-get dist-upgrade -y` doesn't install broken packages as reported by `apt-listbugs` during `apt-get dist-upgrade`
 #   - create a new function that somehow upgrades everything except broken packages reported by `apt-listbugs`
 # - save/load prefered applications / file associations and make it easily editable
+# - unite calling of pattern `mkdir $XXX && doSomething $XXX `chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $XXX`
