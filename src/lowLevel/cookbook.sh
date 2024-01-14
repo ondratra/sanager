@@ -1,6 +1,13 @@
 #!/bin/bash
 # see README.md for script description
 
+function installSanagerGlobally {
+    EXECUTABLE_PATH=/usr/bin/sanager
+
+    rm -rf $EXECUTABLE_PATH
+    ln -s "$SCRIPT_DIR/systemInstall.sh" $EXECUTABLE_PATH
+}
+
 function essential {
     PACKAGES="apt-transport-https apt-listbugs aptitude wget net-tools bash-completion p7zip-full build-essential gdebi"
     DIRMNGR="dirmngr" # there might be glitches with gpg without dirmngr -> ensure it's presence

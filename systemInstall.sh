@@ -3,7 +3,11 @@
 
 # escape on error
 set -e
-set -x
+
+# output all commands done if debug mode is on
+if [[ "$DEBUG" == "true" ]]; then
+    set -x
+fi
 
 ###############################################################################
 # Permission lock - only regular user using `sude -E` is allowed
@@ -30,7 +34,7 @@ SANAGER_INSTALL_TEMP_DIR="$SANAGER_MAIN_DIR/tmp"
 SANAGER_GPG_KEY_DIR="$SANAGER_MAIN_DIR/gpgKeys"
 
 SCRIPT_EXECUTING_USER=$SUDO_USER
-SCRIPT_DIR="`dirname \"$0\"`" # relative
+SCRIPT_DIR="`echo $(dirname $(readlink -nf $0))`"
 SCRIPT_DIR="`( cd \"$SCRIPT_DIR\" && pwd )`"  # absolutized and normalized
 
 VERBOSE_SCRIPT=`[[ "$2" == "--verbose" ]] && echo 1 || echo 0`

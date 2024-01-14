@@ -27,6 +27,15 @@ apt-get install git
 git clone https://github.com/ondratra/sanager /opt/sanager
 ```
 
+## Install globally
+To install sanager globally to the local system run:
+```
+sudo -E ./sanager.sh lowLevel installSanagerGlobally
+```
+
+After that, you can use `sanager` anywhere instead of `./systemInstall.sh`.
+
+
 # Use
 ```
 # use your actual username in following command
