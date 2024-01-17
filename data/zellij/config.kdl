@@ -1,2 +1,2 @@
 theme "molokai-dark"
-copy_command: "xclip -selection clipboard"
+copy_command "xclip -selection clipboard"
