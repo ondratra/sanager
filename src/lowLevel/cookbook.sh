@@ -171,15 +171,17 @@ function sublimeText {
     PACKAGE_CONTROL_DOWNLOAD_URL="https://packagecontrol.io/Package%20Control.sublime-package"
     CONFIG_DIR=~/.config/sublime-text-3
 
-    function ensureSublimeInstall {
+    function ensureInstall {
         # download and install package if absent
-        if [ ! -f $DEB_FILE ]; then
-            wgetDownload "https://download.sublimetext.com/$DEB_FILE"
-            dpkgInstall $DEB_FILE
+        if [ -f $DEB_FILE ]; then
+            return
         fi
+
+        wgetDownload "https://download.sublimetext.com/$DEB_FILE"
+        dpkgInstall $DEB_FILE
     }
 
-    function refreshSublimeConfiguration {
+    function refreshConfiguration {
         INSTALLED_PACKAGES_DIR="$CONFIG_DIR/Installed Packages"
         PACKAGE_LOCAL_NAME="Ondratra"
         FILES_TO_SYMLINK=("Preferences.sublime-settings" "Default (Linux).sublime-keymap" "SideBarEnhancements" "Package Control.sublime-settings" "Package Control.user-ca-bundle")
@@ -205,8 +207,8 @@ function sublimeText {
 
     mkdir $OPT_DIR -p
     cd $OPT_DIR
-    ensureSublimeInstall
-    refreshSublimeConfiguration
+    ensureInstall
+    refreshConfiguration
 }
 
 
@@ -774,24 +776,30 @@ function zellij {
     INSTALL_FILE="zellij-x86_64-unknown-linux-musl.tar.gz"
     BINARY_URL="https://github.com/zellij-org/zellij/releases/download/v0.39.2/$INSTALL_FILE"
 
-    mkdir $OPT_DIR -p
-    cd $OPT_DIR
+    function ensureInstall {
+        # download and install package if absent
+        if [ -f $INSTALL_FILE ]; then
+            return
+        fi
 
-    if [ ! -f $INSTALL_FILE ]; then
-        wgetDownload $BINARY_URL -O $INSTALL_FILE
+        wgetDownload "https://download.sublimetext.com/$DEB_FILE"
+        dpkgInstall $DEB_FILE
+    }
 
-        tar -xvf $INSTALL_FILE
-        chmod +x zellij
-        echo "export PATH=\$PATH:$OPT_DIR" >> ~/.profile
-
+    function refreshConfiguration {
         # setup configuration
         cp "$SCRIPT_DIR/data/zellij" "$CONFIG_DIR" -rT
 
         # pass folder permission to relevant user
         chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_DIR
-    fi
+    }
+
+    mkdir $OPT_DIR -p
+    cd $OPT_DIR
 
     aptGetInstall $PACKAGES
+    ensureInstall
+    refreshConfiguration
 }
 
 # TODO:
