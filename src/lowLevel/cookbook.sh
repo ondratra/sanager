@@ -354,6 +354,12 @@ function openvpn {
     aptGetInstall $PACKAGES
 }
 
+function wireguard {
+    PACKAGES="wireguard"
+
+    aptGetInstall $PACKAGES
+}
+
 # screen capture
 function obsStudio {
     PACKAGES="obs-studio"
