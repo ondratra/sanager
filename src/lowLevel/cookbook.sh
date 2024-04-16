@@ -93,12 +93,10 @@ function enableBashCompletion {
 #       `dropbox` here conflicts with `dropbox` command that is installed
 #       that makes ``dropbox start -i` call recursively calling this (install) function`
 # TODO: make dropbox work - it unpredictably throws http error 404 when downloading install package and that breaks tests
+#       NOTE: possibly not an issue anymore since `dropbox` from external repository has been replaced by `caja-dropbox`
 function dropboxPackage {
-    PACKAGES="dropbox"
-    REPO_ROW="deb https://linux.dropbox.com/debian $TARGET_DEBIAN_VERSION main"
-    REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com 1C61A2656FB57B7E4DE0F4C1FC918B335044912E` # key can be found at  https://help.dropbox.com/installs/linux-repository
+    PACKAGES="caja-dropbox"
 
-    addAptRepository dropbox "$REPO_ROW" $REPO_KEY_URL
     aptGetInstall $PACKAGES
 
     dropbox start -i
