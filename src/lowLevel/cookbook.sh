@@ -716,7 +716,7 @@ function discord {
     dpkgInstall $DEB_FILE
 }
 
-function dotnet {
+function dotnet_pkg {
     #PACKAGES="dotnet-sdk-6.0 dotnet-sdk-7.0" # installing dotnet-sdk-7.0 is problematic when developing dotnet 6.0 app
     PACKAGES="dotnet-sdk-6.0"
     REPO_ROW="deb https://packages.microsoft.com/debian/11/prod $NOWADAYS_DEBIAN_VERSION main"
