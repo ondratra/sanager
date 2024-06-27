@@ -43,7 +43,7 @@ function networkManager {
 }
 
 function desktopDisplayEtc {
-    PACKAGES="pulseaudio dconf-cli"
+    PACKAGES="dconf-cli"
     XORG="xorg"
     DESKTOP="mate mate-desktop-environment mate-desktop-environment-extras mate-tweak"
     DISPLAY="lightdm"
@@ -53,6 +53,11 @@ function desktopDisplayEtc {
     aptGetInstall $PACKAGES $DESKTOP $DISPLAY
 }
 
+function audio {
+    PACKAGES="pulseaudio pulseeffects lsp-plugins"
+
+    aptGetInstall $PACKAGES
+}
 
 function amdCpuDrivers {
     PACKAGES="firmware-linux-nonfree"

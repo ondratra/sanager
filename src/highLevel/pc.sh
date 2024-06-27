@@ -22,6 +22,7 @@ function pc_essentials {
     graphicalDesktop_all
 
     desktopDisplayEtc
+    audio
     infinalityFonts
     networkManager
 }
