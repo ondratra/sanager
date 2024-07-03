@@ -329,6 +329,12 @@ function pdfarranger {
     aptGetInstall $PACKAGES
 }
 
+function pandoc {
+    PACKAGES="pandoc"
+
+    aptGetInstall $PACKAGES
+}
+
 function changeMysqlPassword {
     NEW_PASSWORD="$1"
     echo "newPassword: '$1'"
@@ -554,7 +560,7 @@ function lutris {
 }
 
 function multimedia {
-    PACKAGES="vlc transmission easytag ardour"
+    PACKAGES="vlc transmission easytag ardour ffmpeg"
 
     aptGetInstall $PACKAGES
 }
