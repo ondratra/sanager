@@ -703,10 +703,19 @@ function coolercontrol {
     PACKAGES="coolercontrol"
     REPO_ROW="deb https://dl.cloudsmith.io/public/coolercontrol/coolercontrol/deb/debian $NOWADAYS_DEBIAN_VERSION main"
     REPO_KEY_URL="https://dl.cloudsmith.io/public/coolercontrol/coolercontrol/gpg.668189E5007F5A8D.key"
+    CONFIG_DIR=~/.config/coolercontrol
+
+    function refreshConfiguration {
+        # setup configuration
+        cp "$SCRIPT_DIR/data/coolercontrol" "$CONFIG_DIR" -rT
+
+        # pass folder permission to relevant user
+        chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_DIR
+    }
 
     addAptRepository coolercontrol "$REPO_ROW" $REPO_KEY_URL
-
     aptGetInstall $PACKAGES
+    refreshConfiguration
 
     systemctl enable coolercontrold.service
     systemctl start coolercontrold.service
