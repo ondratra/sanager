@@ -174,6 +174,12 @@ function terminalImprovements {
     aptGetInstall $PACKAGES
 }
 
+function 2dPrint {
+    PACKAGES="cups cups-browsed xsane"
+
+    systemctl restart cups-browsed
+}
+
 function sublimeText {
     OPT_DIR="$SANAGER_INSTALL_DIR/sublimeText"
     DEB_FILE="sublime-text_build-4169_amd64.deb"
