@@ -168,6 +168,12 @@ function userEssential {
     aptGetInstall $PACKAGES
 }
 
+function terminalImprovements {
+    PACKAGES="fzf"
+
+    aptGetInstall $PACKAGES
+}
+
 function sublimeText {
     OPT_DIR="$SANAGER_INSTALL_DIR/sublimeText"
     DEB_FILE="sublime-text_build-4169_amd64.deb"
