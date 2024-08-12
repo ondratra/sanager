@@ -17,6 +17,11 @@ Generate SSH key
 ssh-keygen -t rsa -b 4096 -f myKey
 ```
 
+See battery info
+```
+upower -i /org/freedesktop/UPower/devices/battery_BAT0
+```
+
 ## Package management
 
 Get package that installed the inspected file/command
