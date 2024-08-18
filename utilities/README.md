@@ -48,3 +48,45 @@ List *non-free* packages and packages that rely on *non-free* packages (aka *con
 aptitude search '~i ?section(non-free)
 aptitude search '~i ?section(contrib)
 ```
+
+## Disks
+
+Basic analysis and management
+```
+sudo gparted
+# alternatively
+sudo gnome-disks
+```
+
+Copy whole disk including partitions into a new one
+```
+sudo dd if=/dev/sdXXX of=/dev/sdYYY bs=64K conv=noerror,sync status=progress
+```
+
+Copy only individual partitions
+```
+sudo dd if=/dev/sdXXX1 of=/dev/sdYYY1 bs=64K conv=noerror,sync status=progress
+# resize partition to match the size of partition on the new disk
+sudo resize2fs /dev/sdYYY1
+```
+Consider generating a new UUID for a partition(s) afterwards. Otherwise you mind end up with multiple partitions
+with the same UUID that will cause problems. Don't forget to update `/etc/fstab` afterwards.
+
+### EFI
+
+EFI partition setup
+- FAT32 partition with flags `GPT + BOOT`
+- use at least 256 MB, preferably 1 GB
+    - otherwise you will not be able to resize the partition (limitation of `libparted`)
+
+EFI partition reinstall
+- https://wiki.debian.org/GrubEFIReinstall
+
+### CLI alternatives to `gparted` and `gnome-disks`
+```
+# fix problems with filesystem
+fsck /dev/sdb1
+
+# generate new UUID for partition (NNN is partition index)
+sudo sgdisk --partition-guid=NNN:new /dev/sdX
+```

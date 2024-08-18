@@ -29,6 +29,7 @@ function pc_essentials {
 
 function pc_userMinimum {
     userEssential
+    diskUtils
     enableHistorySearch
     enableBashCompletion
     restoreMateConfig

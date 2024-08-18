@@ -163,7 +163,13 @@ function restoreMateConfig {
 }
 
 function userEssential {
-    PACKAGES="curl vim htop iotop-c firefox chromium gnome-disk-utility"
+    PACKAGES="curl vim htop iotop-c firefox chromium"
+
+    aptGetInstall $PACKAGES
+}
+
+function diskUtils {
+    PACKAGES="gnome-disk-utility gparted"
 
     aptGetInstall $PACKAGES
 }
