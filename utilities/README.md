@@ -90,3 +90,9 @@ fsck /dev/sdb1
 # generate new UUID for partition (NNN is partition index)
 sudo sgdisk --partition-guid=NNN:new /dev/sdX
 ```
+
+## Create Debian bootable CD/USB
+```
+cp debian.iso /dev/sdXXX
+sync
+```
