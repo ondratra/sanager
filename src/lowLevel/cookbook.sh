@@ -814,9 +814,10 @@ function zellij {
     PACKAGES="xclip"
     OPT_DIR="$SANAGER_INSTALL_DIR/zellij"
     CONFIG_DIR=~/.config/zellij
+    CURRENT_VERSION="v0.40.1"
 
     INSTALL_FILE="zellij-x86_64-unknown-linux-musl.tar.gz"
-    BINARY_URL="https://github.com/zellij-org/zellij/releases/download/v0.39.2/$INSTALL_FILE"
+    BINARY_URL="https://github.com/zellij-org/zellij/releases/download/$CURRENT_VERSION/$INSTALL_FILE"
 
     function ensureInstall {
         # download and install package if absent
@@ -824,8 +825,14 @@ function zellij {
             return
         fi
 
-        wgetDownload "https://download.sublimetext.com/$DEB_FILE"
-        dpkgInstall $DEB_FILE
+        wgetDownload $BINARY_URL
+        tar -xzf $INSTALL_FILE
+
+        # TODO: consider using addGlobalEnvVariable instead or create some resusable utility function
+        # TODO:
+        #    - improve this -> insert multiple `export PATH=...` into profile file
+        #    - manual calling `source ~/.profile` is needed in each terminal before usage
+        echo "export PATH=\$PATH:$OPT_DIR" >> ~/.profile
     }
 
     function refreshConfiguration {
