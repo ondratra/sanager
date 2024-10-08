@@ -189,8 +189,8 @@ function 2dPrint {
 function sublimeText {
     OPT_DIR="$SANAGER_INSTALL_DIR/sublimeText"
     DEB_FILE="sublime-text_build-4180_amd64.deb"
-    PACKAGE_CONTROL_DOWNLOAD_URL="https://packagecontrol.io/Package%20Control.sublime-package"
-    CONFIG_DIR=~/.config/sublime-text-3
+    PACKAGE_CONTROL_DOWNLOAD_URL="https://github.com/wbond/package_control/releases/download/4.0.8/Package.Control.sublime-package"
+    CONFIG_DIR=~/.config/sublime-text
 
     function ensureInstall {
         # download and install package if absent
@@ -204,22 +204,26 @@ function sublimeText {
 
     function refreshConfiguration {
         INSTALLED_PACKAGES_DIR="$CONFIG_DIR/Installed Packages"
+        PACKAGE_LOCAL_NAME="User"
+        # NOTE: used for symlinking - not working atm
         PACKAGE_LOCAL_NAME="Ondratra"
-        FILES_TO_SYMLINK=("Preferences.sublime-settings" "Default (Linux).sublime-keymap" "SideBarEnhancements" "Package Control.sublime-settings" "Package Control.user-ca-bundle")
+        #FILES_TO_SYMLINK=("Preferences.sublime-settings" "Default (Linux).sublime-keymap" "SideBarEnhancements" "Package Control.sublime-settings" "Package Control.user-ca-bundle")
 
         # download editor's configuration and setup everything
         sudo -u $SCRIPT_EXECUTING_USER mkdir $CONFIG_DIR -p
         mkdir "$INSTALLED_PACKAGES_DIR" -p
         mkdir "$CONFIG_DIR/Packages/User" -p
         cp "$SCRIPT_DIR/data/sublimeText" "$CONFIG_DIR/Packages/$PACKAGE_LOCAL_NAME" -rT
-        for TMP_FILE in "${FILES_TO_SYMLINK[@]}"; do
-            ln -sf "../$PACKAGE_LOCAL_NAME/$TMP_FILE" "$CONFIG_DIR/Packages/User/$TMP_FILE"
-        done
+
+        # NOTE: symlinking package control settings wreak havoc to sublime -> resulted in removing all packages and then installing ALL packages available to package control
+        #for TMP_FILE in "${FILES_TO_SYMLINK[@]}"; do
+        #    ln -sf "../$PACKAGE_LOCAL_NAME/$TMP_FILE" "$CONFIG_DIR/Packages/User/$TMP_FILE"
+        #done
 
         # download package control when absent
         if [ ! -f "$INSTALLED_PACKAGES_DIR/Package Control.sublime-package" ]; then
             # download package control for sublime text -> it will download all other packages on first run
-            wgetDownload --directory-prefix "$INSTALLED_PACKAGES_DIR" $PACKAGE_CONTROL_DOWNLOAD_URL
+            wgetDownload $PACKAGE_CONTROL_DOWNLOAD_URL -O "$INSTALLED_PACKAGES_DIR/Package Control.sublime-package"
         fi
 
         # pass folder permission to relevant user

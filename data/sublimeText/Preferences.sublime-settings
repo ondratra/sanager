@@ -18,7 +18,8 @@
     "tab_completion": true,
     "tab_size": 4,
     "color_scheme": "Packages/Ondratra/Ondratra.sublime-color-scheme",
-    "theme": "Ondratra.sublime-theme",
+    // uncomment when Soda theme package has been downloaded
+    //"theme": "Ondratra.sublime-theme",
     "translate_tabs_to_spaces": true,
     "use_tab_stops": false,
     "word_wrap": false,
