@@ -204,10 +204,8 @@ function sublimeText {
 
     function refreshConfiguration {
         INSTALLED_PACKAGES_DIR="$CONFIG_DIR/Installed Packages"
-        PACKAGE_LOCAL_NAME="User"
-        # NOTE: used for symlinking - not working atm
         PACKAGE_LOCAL_NAME="Ondratra"
-        #FILES_TO_SYMLINK=("Preferences.sublime-settings" "Default (Linux).sublime-keymap" "SideBarEnhancements" "Package Control.sublime-settings" "Package Control.user-ca-bundle")
+        FILES_TO_SYMLINK=("Preferences.sublime-settings.symlinktarget" "Default (Linux).sublime-keymap.symlinktarget" "SideBarEnhancements" "Package Control.sublime-settings.symlinktarget" "Package Control.user-ca-bundle.symlinktarget")
 
         # download editor's configuration and setup everything
         sudo -u $SCRIPT_EXECUTING_USER mkdir $CONFIG_DIR -p
@@ -215,10 +213,13 @@ function sublimeText {
         mkdir "$CONFIG_DIR/Packages/User" -p
         cp "$SCRIPT_DIR/data/sublimeText" "$CONFIG_DIR/Packages/$PACKAGE_LOCAL_NAME" -rT
 
-        # NOTE: symlinking package control settings wreak havoc to sublime -> resulted in removing all packages and then installing ALL packages available to package control
-        #for TMP_FILE in "${FILES_TO_SYMLINK[@]}"; do
-        #    ln -sf "../$PACKAGE_LOCAL_NAME/$TMP_FILE" "$CONFIG_DIR/Packages/User/$TMP_FILE"
-        #done
+        # NOTE: symlinking package control settings wreak havoc to sublime -> resulted in removing all packages
+        #       and then installing ALL packages available to package control; that's why all symlinked files have
+        #       suffix `.symlinktarget` so they are ignored by Sublime Text on their own
+        for TMP_FILE in "${FILES_TO_SYMLINK[@]}"; do
+            TARGET_FILE_NAME="${TMP_FILE/.symlinktarget/}"
+            ln -sf "../$PACKAGE_LOCAL_NAME/$TMP_FILE" "$CONFIG_DIR/Packages/User/$TARGET_FILE_NAME"
+        done
 
         # download package control when absent
         if [ ! -f "$INSTALLED_PACKAGES_DIR/Package Control.sublime-package" ]; then

@@ -1,4 +1,9 @@
 {
+    "submit_usage": false,
+    "bootstrapped": true,
+    "auto_upgrade_ignore": [
+        "Package Control",
+    ],
     "in_process_packages":
     [
     ],
@@ -37,11 +42,5 @@
         "SyncedSideBar",
         "Theme - Soda",
         "TrailingSpaces",
-    ],
-    "submit_usage": false,
-    "bootstrapped": false,
-    // Packages to not auto upgrade
-    "auto_upgrade_ignore": [
-        "Package Control",
     ],
 }
