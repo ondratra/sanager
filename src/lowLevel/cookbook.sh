@@ -589,7 +589,7 @@ function multimedia {
 }
 
 function newestLinuxKernel {
-    KERNEL_VERSION="6.3.0-1"
+    KERNEL_VERSION="6.10.11"
     PACKAGES="linux-image-$KERNEL_VERSION-amd64 linux-headers-$KERNEL_VERSION-amd64"
 
     aptGetInstall $PACKAGES
