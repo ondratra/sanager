@@ -14,7 +14,7 @@ function vmWithOs {
     # TODO: "run VM with custom install iso"
 
     # TODO
-    # downloadInstallMedium
+    downloadInstallMedium
     # createCustomInstallIso
 
     # TODO: enable ssh connection for root user
@@ -27,6 +27,8 @@ function vmWithOs {
     # TODO: make sure repositories are updated; needed for essential packages to be installed
     # sudo -E ./systemInstall lowLevel distUpgrade (how to call it before Sanager folder is rsynced??)
     # sudo -E ./systemInstall lowLevel distCleanup (how to call it before Sanager folder is rsynced??)
+
+    # TODO: insert virtualbox guest addition cd in (should be available in `/dev/sr0`)
 }
 
 function vmWithGuestAdditions {
@@ -40,11 +42,11 @@ function vmWithGuestAdditions {
     ensureSshRootConnection $TMP_MACHINE_NAME
 
     runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "mkdir /mnt/tmp"
-    runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "mount /dev/sr1 /mnt/tmp"
+    runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "mount /dev/sr0 /mnt/tmp"
     runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "apt-get update"
     runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "apt-get install -y linux-headers-\$(uname -r) build-essential dkms"
 
-    # VBoxLinuxAdditions.run exists with code `2` on what it's consider as success here
+    # VBoxLinuxAdditions.run exists with code `2` which is considered as success here
     runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "/mnt/tmp/VBoxLinuxAdditions.run --nox11 || true"
 
     stopVm $TMP_MACHINE_NAME
@@ -71,3 +73,10 @@ function vmRunner {
     stopVm $TMP_MACHINE_NAME
 }
 
+function vmRunnerUnstable {
+    local TMP_MACHINE_NAME=$1
+
+    log "Applying routine: Runner unstable"
+
+    # TODO: change apt sources to unstable
+}

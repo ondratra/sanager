@@ -21,7 +21,9 @@ function physicalPc_all {
 }
 
 function physicalPc_drivers {
-    newestLinuxKernel
+    if is_virtualbox; then
+        return
+    fi
 
     # TODO: make cpu and gpu vendors configurable(?)
     amdCpuDrivers

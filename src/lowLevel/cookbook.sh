@@ -17,7 +17,8 @@ function essential {
 
 function infinalityFonts {
     PACKAGES="fontconfig-infinality"
-    REPO_ROW="deb http://ppa.launchpad.net/no1wantdthisname/ppa/ubuntu $NOWADAYS_UBUNTU_VERSION main"
+    MAX_UBUNTU_VERSION="xenial" # repository doesn't support newer Ubuntu versions atm
+    REPO_ROW="deb http://ppa.launchpad.net/no1wantdthisname/ppa/ubuntu $MAX_UBUNTU_VERSION main"
     REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com E985B27B` # key can be found at https://launchpad.net/~no1wantdthisname/+archive/ubuntu/ppa
 
     addAptRepository infinalityFonts "$REPO_ROW" $REPO_KEY_URL
@@ -27,7 +28,6 @@ function infinalityFonts {
     # sudo bash /etc/fonts/infinality/infctl.sh setstyle
     # and select 3) linux from the menu
 }
-
 
 function networkManager {
     PACKAGES="network-manager network-manager-gnome"
@@ -122,9 +122,11 @@ function restoreMateConfig {
         mkdir -p tmp/theme
         cd tmp
         wgetDownload "$THEME_URL" -O "$THEME_OUTPUT_FILE"
-        7z x "$THEME_OUTPUT_FILE" -o"./theme"
-        cp -rf "./theme/$THEME_INTER_FOLDER/$THEME_SUBFOLDER" ~/.themes/
-        chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" ~/.themes/$THEME_SUBFOLDER
+        7z x "$THEME_OUTPUT_FILE" -o"./theme" # intentionally no space after `-o`
+
+        mkdir -p ~/.themes # ensure themes folder exist -> only important before first login into graphical interface
+        cp -rf "./theme/$THEME_INTER_FOLDER/$THEME_SUBFOLDER" ~/.themes/$THEME_SUBFOLDER
+        chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" ~/.themes
 
         # clean tmp folder
         cd ..
@@ -163,9 +165,10 @@ function restoreMateConfig {
 }
 
 function userEssential {
-    PACKAGES="curl vim htop iotop-c firefox chromium"
+    PACKAGES="curl vim htop iotop-c chromium"
+    PACKAGE_FIREFOX=$(is_debian_sid && echo "firefox" || echo "firefox-esr")
 
-    aptGetInstall $PACKAGES
+    aptGetInstall $PACKAGES $PACKAGE_FIREFOX
 }
 
 function diskUtils {
@@ -589,7 +592,7 @@ function multimedia {
 }
 
 function newestLinuxKernel {
-    KERNEL_VERSION="6.10.11"
+    KERNEL_VERSION=$(is_debian_sid && echo "6.10.11" || echo "6.1.0-26")
     PACKAGES="linux-image-$KERNEL_VERSION-amd64 linux-headers-$KERNEL_VERSION-amd64"
 
     aptGetInstall $PACKAGES

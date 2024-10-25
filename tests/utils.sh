@@ -35,6 +35,9 @@ function stopVm {
     log "Stopping VM \"$TMP_MACHINE_NAME\""
 
     VBoxManage controlvm $TMP_MACHINE_NAME poweroff
+
+    # TODO: revisit this - without sleep VM tends to be still locked when starting
+    sleep 3
 }
 
 function restartVm {
@@ -179,7 +182,7 @@ function runTunneledSshCommand {
     log "Running command through ssh. \`$TMP_COMMAND\`"
 
     sshpass \
-        -p $VM_USERS_ROOT_PASSWORD \
+        -p $TMP_PASSWORD \
         ssh $TMP_USER@$SSH_TUNNEL_HOST_HOSTNAME \
             -p $SSH_TUNNEL_HOST_PORT \
             -o ConnectTimeout=5 \

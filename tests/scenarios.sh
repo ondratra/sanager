@@ -52,7 +52,7 @@ function testSanagerInstallGraphicalDesktop {
         $TMP_MACHINE_NAME \
         $VM_USERS_SANAGER_NAME \
         $VM_USERS_SANAGER_PASSWORD \
-        "echo $VM_USERS_SANAGER_PASSWORD | sudo -E /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh graphicalDesktop"
+        "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh graphicalDesktop"
 
     log "Syncing file system"
     $EXECUTOR \
@@ -83,7 +83,7 @@ function testSanagerInstallPc {
         $TMP_MACHINE_NAME \
         $VM_USERS_SANAGER_NAME \
         $VM_USERS_SANAGER_PASSWORD \
-        "echo $VM_USERS_SANAGER_PASSWORD | sudo -E /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh pc"
+        "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh pc"
 
     log "Syncing file system"
     $EXECUTOR \
@@ -94,6 +94,41 @@ function testSanagerInstallPc {
 
     stopVm $TMP_MACHINE_NAME
 }
+
+function testSanagerInstallHomeServer {
+    local TMP_MACHINE_NAME=$1
+
+    # ensure root install
+    testSanagerSetup $TMP_MACHINE_NAME
+
+    log "Running Sanager install on $TMP_MACHINE_NAME - HomeServer"
+
+    # TODO: try to get rid of this call by improving wairForVMOsBoot
+    clearVMLog $TMP_MACHINE_NAME "$VIRTUAL_MACHINES_DIR/$TMP_MACHINE_NAME/Logs/VBox.log"
+
+    # startup VM
+    startVm $TMP_MACHINE_NAME
+    waitForVMOsBoot $TMP_MACHINE_NAME
+
+    __copySanagerFilesToGuest
+
+    log "Running Sanager script: \`systemInstall.sh homeServer\`"
+    $EXECUTOR \
+        $TMP_MACHINE_NAME \
+        $VM_USERS_SANAGER_NAME \
+        $VM_USERS_SANAGER_PASSWORD \
+        "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh homeServer"
+
+    log "Syncing file system"
+    $EXECUTOR \
+        $TMP_MACHINE_NAME \
+        $VM_USERS_ROOT_NAME \
+        $VM_USERS_ROOT_PASSWORD \
+        "/bin/sync" \
+
+    stopVm $TMP_MACHINE_NAME
+}
+
 
 function runSanagerGuestVMChecks {
     local TMP_MACHINE_NAME=$1
@@ -114,8 +149,8 @@ function __executorSsh {
     local ENV_ASSIGNMENTS=${@:5}
 
     runTunneledSshCommand \
-        $VM_USERS_ROOT_NAME \
-        $VM_USERS_ROOT_PASSWORD \
+        $TMP_VM_USER \
+        $TMP_VM_PASSWORD \
         "$ENV_ASSIGNMENTS $COMMAND"
 }
 

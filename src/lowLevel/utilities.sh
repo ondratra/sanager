@@ -1,4 +1,3 @@
-
 function printMsg {
     echo "SANAGER: $@" >&2
 }
@@ -10,12 +9,12 @@ function aptUpdate {
 
 function aptInstall {
     printMsg "Installing packages: $@"
-    DEBIAN_FRONTEND="noninteractive" apt install "$VERBOSE_APT_FLAG" -y "$@"
+    DEBIAN_FRONTEND="noninteractive" APT_LISTBUGS_FRONTEND="none" apt install "$VERBOSE_APT_FLAG" -y "$@"
 }
 
 function aptGetInstall {
     printMsg "Installing packages: $@"
-    DEBIAN_FRONTEND="noninteractive" apt-get install "$VERBOSE_APT_FLAG" -y "$@"
+    DEBIAN_FRONTEND="noninteractive" APT_LISTBUGS_FRONTEND="none" apt-get install "$VERBOSE_APT_FLAG" -y "$@"
 }
 
 function aptRemove {
@@ -58,6 +57,14 @@ function isInstalled {
         return 0
     fi
     return 1
+}
+
+function isVirtualboxVm {
+    if grep -q "VirtualBox" /sys/class/dmi/id/product_name 2>/dev/null; then
+        return 1  # Running inside VirtualBox
+    else
+        return 0  # Not running inside VirtualBox
+    fi
 }
 
 # use:
@@ -203,4 +210,8 @@ function appendToFileIfNotPresent {
     TEXT="$2"
 
     grep -q "$TEXT" "$FILE" || echo $TEXT >> $FILE
+}
+
+function is_debian_sid {
+    grep -q "sid" /etc/debian_version
 }

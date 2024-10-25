@@ -33,7 +33,8 @@ function main {
     local TEST_NUMBER=1 # TODO
     local CLEAR_VMS_ON_STARTUP=false # TODO: read from parameters
 
-    local MACHINE_RUNNER_NAME="${MACHINE_NAME_TEST_PREFIX}${TEST_NUMBER}"
+    local MACHINE_NAME_RUNNER="${MACHINE_NAME_TEST_PREFIX}${TEST_NUMBER}"
+    local MACHINE_NAME_RUNNER_UNSTABLE="${MACHINE_NAME_RUNNER}_Unstable"
 
     # ensure work folder exists
     mkdir -p $TEST_DIR
@@ -59,18 +60,23 @@ function main {
     cachedBuildOnTopOfVm $MACHINE_NAME_BARE $MACHINE_NAME_WITH_OS vmWithOs
 
     cachedBuildOnTopOfVm $MACHINE_NAME_WITH_OS $MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS vmWithGuestAdditions
+    cachedBuildOnTopOfVm $MACHINE_NAME_WITH_OS $MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS_UNSTABLE vmWithOsUnstable
 
-    cachedBuildOnTopOfVm $MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS $MACHINE_RUNNER_NAME vmRunner
+    cachedBuildOnTopOfVm $MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS $MACHINE_NAME_RUNNER vmRunner
+    cachedBuildOnTopOfVm $MACHINE_NAME_RUNNER $MACHINE_NAME_RUNNER_UNSTABLE vmRunnerUnstable
 
     # VM test runs
 
-    local MACHINE_NAME_ROOT_INSTALL=${MACHINE_RUNNER_NAME}_rootInstall
-    local MACHINE_NAME_GRAPHICAL_DESKTOP=${MACHINE_RUNNER_NAME}_graphicalDesktop
-    local MACHINE_NAME_PC=${MACHINE_RUNNER_NAME}_pc
+#    local MACHINE_NAME_ROOT_INSTALL=${MACHINE_NAME_RUNNER_UNSTABLE}_rootInstall
+#    local MACHINE_NAME_GRAPHICAL_DESKTOP=${MACHINE_NAME_RUNNER_UNSTABLE}_graphicalDesktop
+#    local MACHINE_NAME_PC=${MACHINE_NAME_RUNNER_UNSTABLE}_pc
+    local MACHINE_NAME_HOME_SERVER=${MACHINE_NAME_RUNNER}_homeServer
 
-    cachedBuildOnTopOfVm $MACHINE_RUNNER_NAME $MACHINE_NAME_ROOT_INSTALL testSanagerSetup
-    cachedBuildOnTopOfVm $MACHINE_NAME_ROOT_INSTALL $MACHINE_NAME_GRAPHICAL_DESKTOP testSanagerInstallGraphicalDesktop
-    cachedBuildOnTopOfVm $MACHINE_NAME_GRAPHICAL_DESKTOP $MACHINE_NAME_PC testSanagerInstallPc
+#    cachedBuildOnTopOfVm $MACHINE_NAME_RUNNER_UNSTABLE $MACHINE_NAME_ROOT_INSTALL testSanagerSetup
+#    cachedBuildOnTopOfVm $MACHINE_NAME_ROOT_INSTALL $MACHINE_NAME_GRAPHICAL_DESKTOP testSanagerInstallGraphicalDesktop
+#    cachedBuildOnTopOfVm $MACHINE_NAME_GRAPHICAL_DESKTOP $MACHINE_NAME_PC testSanagerInstallPc
+
+    cachedBuildOnTopOfVm $MACHINE_NAME_RUNNER $MACHINE_NAME_HOME_SERVER testSanagerInstallHomeServer
 
     log "Tests finished successfully!"
 }

@@ -1,8 +1,8 @@
 SANAGER_MAIN_DIR=`realpath $(dirname $SCRIPT_DIR)`
 
 # config
-DEBIAN_VERSION="11.4.0"
-NOWADAYS_DEBIAN_VERSION="bullseye"
+DEBIAN_VERSION="12.7.0"
+NOWADAYS_DEBIAN_VERSION="bookworm"
 #DEBIAN_MIRROR_FTP="ftp.cz.debian.org/debian/"
 DEBIAN_MIRROR_FTP="ftp.us.debian.org/debian/"
 
@@ -24,6 +24,7 @@ MACHINE_NAME_TEMPORARY="Sanager_Temporary"
 MACHINE_NAME_BARE="Sanager_Testing_Bare"
 MACHINE_NAME_WITH_OS="Sanager_Testing_WithOS"
 MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS="Sanager_Testing_WithOS_GuestAdditions"
+MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS_UNSTABLE="Sanager_Testing_WithOS_GuestAdditions_Unstable"
 MACHINE_NAME_TEST_PREFIX="Sanager_Testing_Runner_"
 
 SSH_TUNNEL_HOST_PORT=2222

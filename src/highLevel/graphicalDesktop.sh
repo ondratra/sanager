@@ -5,4 +5,6 @@ function runHighLevel {
 function graphicalDesktop_all {
     essential
     desktopDisplayEtc
+
+    newestLinuxKernel
 }
