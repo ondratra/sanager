@@ -9,7 +9,7 @@ function installSanagerGlobally {
 }
 
 function essential {
-    PACKAGES="apt-transport-https apt-listbugs aptitude wget net-tools bash-completion p7zip-full build-essential gdebi"
+    PACKAGES="apt-transport-https apt-listbugs aptitude wget net-tools bash-completion p7zip-full build-essential gdebi rsync"
     DIRMNGR="dirmngr" # there might be glitches with gpg without dirmngr -> ensure it's presence
 
     aptGetInstall $PACKAGES $DIRMNGR
@@ -857,6 +857,28 @@ function zellij {
     aptGetInstall $PACKAGES
     ensureInstall
     refreshConfiguration
+}
+
+function zfsLuks {
+    PACKAGES="zfsutils-linux cryptsetup"
+
+    aptGetInstall $PACKAGES
+}
+
+function sshServer {
+    PACKAGES="openssh-server"
+
+    aptGetInstall $PACKAGES
+
+    CONFIG_NAME="__sanagerConfig.conf"
+    CONFIG_SOURCE_PATH=$SCRIPT_DIR/data/sshServer/$CONFIG_NAME
+    CONFIG_TARGET_PATH=/etc/ssh/sshd_config.d/$CONFIG_NAME
+
+    if [ -f $CONFIG_TARGET_PATH ]; then
+       return
+    fi
+
+    cp -rf $CONFIG_SOURCE_PATH $CONFIG_TARGET_PATH
 }
 
 # TODO:

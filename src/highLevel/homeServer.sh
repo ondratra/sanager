@@ -21,6 +21,7 @@ function homeServer_essentials {
     infinalityFonts
     networkManager
     versioningAndTools
+    sshServer
 }
 
 function homeServer_userMinimum {
@@ -50,6 +51,5 @@ function homeServer_physical {
 }
 
 function homeServer_zfs {
-    # TODO install zfs
-    echo "TODO: zfs"
+    zfsLuks
 }

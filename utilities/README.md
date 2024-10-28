@@ -96,3 +96,34 @@ sudo sgdisk --partition-guid=NNN:new /dev/sdX
 cp debian.iso /dev/sdXXX
 sync
 ```
+
+### ZFS
+Sources:
+- https://wiki.debian.org/ZFS
+
+Get partition's UUID (works even in some cases when `ls -al /dev/disk/by-uuid/` has missing results):
+```
+sudo blkid /dev/sdX1
+```
+
+Create 2 disks mirror pool:
+```
+MY_ZFS_POOL_NAME=mypool
+
+sudo zpool create $MY_ZFS_POOL_NAME mirror \
+    /dev/disk/by-partuuid/09f2ecb6-7802-4fcd-9a95-fb828f0781be \
+    /dev/disk/by-partuuid/1312069d-7b9e-41e5-8490-5ec788d141c4
+
+# check status
+zpool status
+```
+
+Set mount point for a pool:
+```
+sudo zfs set mountpoint=/desired/mount/point $MY_ZFS_POOL_NAME
+```
+
+See existing mounting points:
+```
+zfs get mountpoint
+```
