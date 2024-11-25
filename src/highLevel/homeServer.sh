@@ -18,7 +18,7 @@ function homeServer_essentials {
     graphicalDesktop_all
 
     audio
-    infinalityFonts
+    fonts
     networkManager
     versioningAndTools
     sshServer

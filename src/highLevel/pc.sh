@@ -22,7 +22,7 @@ function pc_essentials {
     graphicalDesktop_all
 
     audio
-    infinalityFonts
+    fonts
     networkManager
 }
 

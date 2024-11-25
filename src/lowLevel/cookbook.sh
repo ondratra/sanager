@@ -15,8 +15,8 @@ function essential {
     aptGetInstall $PACKAGES $DIRMNGR
 }
 
-function infinalityFonts {
-    PACKAGES="fontconfig-infinality"
+function fonts {
+    PACKAGES="fontconfig-infinality fonts-noto-color-emoji"
     MAX_UBUNTU_VERSION="xenial" # repository doesn't support newer Ubuntu versions atm
     REPO_ROW="deb http://ppa.launchpad.net/no1wantdthisname/ppa/ubuntu $MAX_UBUNTU_VERSION main"
     REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com E985B27B` # key can be found at https://launchpad.net/~no1wantdthisname/+archive/ubuntu/ppa
