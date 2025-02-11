@@ -108,7 +108,7 @@ sudo blkid /dev/sdX1
 
 Create 2 disks mirror pool:
 ```
-MY_ZFS_POOL_NAME=mypool
+MY_ZFS_POOL_NAME=myPool
 
 sudo zpool create $MY_ZFS_POOL_NAME mirror \
     /dev/disk/by-partuuid/09f2ecb6-7802-4fcd-9a95-fb828f0781be \
@@ -126,4 +126,27 @@ sudo zfs set mountpoint=/desired/mount/point $MY_ZFS_POOL_NAME
 See existing mounting points:
 ```
 zfs get mountpoint
+```
+
+Create 1 disk backup pool:
+```
+MY_ZFS_BACKUP_POOL_NAME=myBackupPool
+
+sudo zpool create $MY_ZFS_BACKUP_POOL_NAME
+sudo zpool set compression=lz4 $MY_ZFS_BACKUP_POOL_NAME
+```
+
+Creating backup
+```
+PC_NAME=myPc
+SNAPSHOT_NAME=initial # CHANGE THIS EACH TIME!
+
+# create at-the-moment snapshot
+sudo zfs snapshot -r ${MY_ZFS_POOL_NAME}@${SNAPSHOT_NAME}
+
+# ensure parent structure exist in backup pool
+sudo zfs list "$MY_ZFS_BACKUP_POOL_NAME" >/dev/null 2>&1 || sudo zfs create -p "$MY_ZFS_BACKUP_POOL_NAME"
+
+# send snapshot to backup pool (no progress shown)
+sudo zfs send -v ${MY_ZFS_POOL_NAME}@${SNAPSHOT_NAME} | sudo zfs receive $MY_ZFS_BACKUP_POOL_NAME/Backups/$PC_NAME/$MY_ZFS_POOL_NAME
 ```

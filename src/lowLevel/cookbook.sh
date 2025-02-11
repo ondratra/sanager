@@ -9,7 +9,7 @@ function installSanagerGlobally {
 }
 
 function essential {
-    PACKAGES="apt-transport-https apt-listbugs aptitude wget net-tools bash-completion p7zip-full build-essential gdebi rsync"
+    PACKAGES="apt-transport-https apt-listbugs aptitude wget net-tools bash-completion p7zip-full build-essential gdebi rsync ntp"
     DIRMNGR="dirmngr" # there might be glitches with gpg without dirmngr -> ensure it's presence
 
     aptGetInstall $PACKAGES $DIRMNGR
