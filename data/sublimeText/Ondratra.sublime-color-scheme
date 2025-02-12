@@ -213,5 +213,85 @@
             "scope": "sublimelinter.gutter-mark",
             "foreground": "#FFFFFF"
         },
+
+
+        /////////////////// Markdown ///////////////////////////////////////////
+        {
+            "name": "Heading 1",
+            "scope": "markup.heading.1",
+            "foreground": "#66D9EF",
+            "font_style": "bold"
+        },
+        {
+            "name": "Heading 2",
+            "scope": "markup.heading.2",
+            "foreground": "#A6E22E",
+            "font_style": "bold"
+        },
+        {
+            "name": "Heading 3",
+            "scope": "markup.heading.3",
+            "foreground": "#FD971F",
+            "font_style": "bold"
+        },
+        {
+            "name": "Heading 4",
+            "scope": "markup.heading.4",
+            "foreground": "#F92672",
+            "font_style": "bold"
+        },
+        {
+            "name": "Heading 5",
+            "scope": "markup.heading.5",
+            "foreground": "#AE81FF",
+            "font_style": "bold"
+        },
+        {
+            "name": "Heading 6",
+            "scope": "markup.heading.6",
+            "foreground": "#E6DB74",
+            "font_style": "bold"
+        },
+        {
+            "name": "Markdown Bold",
+            "scope": "markup.bold",
+            "foreground": "#F92672",
+            "font_style": "bold"
+        },
+        {
+            "name": "Markdown Italic",
+            "scope": "markup.italic",
+            "foreground": "#FD971F",
+            "font_style": "italic"
+        },
+        {
+            "name": "Link Title",
+            "scope": "string.other.link.title",
+            "foreground": "#A6E22E"
+        },
+        {
+            "name": "Link URL",
+            "scope": "markup.underline.link",
+            "foreground": "#66D9EF"
+        },
+        {
+            "name": "Inline Code",
+            "scope": "markup.raw.inline",
+            "background": "#3E3D32",
+            "foreground": "#F8F8F2"
+        },
+        {
+            "name": "Code Blocks",
+            "scope": "markup.raw.block",
+            "background": "#3E3D32",
+            "foreground": "#F8F8F2"
+        },
+        {
+            "name": "Markdown Quotes",
+            "scope": "markup.quote",
+            "foreground": "#75715E",
+            "font_style": "italic"
+        }
+        /////////////////// Markdown - end /////////////////////////////////////
     ]
 }
