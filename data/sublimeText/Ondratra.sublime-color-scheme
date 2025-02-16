@@ -266,7 +266,7 @@
         },
         {
             "name": "Link Title",
-            "scope": "string.other.link.title",
+            "scope": "meta.link.inline.description",
             "foreground": "#A6E22E"
         },
         {
@@ -277,14 +277,29 @@
         {
             "name": "Inline Code",
             "scope": "markup.raw.inline",
-            "background": "#3E3D32",
+            "background": "#2E2D22",
             "foreground": "#F8F8F2"
         },
         {
             "name": "Code Blocks",
-            "scope": "markup.raw.block",
-            "background": "#3E3D32",
+            "scope": "markup.raw.code-fence",
+            "background": "#2E2D22",
             "foreground": "#F8F8F2"
+        },
+        {
+            "name": "Code Blocks - definition",
+            "scope": "meta.code-fence.definition",
+            "background": "#2E2D22"
+        },
+        {
+            "name": "Markdown list unnumbered",
+            "scope": "markup.list.unnumbered.bullet",
+            "foreground": "#66D9EF"
+        },
+        {
+            "name": "Markdown list numbered",
+            "scope": "markup.list.numbered.bullet",
+            "foreground": "#66D9EF"
         },
         {
             "name": "Markdown Quotes",
