@@ -42,6 +42,8 @@ function pc_userRobust {
     #datovka
     brave
     #iridium
+    zellij
+    kittyTerminal
 }
 
 function pc_work {

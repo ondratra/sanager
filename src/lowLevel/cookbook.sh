@@ -881,6 +881,20 @@ function sshServer {
     cp -rf $CONFIG_SOURCE_PATH $CONFIG_TARGET_PATH
 }
 
+function kittyTerminal {
+    PACKAGES="kitty"
+    CONFIG_SOURCE_FOLDER=$SCRIPT_DIR/data/kitty
+    CONFIG_TARGET_PATH=~/.config/kitty
+
+    aptGetInstall $PACKAGES
+
+    if [ -f "$CONFIG_TARGET_PATH/kitty.conf" ]; then
+        return
+    fi
+
+    cp -r $CONFIG_SOURCE_FOLDER/* $CONFIG_TARGET_PATH/
+}
+
 # TODO:
 # - IMPORTANT!!!
 #   - create apt policy file in preferences.d/ for each added repository

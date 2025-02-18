@@ -36,6 +36,7 @@ function homeServer_userRobust {
     sublimeText
     multimedia
     zellij
+    kittyTerminal
 }
 
 function homeServer_physical {
