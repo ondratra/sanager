@@ -822,7 +822,7 @@ function zellij {
     PACKAGES="xclip"
     OPT_DIR="$SANAGER_INSTALL_DIR/zellij"
     CONFIG_DIR=~/.config/zellij
-    CURRENT_VERSION="v0.40.1"
+    CURRENT_VERSION="v0.41.2"
 
     INSTALL_FILE="zellij-x86_64-unknown-linux-musl.tar.gz"
     BINARY_URL="https://github.com/zellij-org/zellij/releases/download/$CURRENT_VERSION/$INSTALL_FILE"
