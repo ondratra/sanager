@@ -646,16 +646,6 @@ function keybase {
     rm -f /etc/apt/sources.list.d/keybase.list
 }
 
-function iridium {
-    PACKAGES="iridium-browser"
-    REPO_ROW="deb https://downloads.iridiumbrowser.de/deb/ stable main"
-    REPO_KEY_URL="https://downloads.iridiumbrowser.de/ubuntu/iridium-release-sign-01.pub"
-
-    addAptRepository iridium "$REPO_ROW" $REPO_KEY_URL
-    aptGetInstall $PACKAGES
-}
-
-
 function slack {
     PACKAGES="slack-desktop"
     REPO_ROW="deb https://packagecloud.io/slacktechnologies/slack/debian/ jessie main"
@@ -900,7 +890,6 @@ function kittyTerminal {
 #   - create apt policy file in preferences.d/ for each added repository
 #   - save hash(es) (Merkle Tree?) of all used/downloaded gpg keys in this repository so any changes are spotted
 # - reenable lamp (maybe a fix for mysql password init problems will be needed)
-# - iridium - update to some 2022 version (?)
 # - Element instant messaging
 # - teamviewer (?)
 # - check `logseq` if it's valid replacement to obsidian

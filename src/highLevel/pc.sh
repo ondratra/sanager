@@ -41,7 +41,6 @@ function pc_userRobust {
     # TODO: make datovka work - it currently depends on obsolete `libssl1.0.0` that is no longer available in Debian sid
     #datovka
     brave
-    #iridium
     zellij
     kittyTerminal
 }
