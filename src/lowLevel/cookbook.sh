@@ -882,7 +882,8 @@ function kittyTerminal {
         return
     fi
 
-    cp -r $CONFIG_SOURCE_FOLDER/* $CONFIG_TARGET_PATH/
+    mkdir $CONFIG_TARGET_PATH -p
+    cp -rp $CONFIG_SOURCE_FOLDER/* $CONFIG_TARGET_PATH/
 }
 
 # TODO:
