@@ -828,9 +828,9 @@ function zellij {
 
         # TODO: consider using addGlobalEnvVariable instead or create some resusable utility function
         # TODO:
-        #    - improve this -> insert multiple `export PATH=...` into profile file
-        #    - manual calling `source ~/.profile` is needed in each terminal before usage
-        echo "export PATH=\$PATH:$OPT_DIR" >> ~/.profile
+        #    - improve this -> don't insert multiple `export PATH=...` into bashrc file
+        #    - manual calling `source ~/.bashrc` is needed in each terminal before usage
+        echo "export PATH=\$PATH:$OPT_DIR" >> ~/.bashrc
     }
 
     function refreshConfiguration {
