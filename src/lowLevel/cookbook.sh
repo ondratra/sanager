@@ -178,7 +178,7 @@ function diskUtils {
 }
 
 function terminalImprovements {
-    PACKAGES="fzf"
+    PACKAGES="fzf duf"
 
     aptGetInstall $PACKAGES
 }
