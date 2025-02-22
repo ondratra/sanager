@@ -347,6 +347,26 @@ function docker {
     aptInstall $PACKAGES
 
     addUserToGroup "$SCRIPT_EXECUTING_USER" docker
+
+    function installLazydocker {
+        VERSION="0.24.1"
+        RELEASE_FILE="lazydocker_${VERSION}_Linux_x86_64.tar.gz"
+        RELEASE_URL="https://github.com/jesseduffield/lazydocker/releases/download/v${VERSION}/${RELEASE_FILE}"
+        OPT_DIR="$SANAGER_INSTALL_DIR/lazydocker"
+
+        if [ -f "$OPT_DIR/$RELEASE_FILE" ]; then
+            return
+        fi
+
+        mkdir $OPT_DIR -p
+        cd $OPT_DIR
+        wgetDownload $RELEASE_URL -O "$OPT_DIR/$RELEASE_FILE"
+        tar -xzf $RELEASE_FILE
+
+        echo "export PATH=\$PATH:$OPT_DIR" >> ~/.bashrc
+    }
+
+    installLazydocker
 }
 
 function pdfarranger {
@@ -910,3 +930,5 @@ function kittyTerminal {
 #   - create a new function that somehow upgrades everything except broken packages reported by `apt-listbugs`
 # - save/load prefered applications / file associations and make it easily editable
 # - unite calling of pattern `mkdir $XXX && doSomething $XXX `chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $XXX`
+# - create a mechanism for installing binary files -> look at zellij and lazydocker -> it likely should create 
+#   `/opt/__sanager/bin`, link or add binaries there, and add it to PATH via `.bashrc`
