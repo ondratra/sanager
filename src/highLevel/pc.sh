@@ -44,6 +44,7 @@ function pc_userRobust {
     brave
     zellij
     kittyTerminal
+    terminalImprovements
 }
 
 function pc_work {

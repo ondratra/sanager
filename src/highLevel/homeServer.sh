@@ -38,6 +38,7 @@ function homeServer_userRobust {
     multimedia
     zellij
     kittyTerminal
+    terminalImprovements
 }
 
 function homeServer_physical {
