@@ -1,0 +1,11 @@
+[Unit]
+Description=Syncoid Backup - ZFS pools
+After=zfs.target network.target
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/sh -c 'if systemctl is-active --quiet syncoid.service; then exit 1; fi'
+ExecStart=echo "setup syncoid service first!"
+#ExecStart=syncoid --recursive --delete --no-sync-snap A/mydataset B/mydataset
+TimeoutStartSec=0
+RuntimeMaxSec=43200 # execution timeout [minutes]

@@ -849,10 +849,75 @@ function zellij {
     refreshConfiguration
 }
 
+# after running this for first time, manually setup /etc/sanoid/sanoid.conf and /etc/systemd/system/syncoind.service
 function zfsLuks {
     PACKAGES="zfsutils-linux cryptsetup"
 
     aptGetInstall $PACKAGES
+
+    # see https://github.com/jimsalterjrs/sanoid/blob/master/INSTALL.md#debianubuntu
+    function buildSanoidPackage {
+        OPT_DIR="$SANAGER_INSTALL_DIR/sanoid"
+        SANOID_DEPENDENCIES="debhelper libcapture-tiny-perl libconfig-inifiles-perl pv lzop mbuffer"
+
+        aptGetInstall $SANOID_DEPENDENCIES
+
+        if [ -d $OPT_DIR ]; then
+           return
+        fi
+
+        git clone https://github.com/jimsalterjrs/sanoid.git $OPT_DIR
+        cd $OPT_DIR
+
+        # checkout latest stable release or stay on master for bleeding edge stuff (but expect bugs!)
+        #git checkout $(git tag | grep "^v" | tail -n 1)
+        git checkout 6beef5fee67deb2c17f160244953bd5a1983e1ad # (https://github.com/jimsalterjrs/sanoid/commit/6beef5fee67deb2c17f160244953bd5a1983e1ad)
+        ln -s packages/debian .
+        dpkg-buildpackage -uc -us
+        aptInstall ../sanoid_*_all.deb
+
+        systemctl enable sanoid --now
+    }
+
+    function setupSanoid {
+        CONFIG_NAME=sanoid.conf
+        CONFIG_SOURCE_PATH=$SCRIPT_DIR/data/sanoid/$CONFIG_NAME
+        CONFIG_TARGET_PATH=/etc/sanoid/$CONFIG_NAME
+
+        if [ -f $CONFIG_TARGET_PATH ]; then
+           return
+        fi
+
+        cp -rf $CONFIG_SOURCE_PATH $CONFIG_TARGET_PATH
+
+        # manually adjust the config now - /etc/sanoid/sanoid.conf - specificaly for your machine
+
+        systemctl enable sanoid --now
+    }
+
+    function setupSyncoid {
+        CONFIG_NAME=syncoid.service
+        CONFIG_SOURCE_PATH=$SCRIPT_DIR/data/sanoid/$CONFIG_NAME
+        CONFIG_TARGET_PATH=/etc/systemd/system/$CONFIG_NAME
+
+        CONFIG_NAME_TIMER=syncoid.timer
+        CONFIG_SOURCE_PATH_TIMER=$SCRIPT_DIR/data/sanoid/$CONFIG_NAME_TIMER
+        CONFIG_TARGET_PATH_TIMER=/etc/systemd/system/$CONFIG_NAME_TIMER
+
+        if [ -f $CONFIG_TARGET_PATH ]; then
+           return
+        fi
+
+        cp -rf $CONFIG_SOURCE_PATH $CONFIG_TARGET_PATH
+        cp -rf $CONFIG_SOURCE_PATH_TIMER $CONFIG_TARGET_PATH_TIMER
+
+        systemctl daemon-reload
+        systemctl enable --now syncoid.timer
+    }
+
+    buildSanoidPackage
+    setupSanoid
+    setupSyncoid
 }
 
 function sshServer {

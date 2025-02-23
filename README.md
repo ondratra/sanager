@@ -22,14 +22,14 @@ You should also replace **merlin.fit.vutbr.cz** with your preferred repository m
 # Install
 You will need to somehow download files on your fresh Debian install. Preferred way is by cloning git repository.
 Run as root
-```
+```sh
 apt-get install git
 git clone https://github.com/ondratra/sanager /opt/sanager
 ```
 
 ## Install globally
 To install sanager globally to the local system run:
-```
+```sh
 sudo -E ./sanager.sh lowLevel installSanagerGlobally
 ```
 
@@ -37,7 +37,7 @@ After that, you can use `sanager` anywhere instead of `./systemInstall.sh`.
 
 
 # Use
-```
+```sh
 # use your actual username in following command
 # following command is needed only once (will not break anything when run repeatedly)
 NON_ROOT_USERNAME=ondratra su -c ./rootInit.sh
@@ -50,12 +50,12 @@ sudo -E ./systemInstall.sh pc
 
 # you can now restart pc(preferred) or start graphical interface via
 lightdm
-```
+```sh
 Running this script on regular user account with `sudo -E` ensuring your git keys, etc. will be available for the script.
 
 ## Logging
 If you need to log system install run command with additional parameter `--verbose`.
-```
+```sh
 sudo -E ./systemInstall.sh pc --verbose |& sudo -E tee systemInstall.log
 ```
 
@@ -68,7 +68,7 @@ All script are meant to be quite by default; messages to stderr are enabled alwa
 # Troubleshooting
 When somethings goes wrong try to rerun `systemInstall.sh`.
 Additionally you can delete content of some config folders before rerun.
-```
+```sh
 rm -rf /etc/apt/sources.list.d/__sanager*
 rm -rf /opt/__sanager/*
 # or selectively
@@ -81,7 +81,7 @@ rm -rf /opt/__sanager/tmp
 # Updating configuration
 
 ## Mate
-```
+```sh
 # export Mate configuration
 ./utilities/exportMateConfig.sh
 # this dumps the current profile; if you need to dump the old backup, you can set the db path by prepending `DCONF_PROFILE=~/oldMateBackupPath`

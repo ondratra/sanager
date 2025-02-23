@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Syncoid Hourly
+
+[Timer]
+OnCalendar=hourly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
