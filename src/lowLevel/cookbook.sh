@@ -347,26 +347,6 @@ function docker {
     aptInstall $PACKAGES
 
     addUserToGroup "$SCRIPT_EXECUTING_USER" docker
-
-    function installLazydocker {
-        VERSION="0.24.1"
-        RELEASE_FILE="lazydocker_${VERSION}_Linux_x86_64.tar.gz"
-        RELEASE_URL="https://github.com/jesseduffield/lazydocker/releases/download/v${VERSION}/${RELEASE_FILE}"
-        OPT_DIR="$SANAGER_INSTALL_DIR/lazydocker"
-
-        if [ -f "$OPT_DIR/$RELEASE_FILE" ]; then
-            return
-        fi
-
-        mkdir $OPT_DIR -p
-        cd $OPT_DIR
-        wgetDownload $RELEASE_URL -O "$OPT_DIR/$RELEASE_FILE"
-        tar -xzf $RELEASE_FILE
-
-        echo "export PATH=\$PATH:$OPT_DIR" >> ~/.bashrc
-    }
-
-    installLazydocker
 }
 
 function pdfarranger {
@@ -906,6 +886,41 @@ function kittyTerminal {
     cp -rp $CONFIG_SOURCE_FOLDER/* $CONFIG_TARGET_PATH/
 }
 
+function syncthing_pkg {
+    PACKAGES="syncthing"
+    CONFIG_SOURCE_FOLDER=$SCRIPT_DIR/data/syncthing
+    CONFIG_TARGET_PATH=~/.local/state/syncthing
+    CONFIG_XML_PATH=$CONFIG_TARGET_PATH/config.xml
+
+    aptGetInstall $PACKAGES
+
+    if [ -f $CONFIG_XML_PATH ]; then
+        return
+    fi
+
+    mkdir -p /mnt/syncthing
+
+    syncthing generate --no-default-folder
+    THIS_MACHINE_DEVICE_ID=$(sed -n 's/^    <device id="\([^"]*\)".*/\1/p' $CONFIG_XML_PATH)
+    THIS_MACHINE_NAME=$(uname -n)
+
+    # overwrite generated config
+    cat $CONFIG_SOURCE_FOLDER/config.xml \
+        | sed "s/\${THIS_MACHINE_DEVICE_ID}/$THIS_MACHINE_DEVICE_ID/g" \
+        | sed "s/\${THIS_MACHINE_NAME}/$THIS_MACHINE_NAME/g" \
+        > $CONFIG_XML_PATH
+
+    # now manually update config if -> configure listening address, devices, and folders
+    # for each Syncthing folder, put symlinks into `/mnt/syncthing/myShareWithMachineXyz` pointing to local folders
+    # you want to share
+
+    chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_TARGET_PATH
+
+    # TODO: create a helper function for using systemctl as regular user
+    sudo -u $SCRIPT_EXECUTING_USER  XDG_RUNTIME_DIR="/run/user/$(id -u $SCRIPT_EXECUTING_USER)" systemctl --user enable syncthing
+    sudo -u $SCRIPT_EXECUTING_USER  XDG_RUNTIME_DIR="/run/user/$(id -u $SCRIPT_EXECUTING_USER)" systemctl --user start syncthing
+}
+
 # TODO:
 # - IMPORTANT!!!
 #   - create apt policy file in preferences.d/ for each added repository
@@ -919,7 +934,7 @@ function kittyTerminal {
 # - opendoas + rework this script to use it - should be simple, but replacement for `sudo -E` usage must be found first
 # - rename install functions in cookbook - there is a problem with a install function, for example, `yarn` and the utility of same name
 #   if you call `yarn` inside of cookbook, you will mistakenly call install function + you can cause infinite loop when calling
-#   `yarn` the utility inside of `yarn` the install function
+#   `yarn` the utility inside of `yarn` the install function (same situation will dotnet, syncthing, etc)
 # - create utility function `runAsRegularUser userName commandToRun...` that will abstract `sudo -u ...` and `sudo -u sh -c ...`
 # - unite wgetDownload calls - make it download files to sanager install dir, make calls use same number of parameters, etc.
 #   - add new feature that will check if file is already downloaded and skip the download if it's so - bacically move this
@@ -930,5 +945,3 @@ function kittyTerminal {
 #   - create a new function that somehow upgrades everything except broken packages reported by `apt-listbugs`
 # - save/load prefered applications / file associations and make it easily editable
 # - unite calling of pattern `mkdir $XXX && doSomething $XXX `chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $XXX`
-# - create a mechanism for installing binary files -> look at zellij and lazydocker -> it likely should create 
-#   `/opt/__sanager/bin`, link or add binaries there, and add it to PATH via `.bashrc`

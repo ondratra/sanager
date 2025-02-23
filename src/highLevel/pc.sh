@@ -16,6 +16,7 @@ function pc_all {
     pc_workInstantMessaging
     pc_fun
     pc_userRobust
+    pc_advancedNetworking
 }
 
 function pc_essentials {
@@ -81,4 +82,8 @@ function pc_fun {
     rhythmbox
     # TODO: uncomment this when lutris works - currently there is some incompatibility with `libasound-plugins:386` in sid
     #lutris
+}
+
+function pc_advancedNetworking {
+    syncthing_pkg
 }

@@ -12,6 +12,7 @@ function homeServer_all {
     homeServer_userMinimum
     homeServer_userRobust
     homeServer_zfs
+    homeServer_advancedNetworking
 }
 
 function homeServer_essentials {
@@ -53,4 +54,8 @@ function homeServer_physical {
 
 function homeServer_zfs {
     zfsLuks
+}
+
+function homeServer_advancedNetworking {
+    syncthing_pkg
 }

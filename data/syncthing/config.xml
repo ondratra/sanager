@@ -1,0 +1,29 @@
+<configuration version="37">
+    <folder id="default" label="Main tree" path="/mnt/syncthing" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="1" ignorePerms="false" autoNormalize="true">
+        <device id="${THIS_MACHINE_DEVICE_ID}" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+    </folder>
+
+    <device id="${THIS_MACHINE_DEVICE_ID}" name="${THIS_MACHINE_NAME}" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
+        <address>tcp://0.0.0.0:22000</address>
+    </device>
+
+    <gui enabled="true" tls="false" debugging="false" sendBasicAuthPrompt="false">
+        <address>127.0.0.1:8384</address>
+        <apikey></apikey>
+    </gui>
+
+    <options>
+        <listenAddress>tcp://0.0.0.0:22000</listenAddress>
+
+        <globalAnnounceEnabled>false</globalAnnounceEnabled>
+        <localAnnounceEnabled>false</localAnnounceEnabled>
+        <relaysEnabled>false</relaysEnabled>
+        <startBrowser>false</startBrowser>
+        <natEnabled>false</natEnabled>
+        <urAccepted>-1</urAccepted>
+        <autoUpgradeIntervalH>0</autoUpgradeIntervalH>
+        <crashReportingEnabled>false</crashReportingEnabled>
+    </options>
+</configuration>
