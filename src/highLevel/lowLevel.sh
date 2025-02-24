@@ -46,9 +46,8 @@ function lowLevel_getExistingRoutines {
         NICE_NAMES+=("$UGLY_NAME")
     done
 
-
     IFS=$'\n' SORTED_NAMES=($(sort <<< "${NICE_NAMES[*]}"))
     unset IFS
 
-    echo "${NICE_NAMES[@]}"
+    echo "${SORTED_NAMES[@]}"
 }
