@@ -1002,6 +1002,9 @@ function syncthing_pkg {
     chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_TARGET_PATH
     chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" ~/.local/state
 
+    # ensure user's deamon doesn't deactivate on logout
+    loginctl enable-linger $SCRIPT_EXECUTING_USER
+
     # TODO: create a helper function for using systemctl as regular user
     sudo -u $SCRIPT_EXECUTING_USER  XDG_RUNTIME_DIR="/run/user/$(id -u $SCRIPT_EXECUTING_USER)" systemctl --user enable syncthing
     sudo -u $SCRIPT_EXECUTING_USER  XDG_RUNTIME_DIR="/run/user/$(id -u $SCRIPT_EXECUTING_USER)" systemctl --user start syncthing
