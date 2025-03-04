@@ -169,6 +169,8 @@ function userEssential {
     PACKAGE_FIREFOX=$(is_debian_sid && echo "firefox" || echo "firefox-esr")
 
     aptGetInstall $PACKAGES $PACKAGE_FIREFOX
+
+    librewolf_pkg
 }
 
 function diskUtils {
@@ -1010,6 +1012,22 @@ function syncthing_pkg {
     sudo -u $SCRIPT_EXECUTING_USER  XDG_RUNTIME_DIR="/run/user/$(id -u $SCRIPT_EXECUTING_USER)" systemctl --user start syncthing
 }
 
+function extrepo_pkg {
+    PACKAGES="extrepo"
+
+    aptGetInstall $PACKAGES
+}
+
+function librewolf_pkg {
+    extrepo_pkg
+
+    PACKAGES="librewolf"
+
+    extrepo enable $PACKAGES
+    aptUpdate
+    aptGetInstall $PACKAGES
+}
+
 # TODO:
 # - IMPORTANT!!!
 #   - create apt policy file in preferences.d/ for each added repository
@@ -1034,5 +1052,5 @@ function syncthing_pkg {
 #   - create a new function that somehow upgrades everything except broken packages reported by `apt-listbugs`
 # - save/load prefered applications / file associations and make it easily editable
 # - unite calling of pattern `mkdir $XXX && doSomething $XXX `chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $XXX`
-# - create a mechanism for installing binary files -> look at zellij and lazydocker -> it likely should create 
+# - create a mechanism for installing binary files -> look at zellij and lazydocker -> it likely should create
 #   `/opt/__sanager/bin`, link or add binaries there, and add it to PATH via `.bashrc`
