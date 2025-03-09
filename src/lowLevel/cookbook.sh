@@ -711,7 +711,7 @@ function zoom {
 }
 
 function obsidian {
-    LATEST_VERSION="1.5.3"
+    LATEST_VERSION="1.8.9"
     DEB_FILE=obsidian_${LATEST_VERSION}_amd64.deb
     OPT_DIR="$SANAGER_INSTALL_DIR/obsidian"
 
