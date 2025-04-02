@@ -180,7 +180,7 @@ function diskUtils {
 }
 
 function terminalImprovements {
-    PACKAGES="fzf duf"
+    PACKAGES="fzf duf tailspin"
 
     aptGetInstall $PACKAGES
 }
