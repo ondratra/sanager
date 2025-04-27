@@ -21,6 +21,17 @@ See battery info
 upower -i /org/freedesktop/UPower/devices/battery_BAT0
 ```
 
+Read and set mac address (spoof) - works until restart
+```sh
+# read max
+cat /sys/class/net/enpXsY/address # replace X and Y
+# read mac of WiFi
+cat /sys/class/net/wlpXsY/address # replace X and Y
+
+# set custom mac
+ip link set enpXsY address 00:11:22:33:44:55  # replace X and Y and mac
+```
+
 ## Package management
 
 Get package that installed the inspected file/command
