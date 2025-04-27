@@ -38,7 +38,7 @@ function pc_userMinimum {
 function pc_userRobust {
     # TODO: make dropbox work - it unpredictably throws http error 404 when downloading install package and that breaks tests
     #  dropboxPackage
-    pdfarranger
+    pdftools
     # TODO: make datovka work - it currently depends on obsolete `libssl1.0.0` that is no longer available in Debian sid
     #datovka
     brave

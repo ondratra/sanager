@@ -371,8 +371,8 @@ function docker {
     installLazydocker
 }
 
-function pdfarranger {
-    PACKAGES="pdfarranger"
+function pdftools {
+    PACKAGES="pdfarranger img2pdf"
 
     aptGetInstall $PACKAGES
 }
