@@ -320,9 +320,31 @@ function lamp {
 }
 
 function mongodb {
-    PACKAGES="mongodb"
+    PACKAGES="mongodb-org"
+    REPO_ROW="deb http://repo.mongodb.org/apt/debian bookworm/mongodb-org/8.0 main"
+    REPO_KEY_URL="https://www.mongodb.org/static/pgp/server-8.0.asc"
+
+    addAptRepository mongodb "$REPO_ROW" $REPO_KEY_URL
 
     aptGetInstall $PACKAGES
+
+    function installMongoDbCompass {
+        OPT_DIR="$SANAGER_INSTALL_DIR/mongodb"
+        VERSION="1.45.4"
+        DEB_FILE="mongodb-compass_${VERSION}_amd64.deb"
+        DEB_FILE_URL="https://downloads.mongodb.com/compass/${DEB_FILE}"
+
+        if [ -f "$OPT_DIR/$DEB_FILE" ]; then
+            return
+        fi
+
+        mkdir $OPT_DIR -p
+        cd $OPT_DIR
+        wgetDownload $DEB_FILE_URL -O "$OPT_DIR/$DEB_FILE"
+        dpkgInstall $DEB_FILE
+    }
+
+    installMongoDbCompass
 }
 
 function heroku {
