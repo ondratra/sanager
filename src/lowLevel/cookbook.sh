@@ -1050,6 +1050,22 @@ function librewolf_pkg {
     aptGetInstall $PACKAGES
 }
 
+function feridium_pkg {
+    LATEST_VERSION="7.1.0"
+    DEB_FILE=Ferdium-linux-${LATEST_VERSION}-amd64.deb
+    PACKAGE_URL="https://github.com/ferdium/ferdium-app/releases/download/v${LATEST_VERSION}/$DEB_FILE"
+    OPT_DIR="$SANAGER_INSTALL_DIR/feridium"
+
+    mkdir $OPT_DIR -p
+    cd $OPT_DIR
+
+    if [ ! -f $DEB_FILE ]; then
+        wgetDownload $PACKAGE_URL -O $DEB_FILE
+    fi
+
+    dpkgInstall $DEB_FILE
+}
+
 # TODO:
 # - IMPORTANT!!!
 #   - create apt policy file in preferences.d/ for each added repository
