@@ -1050,7 +1050,7 @@ function librewolf_pkg {
     aptGetInstall $PACKAGES
 }
 
-function feridium_pkg {
+function ferdium_pkg {
     LATEST_VERSION="7.1.0"
     DEB_FILE=Ferdium-linux-${LATEST_VERSION}-amd64.deb
     PACKAGE_URL="https://github.com/ferdium/ferdium-app/releases/download/v${LATEST_VERSION}/$DEB_FILE"
@@ -1064,6 +1064,12 @@ function feridium_pkg {
     fi
 
     dpkgInstall $DEB_FILE
+}
+
+function keepass_pkg {
+    PACKAGES="keepassxc"
+
+    aptGetInstall $PACKAGES
 }
 
 # TODO:

@@ -45,6 +45,9 @@ function pc_userRobust {
     zellij
     kittyTerminal
     terminalImprovements
+
+    ferdium_pkg
+    keepass_pkg
 }
 
 function pc_work {
