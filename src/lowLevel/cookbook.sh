@@ -1068,8 +1068,17 @@ function ferdium_pkg {
 
 function keepass_pkg {
     PACKAGES="keepassxc"
+    CONFIG_SOURCE_FOLDER=$SCRIPT_DIR/data/keepassxc
+    CONFIG_TARGET_PATH=~/.config/keepassxc
 
     aptGetInstall $PACKAGES
+
+    if [ -f "$CONFIG_TARGET_PATH/keepassxc.ini" ]; then
+        return
+    fi
+
+    mkdir $CONFIG_TARGET_PATH -p
+    cp -rp $CONFIG_SOURCE_FOLDER/* $CONFIG_TARGET_PATH/
 }
 
 # TODO:
