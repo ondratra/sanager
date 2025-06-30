@@ -186,7 +186,7 @@ function terminalImprovements {
 }
 
 function 2dPrint {
-    PACKAGES="cups cups-browsed xsane"
+    PACKAGES="cups cups-browsed xsane simple-scan gscan2pdf"
 
     systemctl restart cups-browsed
 }
