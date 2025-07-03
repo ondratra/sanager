@@ -161,6 +161,27 @@ sudo zfs list "$MY_ZFS_BACKUP_POOL_NAME" >/dev/null 2>&1 || sudo zfs create -p "
 sudo zfs send -v ${MY_ZFS_POOL_NAME}@${SNAPSHOT_NAME} | sudo zfs receive $MY_ZFS_BACKUP_POOL_NAME/Backups/$PC_NAME/$MY_ZFS_POOL_NAME
 ```
 
+#### Single disk ZFS pool
+```sh
+# show status
+lsblk -f
+
+# create single partition on disk
+sudo parted /dev/sdX -- mklabel gpt
+sudo parted -a optimal /dev/sdX -- mkpart primary 0% 100% # uses 100% of disk!
+
+# generate UUID for partition
+blkid /dev/sdX1
+
+# create pool - mind the difference between capital `-O` and lowercase `-o`
+sudo zpool create \
+  -o ashift=12 \
+  -O compression=lz4 \
+  -O atime=off \
+  my-pool-name \
+  /dev/disk/by-partuuid/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
 #### Automatic backups using Sanoid & Syncoid
 
 Sanager installs Sanoid and Syncoid via low level install `zfsLuks`. After the install you need to setup your backup
@@ -169,7 +190,7 @@ strategy for the specific machine:
 - edit `/etc/systemd/system/syncoid.service` - edit `ExecStart` value so it uses your proper datasets
 - `systemctl enable sanoid --now` - ensure Sanoid is running
 - reload Syncoid config
-    ```
+    ```sh
     systemctl daemon-reload
     systemctl enable --now syncoid.timer
     ```
