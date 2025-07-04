@@ -42,12 +42,15 @@ function pc_userRobust {
     # TODO: make datovka work - it currently depends on obsolete `libssl1.0.0` that is no longer available in Debian sid
     #datovka
     brave
+
     zellij
     kittyTerminal
     terminalImprovements
 
     ferdium_pkg
     keepass_pkg
+
+    obsidian
 }
 
 function pc_work {
@@ -77,6 +80,7 @@ function pc_work {
 function pc_workInstantMessaging {
     keybase
     slack
+    discord
 }
 
 function pc_fun {

@@ -192,20 +192,10 @@ function 2dPrint {
 }
 
 function sublimeText {
-    OPT_DIR="$SANAGER_INSTALL_DIR/sublimeText"
     DEB_FILE="sublime-text_build-4192_amd64.deb"
+    PACKAGE_URL="https://download.sublimetext.com/$DEB_FILE"
     PACKAGE_CONTROL_DOWNLOAD_URL="https://github.com/wbond/package_control/releases/download/4.0.8/Package.Control.sublime-package"
     CONFIG_DIR=~/.config/sublime-text
-
-    function ensureInstall {
-        # download and install package if absent
-        if [ -f $DEB_FILE ]; then
-            return
-        fi
-
-        wgetDownload "https://download.sublimetext.com/$DEB_FILE"
-        dpkgInstall $DEB_FILE
-    }
 
     function refreshConfiguration {
         INSTALLED_PACKAGES_DIR="$CONFIG_DIR/Installed Packages"
@@ -236,9 +226,7 @@ function sublimeText {
         chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_DIR
     }
 
-    mkdir $OPT_DIR -p
-    cd $OPT_DIR
-    ensureInstall
+    dpkgDownloadAndInstall sublimeText "$DEB_FILE" "$PACKAGE_URL"
     refreshConfiguration
 }
 
@@ -712,40 +700,19 @@ function signal {
 
 function zoom {
     PACKAGES_DEPENDENCIES=""
-    OPT_DIR="$SANAGER_INSTALL_DIR/zoom"
     DEB_FILE="zoom_amd64.deb"
-
-    mkdir $OPT_DIR -p
-    cd $OPT_DIR
-
-    if isInstalled "zoom"; then
-        return 0
-    fi
+    PACKAGE_URL="https://zoom.us/client/latest/$DEB_FILE"
 
     aptGetInstall $PACKAGES_DEPENDENCIES
-
-    if [ ! -f $DEB_FILE ]; then
-        wgetDownload "https://zoom.us/client/latest/$DEB_FILE" -O $DEB_FILE
-    fi
-
-    # install package and auto-accept license (-n means non-interactive install)
-    dpkgInstall -n $DEB_FILE
+    dpkgDownloadAndInstall zoom "$DEB_FILE" "$PACKAGE_URL"
 }
 
 function obsidian {
     LATEST_VERSION="1.8.9"
     DEB_FILE=obsidian_${LATEST_VERSION}_amd64.deb
-    OPT_DIR="$SANAGER_INSTALL_DIR/obsidian"
+    PACKAGE_URL="https://github.com/obsidianmd/obsidian-releases/releases/download/v${LATEST_VERSION}/$DEB_FILE"
 
-    mkdir $OPT_DIR -p
-    cd $OPT_DIR
-
-    if [ ! -f $DEB_FILE ]; then
-        PACKAGE_URL="https://github.com/obsidianmd/obsidian-releases/releases/download/v${LATEST_VERSION}/$DEB_FILE"
-        wgetDownload $PACKAGE_URL -O $DEB_FILE
-    fi
-
-    dpkgInstall $DEB_FILE
+    dpkgDownloadAndInstall obsidian "$DEB_FILE" "$PACKAGE_URL"
 }
 
 function corectrl {
@@ -783,17 +750,9 @@ function coolercontrol {
 
 function discord {
     DEB_FILE=discord.deb
-    OPT_DIR="$SANAGER_INSTALL_DIR/discord"
+    PACKAGE_URL="https://discord.com/api/download?platform=linux&format=deb"
 
-    mkdir $OPT_DIR -p
-    cd $OPT_DIR
-
-    if [ ! -f $DEB_FILE ]; then
-        PACKAGE_URL="https://discord.com/api/download?platform=linux&format=deb"
-        wgetDownload $PACKAGE_URL -O $DEB_FILE
-    fi
-
-    dpkgInstall $DEB_FILE
+    dpkgDownloadAndInstall discord "$DEB_FILE" "$PACKAGE_URL"
 }
 
 function dotnet_pkg {
@@ -1054,16 +1013,8 @@ function ferdium_pkg {
     LATEST_VERSION="7.1.0"
     DEB_FILE=Ferdium-linux-${LATEST_VERSION}-amd64.deb
     PACKAGE_URL="https://github.com/ferdium/ferdium-app/releases/download/v${LATEST_VERSION}/$DEB_FILE"
-    OPT_DIR="$SANAGER_INSTALL_DIR/feridium"
 
-    mkdir $OPT_DIR -p
-    cd $OPT_DIR
-
-    if [ ! -f $DEB_FILE ]; then
-        wgetDownload $PACKAGE_URL -O $DEB_FILE
-    fi
-
-    dpkgInstall $DEB_FILE
+    dpkgDownloadAndInstall ferdium "$DEB_FILE" "$PACKAGE_URL"
 }
 
 function keepass_pkg {
@@ -1100,7 +1051,6 @@ function keepass_pkg {
 #   - add new feature that will check if file is already downloaded and skip the download if it's so - bacically move this
 #     this behaviour into the function instead of doing it on each/most call of this function
 # - NICE TO HAVE - autocomplete/suggestion in bash when calling `sudo -E ./systemInstall.sh XXX [YYY]`
-# - create helper function to handle `mkdir $OPT_DIR -p; cd $OPT_DIR` etc. calls for creating package's install dir (and downloading install file if needed)
 # - ensure that `apt-get dist-upgrade -y` doesn't install broken packages as reported by `apt-listbugs` during `apt-get dist-upgrade`
 #   - create a new function that somehow upgrades everything except broken packages reported by `apt-listbugs`
 # - save/load prefered applications / file associations and make it easily editable

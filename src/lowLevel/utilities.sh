@@ -49,6 +49,26 @@ function dpkgInstall {
     fi
 }
 
+# usage: `dpkgDownloadAndInstall ferdium "Ferdium-linux-7.1.0-amd64.deb" "https://github.com/ferdium/ferdium-app/releases/download/v7.1.0/Ferdium-linux-7.1.0-amd64.deb"`
+function dpkgDownloadAndInstall {
+    APPLICATION_NAME="$1"
+    DEB_FILE=$2
+    PACKAGE_URL=$3
+
+    OPT_DIR="$SANAGER_INSTALL_DIR/$APPLICATION_NAME"
+
+    mkdir $OPT_DIR -p
+    cd $OPT_DIR
+
+    # do not install same package multiple times
+    if [ -f $DEB_FILE ]; then
+        return
+    fi
+
+    wgetDownload $PACKAGE_URL -O $DEB_FILE
+    dpkgInstall $DEB_FILE
+}
+
 # returns 0 when installed, 1 otherwise
 function isInstalled {
     dpkg -s $1 > /dev/null
