@@ -1,8 +1,11 @@
-
 # TODO
+
+source $SCRIPT_DIR/src/highLevel/common.sh
 source $SCRIPT_DIR/src/highLevel/pc.sh
 
 function runHighLevel {
+    common_all
+
     pc_essentials
     pc_userMinimum
 

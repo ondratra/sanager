@@ -11,8 +11,8 @@ More robust installation medium is also ok.
 
 2) Put this to /etc/apt/sources.list
 ```
-deb http://merlin.fit.vutbr.cz/debian/ unstable main contrib non-free
-deb-src http://merlin.fit.vutbr.cz/debian/ unstable main contrib non-free
+deb http://merlin.fit.vutbr.cz/debian/ unstable main contrib non-free-firmware
+deb-src http://merlin.fit.vutbr.cz/debian/ unstable main contrib non-free-firmware
 ```
 You can replace **unstable** with **testing** or boring **stable** if you like - there might be some glithes if you do so as this install is focused on bleeding edge Debian.
 You should also replace **merlin.fit.vutbr.cz** with your preferred repository mirror.

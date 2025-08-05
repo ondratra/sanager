@@ -50,6 +50,8 @@ function main {
 
     # comment this out in case you need to see/debug mate config as whole
     rm $CONFIG_FILE_PATH
+
+    cp ~/.config/mimeapps.list $SCRIPT_DIR/../data/misc/
 }
 
 main

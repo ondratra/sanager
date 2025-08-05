@@ -36,6 +36,6 @@ fi
 # acting as root run
 echo "SANAGER: Updating apt cache and installing sudo package";
 apt-get update -qq $AUTO_ACCEPT_FLAG
-apt-get install sudo -qq $AUTO_ACCEPT_FLAG
+apt-get install sudo adduser -qq $AUTO_ACCEPT_FLAG
 echo "SANAGER: Adding user $NON_ROOT_USERNAME privileges to sudo. (relogin on all terminals to make effect)";
 adduser $NON_ROOT_USERNAME sudo

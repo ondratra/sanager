@@ -1,3 +1,4 @@
 [desktop/font-rendering]
 antialiasing='rgba'
+dpi=96.0
 hinting='slight'

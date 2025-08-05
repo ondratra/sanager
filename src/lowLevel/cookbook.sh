@@ -1,27 +1,21 @@
 #!/bin/bash
 # see README.md for script description
 
-function installSanagerGlobally {
-    EXECUTABLE_PATH=/usr/bin/sanager
-
-    rm -rf $EXECUTABLE_PATH
-    ln -s "$SCRIPT_DIR/systemInstall.sh" $EXECUTABLE_PATH
-}
-
 function essential {
-    PACKAGES="apt-transport-https apt-listbugs aptitude wget net-tools bash-completion p7zip-full build-essential gdebi rsync ntp"
+    PACKAGES="apt-transport-https apt-listbugs aptitude wget net-tools bash-completion p7zip-full build-essential gdebi rsync ntpsec"
     DIRMNGR="dirmngr" # there might be glitches with gpg without dirmngr -> ensure it's presence
 
     aptGetInstall $PACKAGES $DIRMNGR
 }
 
 function fonts {
-    PACKAGES="fontconfig-infinality fonts-noto-color-emoji"
+    #PACKAGES="fontconfig-infinality fonts-noto-color-emoji"
+    PACKAGES="fonts-noto-color-emoji"
     MAX_UBUNTU_VERSION="xenial" # repository doesn't support newer Ubuntu versions atm
-    REPO_ROW="deb http://ppa.launchpad.net/no1wantdthisname/ppa/ubuntu $MAX_UBUNTU_VERSION main"
-    REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com E985B27B` # key can be found at https://launchpad.net/~no1wantdthisname/+archive/ubuntu/ppa
+    #REPO_ROW="deb http://ppa.launchpad.net/no1wantdthisname/ppa/ubuntu $MAX_UBUNTU_VERSION main"
+    #REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com E985B27B` # key can be found at https://launchpad.net/~no1wantdthisname/+archive/ubuntu/ppa
 
-    addAptRepository infinalityFonts "$REPO_ROW" $REPO_KEY_URL
+    #addAptRepository infinalityFonts "$REPO_ROW" $REPO_KEY_URL
     aptGetInstall $PACKAGES
 
     # in some situation you might need to run manually
@@ -43,11 +37,10 @@ function networkManager {
 }
 
 function desktopDisplayEtc {
-    PACKAGES="dconf-cli"
-    XORG="xorg"
-    DESKTOP="mate mate-desktop-environment mate-desktop-environment-extras mate-tweak"
-    DISPLAY="lightdm"
-
+    local PACKAGES="dconf-cli"
+    local XORG="xorg"
+    local DESKTOP="mate mate-desktop-environment mate-desktop-environment-extras mate-tweak"
+    local DISPLAY="lightdm"
 
     aptGetInstall $XORG # run this first separately to prevent D-bus init problems
     aptGetInstall $PACKAGES $DESKTOP $DISPLAY
@@ -75,23 +68,12 @@ function amdGpuDrivers {
 function virtualboxGuest {
     #PACKAGES="virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms"
     PACKAGES="virtualbox-guest-utils virtualbox-guest-x11"
-    if [[ "$IS_VIRTUALBOX_GUEST" == "0" ]]; then
+
+    if ! isVirtualboxVm; then
         return
     fi
 
     aptGetInstall $PACKAGES
-}
-
-
-
-# enables bash history search by PageUp and PageDown keys
-function enableHistorySearch {
-    # works system wide (changing /etc/inputrc)
-    sed -e '/.*\(history-search-backward\|history-search-forward\)/s/^# //g' /etc/inputrc > tmpSedReplacementFile && mv tmpSedReplacementFile /etc/inputrc
-}
-
-function enableBashCompletion {
-    applyPatch /etc/bash.bashrc < $SCRIPT_DIR/data/misc/bash.bashrc.diff || true
 }
 
 # TODO: improve cookbook's recipes naming or way how to invoke them
@@ -107,62 +89,6 @@ function dropboxPackage {
     dropbox start -i
 }
 
-function restoreMateConfig {
-    function downloadTheme {
-        THEME_URL="https://codeload.github.com/rtlewis88/rtl88-Themes/zip/refs/heads/Arc-Darkest-Nord-Frost"
-        THEME_INTER_FOLDER="rtl88-Themes-Arc-Darkest-Nord-Frost"
-        THEME_SUBFOLDER="Arc-Darkest-Nord-Frost"
-        THEME_OUTPUT_FILE="$THEME_INTER_FOLDER.zip"
-
-        if [ -d ~/.themes/$THEME_SUBFOLDER ]; then
-            return
-        fi
-
-        # extract theme in temporary folder
-        mkdir -p tmp/theme
-        cd tmp
-        wgetDownload "$THEME_URL" -O "$THEME_OUTPUT_FILE"
-        7z x "$THEME_OUTPUT_FILE" -o"./theme" # intentionally no space after `-o`
-
-        mkdir -p ~/.themes # ensure themes folder exist -> only important before first login into graphical interface
-        cp -rf "./theme/$THEME_INTER_FOLDER/$THEME_SUBFOLDER" ~/.themes/$THEME_SUBFOLDER
-        chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" ~/.themes
-
-        # clean tmp folder
-        cd ..
-        rm tmp -r
-    }
-
-    function recomposeConfig {
-        local PARTS_DIR="$1"
-        local OUTPUT_FILE="$2"
-
-        local FILE_PATHS=`find "$PARTS_DIR" -type f -name "*.txt" | sed -e "s/\.txt$//" | sort | sed -e "s/$/.txt/"`
-
-        echo -n "" > $OUTPUT_FILE
-        local FIRST_LINE="1"
-        for FILE in $FILE_PATHS; do
-            if [[ $FIRST_LINE == "1" ]]; then
-                FIRST_LINE="0"
-            else
-                echo >> $OUTPUT_FILE
-            fi
-
-            cat "${FILE}" >> $OUTPUT_FILE
-        done
-    }
-
-    local OUTPUT_FILE="$SCRIPT_DIR/data/mate/config.txt"
-    local PARTS_DIR="$SCRIPT_DIR/data/mate/parts"
-
-    recomposeConfig $PARTS_DIR $OUTPUT_FILE
-    chown "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $OUTPUT_FILE
-
-    downloadTheme
-
-    # passing DBUS_SESSION_BUS_ADDRESS might seem meaningless but it is needed to make dconf work with sudo
-    sudo -u $SCRIPT_EXECUTING_USER DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS dconf load /org/mate/ < "$SCRIPT_DIR/data/mate/config.txt"
-}
 
 function userEssential {
     PACKAGES="curl vim htop iotop-c chromium"
@@ -188,6 +114,7 @@ function terminalImprovements {
 function 2dPrint {
     PACKAGES="cups cups-browsed xsane simple-scan gscan2pdf"
 
+    aptGetInstall $PACKAGES
     systemctl restart cups-browsed
 }
 
@@ -232,17 +159,28 @@ function sublimeText {
 
 
 # newest version of nodejs (not among Debian packages yet)
-function nodejs {
+function nodejs_pkg {
     PACKAGES="nodejs"
-    REPO_ROW="deb https://deb.nodesource.com/node_18.x $NOWADAYS_DEBIAN_VERSION main"
-    REPO_KEY_URL="https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
 
-    addAptRepository nodejs "$REPO_ROW" $REPO_KEY_URL
+    # uncomment and update when some version of node than available in Debian repositoriesis needed
+    # ---
+    #REPO_ROW="deb https://deb.nodesource.com/node_18.x $NOWADAYS_DEBIAN_VERSION main"
+    #REPO_KEY_URL="https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+
+    #addAptRepository nodejs "$REPO_ROW" $REPO_KEY_URL
+    # ---
+
+    aptGetInstall $PACKAGES
+}
+
+function npm_pkg {
+    PACKAGES="npm"
+
     aptGetInstall $PACKAGES
 }
 
 function rust {
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 }
 
 function yarn {
@@ -253,6 +191,11 @@ function yarn {
     addAlias yarn yarnpkg
 
     function disableTelemetry {
+        return
+        if [[ `yarnpkg config get enableTelemetry` == "false" ]]; then
+            return
+        fi
+
         # TODO: check the status and prevent this setup of unnecessary tmp repository if telemetry is already disabled
 
         # NOTE: setup of dummy yarn repository is needed to disable telemetry
@@ -574,7 +517,6 @@ function virtualbox {
     aptGetInstall $PACKAGES
 }
 
-# STEAM NOT WORKING RIGHT NOW - as proprietary licence you need to explicitly agree with licence -> without interactive mode it's auto decline
 function steam {
     PACKAGES="steam"
 
@@ -597,11 +539,14 @@ function steam {
 
 function rhythmbox {
     # package rhythmbox-plugins is needed now because llyrics plugin itself doesn't install all dependencies needed for it to work
-    PACKAGES="rhythmbox rhythmbox-plugins rhythmbox-plugin-llyrics libflac8 flac"
-    REPO_ROW="deb http://ppa.launchpad.net/fossfreedom/rhythmbox-plugins/ubuntu $NOWADAYS_UBUNTU_VERSION main"
-    REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com F4FE239D` # key can be found at https://launchpad.net/~fossfreedom/+archive/ubuntu/rhythmbox
+    PACKAGES="rhythmbox rhythmbox-plugins libflac14 flac"
 
-    addAptRepository rhytmbox-plugins "$REPO_ROW" $REPO_KEY_URL
+    # plugins for lyrics are disabled for now - launchpad has old signature (rsa1024)
+    #PACKAGES="rhythmbox rhythmbox-plugins rhythmbox-plugin-llyrics libflac14 flac"
+    #REPO_ROW="deb http://ppa.launchpad.net/fossfreedom/rhythmbox-plugins/ubuntu $NOWADAYS_UBUNTU_VERSION main"
+    #REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com 143BC139DC5B097AA27C821B07089EBCF3AC1FCD` # key can be found at https://launchpad.net/~fossfreedom/+archive/ubuntu/rhythmbox-plugins
+
+    #addAptRepository rhytmbox-plugins "$REPO_ROW" $REPO_KEY_URL
 
     aptGetInstall $PACKAGES
 }
@@ -624,7 +569,7 @@ function multimedia {
 }
 
 function newestLinuxKernel {
-    KERNEL_VERSION=$(is_debian_sid && echo "6.10.11" || echo "6.1.0-26")
+    KERNEL_VERSION=$(is_debian_sid && echo "6.12.33+deb13" || echo "6.1.0-26")
     PACKAGES="linux-image-$KERNEL_VERSION-amd64 linux-headers-$KERNEL_VERSION-amd64"
 
     aptGetInstall $PACKAGES
@@ -652,9 +597,12 @@ function redshift {
 
     if [ ! -f $CONFIG_FILE_PATH ]; then
         cp $SCRIPT_DIR/data/misc/redshift.conf $CONFIG_FILE_PATH
+        chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_FILE_PATH
     fi
 
     aptGetInstall $PACKAGES
+
+    autostartApplication "redshift-gtk.desktop"
 }
 
 function brave {
@@ -666,28 +614,30 @@ function brave {
     aptGetInstall $PACKAGES
 }
 
-function keybase {
-    PACKAGES="keybase"
-    REPO_ROW="deb http://prerelease.keybase.io/deb stable main"
-    REPO_KEY_URL="https://keybase.io/docs/server_security/code_signing_key.asc"
+# keybase not supported for now due to obsolete repo signature (SHA1)
+#function keybase {
+#    PACKAGES="keybase"
+#    REPO_ROW="deb http://prerelease.keybase.io/deb stable main"
+#    REPO_KEY_URL="https://keybase.io/docs/server_security/code_signing_key.asc"
+#
+#    addAptRepository keybase "$REPO_ROW" $REPO_KEY_URL
+#    aptGetInstall $PACKAGES
+#
+#    # this file sometimes gets autogenerated but conflits Sanager's Keybase source
+#    rm -f /etc/apt/sources.list.d/keybase.list
+#}
 
-    addAptRepository keybase "$REPO_ROW" $REPO_KEY_URL
-    aptGetInstall $PACKAGES
-
-    # this file sometimes gets autogenerated but conflits Sanager's Keybase source
-    rm -f /etc/apt/sources.list.d/keybase.list
-}
-
-function slack {
-    PACKAGES="slack-desktop"
-    REPO_ROW="deb https://packagecloud.io/slacktechnologies/slack/debian/ jessie main"
-    REPO_KEY_URL="https://slack.com/gpg/slack_pubkey_20210901.gpg"
-    #REPO_KEY_URL=`gpgKeyUrlFromKeyring pgpkeys.mit.edu C6ABDCF64DB9A0B2` # TODO - automatically search for online keyservers
-    REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com C6ABDCF64DB9A0B2`
-
-    addAptRepository slack "$REPO_ROW" $REPO_KEY_URL
-    aptGetInstall $PACKAGES
-}
+# slack not supported for now due to obsolete repo signature (SHA1)
+#function slack {
+#    PACKAGES="slack-desktop"
+#    REPO_ROW="deb https://packagecloud.io/slacktechnologies/slack/debian/ jessie main"
+#    REPO_KEY_URL="https://slack.com/gpg/slack_pubkey_20210901.gpg"
+#    #REPO_KEY_URL=`gpgKeyUrlFromKeyring pgpkeys.mit.edu C6ABDCF64DB9A0B2` # TODO - automatically search for online keyservers
+#    REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com C6ABDCF64DB9A0B2`
+#
+#    #addAptRepository slack "$REPO_ROW" $REPO_KEY_URL
+#    #aptGetInstall $PACKAGES
+#}
 
 function signal {
     PACKAGES="signal-desktop"
@@ -720,8 +670,7 @@ function corectrl {
 
     aptGetInstall $PACKAGES
 
-    # enable autostart
-    cp /usr/share/applications/org.corectrl.corectrl.desktop ~/.config/autostart/org.corectrl.corectrl.desktop
+    autostartApplication "org.corectrl.CoreCtrl.desktop"
 
     cp $SCRIPT_DIR/data/misc/90-corectrl.rules /etc/polkit-1/rules.d/90-corectrl.rules
 }
@@ -952,6 +901,7 @@ function kittyTerminal {
 
     mkdir $CONFIG_TARGET_PATH -p
     cp -rp $CONFIG_SOURCE_FOLDER/* $CONFIG_TARGET_PATH/
+    chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_TARGET_PATH
 }
 
 function syncthing_pkg {
@@ -1030,6 +980,7 @@ function keepass_pkg {
 
     mkdir $CONFIG_TARGET_PATH -p
     cp -rp $CONFIG_SOURCE_FOLDER/* $CONFIG_TARGET_PATH/
+    chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_TARGET_PATH
 }
 
 # TODO:
@@ -1057,3 +1008,4 @@ function keepass_pkg {
 # - unite calling of pattern `mkdir $XXX && doSomething $XXX `chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $XXX`
 # - create a mechanism for installing binary files -> look at zellij and lazydocker -> it likely should create
 #   `/opt/__sanager/bin`, link or add binaries there, and add it to PATH via `.bashrc`
+# - isolate Steam from rest of system - it's proprietary software installing other proprietary system

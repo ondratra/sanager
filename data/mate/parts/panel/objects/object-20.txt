@@ -1,0 +1,5 @@
+[panel/objects/object-20]
+launcher-location='/usr/share/applications/org.keepassxc.KeePassXC.desktop'
+object-type='launcher'
+position=551
+toplevel-id='top'

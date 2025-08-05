@@ -2,6 +2,7 @@
 active-plugins=['time', 'docinfo', 'spell', 'modelines', 'filebrowser']
 background-pattern='none'
 bottom-panel-size=140
+color-scheme='Yaru'
 history-search-for=['created']
 print-font-body-pango='Monospace 9'
 print-font-header-pango='Cantarell 11'
@@ -12,6 +13,6 @@ print-syntax-highlighting=true
 print-wrap-mode='GTK_WRAP_WORD'
 side-panel-active-page=-1725528251
 side-panel-size=200
-size=(1892, 1027)
+size=(1919, 1018)
 state=4
 statusbar-visible=true

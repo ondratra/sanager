@@ -1,4 +1,3 @@
-
 source $SCRIPT_DIR/src/highLevel/pc.sh
 
 # (my) personal computer instaled on real world hardware
@@ -9,6 +8,7 @@ function runHighLevel {
 
 function physicalPc_all {
     pc_all
+
     physicalPc_drivers
     physicalPc_virtualization
     physicalPc_screen
@@ -21,7 +21,7 @@ function physicalPc_all {
 }
 
 function physicalPc_drivers {
-    if is_virtualbox; then
+    if isVirtualboxVm; then
         return
     fi
 
@@ -31,6 +31,8 @@ function physicalPc_drivers {
 }
 
 function physicalPc_cooling {
+    setupTempSensors
+
     corectrl
     coolercontrol
 }

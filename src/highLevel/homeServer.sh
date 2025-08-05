@@ -7,6 +7,8 @@ function runHighLevel {
 }
 
 function homeServer_all {
+    graphicalDesktop_all
+
     homeServer_essentials
     homeServer_physical
     homeServer_userMinimum
@@ -16,8 +18,6 @@ function homeServer_all {
 }
 
 function homeServer_essentials {
-    graphicalDesktop_all
-
     audio
     fonts
     networkManager
@@ -42,7 +42,7 @@ function homeServer_userRobust {
 }
 
 function homeServer_physical {
-    if is_virtualbox; then
+    if isVirtualboxVm; then
         return
     fi
 

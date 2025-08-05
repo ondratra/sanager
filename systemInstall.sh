@@ -25,13 +25,14 @@ fi
 ###############################################################################
 
 # used when importing ubuntu packages
-NOWADAYS_UBUNTU_VERSION="lunar"
+NOWADAYS_UBUNTU_VERSION="noble"
 NOWADAYS_DEBIAN_VERSION="bullseye"
 TARGET_DEBIAN_VERSION="sid"
 SANAGER_MAIN_DIR="/opt/__sanager"
 SANAGER_INSTALL_DIR="$SANAGER_MAIN_DIR/install"
 SANAGER_INSTALL_TEMP_DIR="$SANAGER_MAIN_DIR/tmp"
 SANAGER_GPG_KEY_DIR="$SANAGER_MAIN_DIR/gpgKeys"
+SANAGER_MEDIA_DIR="$SANAGER_MAIN_DIR/media"
 
 SCRIPT_EXECUTING_USER=$SUDO_USER
 SCRIPT_DIR="`echo $(dirname $(readlink -nf $0))`"
@@ -41,20 +42,18 @@ VERBOSE_SCRIPT=`[[ "$2" == "--verbose" ]] && echo 1 || echo 0`
 VERBOSE_APT_FLAG=`[[ "$VERBOSE_SCRIPT" == "1" ]] && echo "" || echo "-qq"`
 VERBOSE_WGET_FLAG=`[[ "$VERBOSE_SCRIPT" == "0" ]] && echo "" || echo "-q"`
 
-# for detection info see http://www.dmo.ca/blog/detecting-virtualization-on-linux/
-TMP=`dmesg | grep -i virtualbox || echo ""`
-IS_VIRTUALBOX_GUEST=`[[ "$TMP" == "" ]] && echo 0 || echo 1`
-
+###############################################################################
+# Definitions of utility functions
+###############################################################################
 
 source $SCRIPT_DIR/src/lowLevel/utilities.sh
-
+source $SCRIPT_DIR/src/lowLevel/effects.sh
 
 ###############################################################################
 # Definitions of functions installing system components
 ###############################################################################
 
 source $SCRIPT_DIR/src/lowLevel/cookbook.sh
-
 
 ###############################################################################
 # Main procedure
@@ -86,7 +85,6 @@ source $BLUEPRINT_PATH
 # TODO: uncomment this when guest additions are used again
 #virtualboxGuest # always try to install virtualbox guest features (will have no effect in non-virtualized environments)
 runHighLevel "${@:2}"
-
 
 ###############################################################################
 # Post run cleansing

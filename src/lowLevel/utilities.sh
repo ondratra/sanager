@@ -82,9 +82,14 @@ function isInstalled {
 function isVirtualboxVm {
     if grep -q "VirtualBox" /sys/class/dmi/id/product_name 2>/dev/null; then
         return 1  # Running inside VirtualBox
-    else
-        return 0  # Not running inside VirtualBox
     fi
+
+    return 0  # Not running inside VirtualBox
+
+    # alternative approach
+    ## for detection info see http://www.dmo.ca/blog/detecting-virtualization-on-linux/
+    #TMP=`dmesg | grep -i virtualbox || echo ""`
+    #IS_VIRTUALBOX_GUEST=`[[ "$TMP" == "" ]] && echo 0 || echo 1`
 }
 
 # use:
@@ -234,4 +239,19 @@ function appendToFileIfNotPresent {
 
 function is_debian_sid {
     grep -q "sid" /etc/debian_version
+}
+
+# usage
+# autostartApplication /usr/share/applications/org.corectrl.CoreCtrl.desktop
+function autostartApplication {
+    APPLICATION_PATH=$1
+
+    AUTOSTART_FOLDER=~/.config/autostart/
+
+    mkdir -p ~/.config/autostart
+    cp "/usr/share/applications/$APPLICATION_PATH" $AUTOSTART_FOLDER
+
+    # pass folder permission to relevant user
+    chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $AUTOSTART_FOLDER
+    chmod -R +x $AUTOSTART_FOLDER
 }

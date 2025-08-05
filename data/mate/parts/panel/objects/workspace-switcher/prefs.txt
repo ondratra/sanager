@@ -1,3 +1,4 @@
 [panel/objects/workspace-switcher/prefs]
 display-all-workspaces=true
+display-workspace-names=false
 num-rows=1

@@ -1,6 +1,5 @@
 [panel/objects/object-19]
-launcher-location='firefox-1.desktop'
-locked=true
+launcher-location='librewolf-1.desktop'
 object-type='launcher'
-position=246
+position=267
 toplevel-id='top'

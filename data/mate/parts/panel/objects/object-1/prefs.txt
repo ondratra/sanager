@@ -3,3 +3,4 @@ cities=['<location name="" city="Brno" timezone="Europe/Prague" latitude="49.150
 custom-format=''
 expand-locations=true
 format='24-hour'
+show-seconds=false

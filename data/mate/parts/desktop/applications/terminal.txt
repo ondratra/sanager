@@ -1,2 +1,2 @@
 [desktop/applications/terminal]
-exec='mate-terminal'
+exec='kitty'

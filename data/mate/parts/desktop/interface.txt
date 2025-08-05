@@ -6,4 +6,4 @@ gtk-decoration-layout='menu:minimize,maximize,close'
 gtk-theme='Arc-Darkest-Nord-Frost'
 icon-theme='menta'
 monospace-font-name='Monospace 16'
-window-scaling-factor=2
+window-scaling-factor=1

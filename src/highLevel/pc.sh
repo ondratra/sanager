@@ -1,4 +1,3 @@
-
 # (my) personal computer
 
 source $SCRIPT_DIR/src/highLevel/graphicalDesktop.sh
@@ -8,8 +7,9 @@ function runHighLevel {
 }
 
 function pc_all {
-    pc_essentials
+    graphicalDesktop_all
 
+    pc_essentials
     pc_userMinimum
     pc_userRobust
     pc_work
@@ -20,8 +20,6 @@ function pc_all {
 }
 
 function pc_essentials {
-    graphicalDesktop_all
-
     audio
     fonts
     networkManager
@@ -65,7 +63,8 @@ function pc_work {
     # programming
     yarn
     rust
-    nodejs
+    nodejs_pkg
+    npm_pkg
     #lamp # no need for lamp lately
     rabbitVCS
 
@@ -78,15 +77,15 @@ function pc_work {
 }
 
 function pc_workInstantMessaging {
-    keybase
-    slack
+    #keybase
+    #slack
     discord
+    signal
 }
 
 function pc_fun {
     multimedia
-    # TODO: uncomment this when steam works - currently there is some incompatibility with `libedit2` in sid
-    #steam
+    steam
     rhythmbox
     # TODO: uncomment this when lutris works - currently there is some incompatibility with `libasound-plugins:386` in sid
     #lutris

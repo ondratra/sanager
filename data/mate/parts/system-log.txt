@@ -1,0 +1,5 @@
+[system-log]
+height=1018
+logfile='/var/log/alternatives.log'
+logfiles=['/var/log/README', '/var/log/fontconfig.log', '/var/log/Xorg.0.log', '/var/log/Xorg.1.log', '/var/log/dpkg.log', '/var/log/alternatives.log', '/var/log/alternatives.log.1', '/var/log/wtmp.1', '/var/log/dpkg.log.1']
+width=1919
