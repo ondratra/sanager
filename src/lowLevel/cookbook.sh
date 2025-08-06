@@ -119,7 +119,7 @@ function 2dPrint {
 }
 
 function sublimeText {
-    DEB_FILE="sublime-text_build-4192_amd64.deb"
+    DEB_FILE="sublime-text_build-4200_amd64.deb"
     PACKAGE_URL="https://download.sublimetext.com/$DEB_FILE"
     PACKAGE_CONTROL_DOWNLOAD_URL="https://github.com/wbond/package_control/releases/download/4.0.8/Package.Control.sublime-package"
     CONFIG_DIR=~/.config/sublime-text
@@ -134,6 +134,12 @@ function sublimeText {
         mkdir "$INSTALLED_PACKAGES_DIR" -p
         mkdir "$CONFIG_DIR/Packages/User" -p
         cp "$SCRIPT_DIR/data/sublimeText" "$CONFIG_DIR/Packages/$PACKAGE_LOCAL_NAME" -rT
+
+        # NOTE: my own theme depends on Soda theme being installed - use it if it's available.
+        #       Otherwise keep theme commented out to prevent SublimeText from crashing on start
+        if [ -f "$INSTALLED_PACKAGES_DIR/Theme - Soda.sublime-package" ]; then
+            sed -i 's|^\( *\)//\("theme":\)|\1\2|' "$CONFIG_DIR/Packages/$PACKAGE_LOCAL_NAME/Preferences.sublime-settings.symlinktarget"
+        fi
 
         # NOTE: symlinking package control settings wreak havoc to sublime -> resulted in removing all packages
         #       and then installing ALL packages available to package control; that's why all symlinked files have
@@ -156,7 +162,6 @@ function sublimeText {
     dpkgDownloadAndInstall sublimeText "$DEB_FILE" "$PACKAGE_URL"
     refreshConfiguration
 }
-
 
 # newest version of nodejs (not among Debian packages yet)
 function nodejs_pkg {
