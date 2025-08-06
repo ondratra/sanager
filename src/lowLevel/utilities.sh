@@ -255,3 +255,20 @@ function autostartApplication {
     chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $AUTOSTART_FOLDER
     chmod -R +x $AUTOSTART_FOLDER
 }
+
+function isExtrepoRepositoryEnabled {
+    local REPOSITORY_NAME="$1"
+    local FILE="/etc/apt/sources.list.d/extrepo_${REPOSITORY_NAME}.sources"
+
+    if [[ ! -f "$FILE" ]]; then
+        return 1
+    fi
+
+    local IS_ENABLED=$(grep -i '^Enabled:' "$FILE" | awk '{print tolower($2)}')
+
+    if [[ "$IS_ENABLED" == "no" ]]; then
+        return 1
+    fi
+
+    return 0
+}

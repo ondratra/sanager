@@ -185,7 +185,7 @@ function npm_pkg {
 }
 
 function rust {
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sudo -u $SCRIPT_EXECUTING_USER sh -s -- -y
 }
 
 function yarn {
@@ -959,8 +959,10 @@ function librewolf_pkg {
 
     PACKAGES="librewolf"
 
-    extrepo enable $PACKAGES
-    aptUpdate
+    if ! isExtrepoRepositoryEnabled librewolf; then
+        extrepo enable $PACKAGES
+        aptUpdate
+    fi
     aptGetInstall $PACKAGES
 }
 
