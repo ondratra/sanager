@@ -112,8 +112,10 @@ function addGpgKey {
 
     printMsg "Adding GPG key for repo: $KEY_NAME"
 
+    chmod go-rw ~/.gnupg/pubring.kbx # ensure this pubkey is not writable for others -> it's not clear why it's writable for them by default
+
     mkdir -p $SANAGER_GPG_KEY_DIR # ensure gpg keys directory
-    wget --no-hsts -qO - "$KEY_URL" | gpg --dearmor > $KEY_FILE_PATH
+    wget --no-hsts -qO - "$KEY_URL" | sudo -u $SCRIPT_EXECUTING_USER gpg --dearmor > $KEY_FILE_PATH
 
     echo $KEY_FILE_PATH
 }
