@@ -2,4 +2,4 @@
 default-window-height=357
 default-window-maximized=false
 default-window-width=554
-look-in-folder='/home/ondratra'
+look-in-folder='__$HOME__'

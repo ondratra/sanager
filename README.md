@@ -82,8 +82,8 @@ rm -rf /opt/__sanager/tmp
 
 ## Mate
 ```sh
-# export Mate configuration
-./utilities/exportMateConfig.sh
+# export all configuration (MATE is included)
+./exportConfig.sh
 # this dumps the current profile; if you need to dump the old backup, you can set the db path by prepending `DCONF_PROFILE=~/oldMateBackupPath`
 
 # import Mate configuration

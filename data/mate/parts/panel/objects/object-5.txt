@@ -1,5 +1,7 @@
 [panel/objects/object-5]
 launcher-location='kitty.desktop'
+locked=true
 object-type='launcher'
+panel-right-stick=false
 position=650
 toplevel-id='top'

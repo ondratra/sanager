@@ -1,4 +1,4 @@
 [pluma/plugins/filebrowser/on-load]
 root='file:///'
 tree-view=true
-virtual-root='file:///home/ondratra/Sta%C5%BEen%C3%A9'
+virtual-root='file://__$XDG_DOWNLOAD_DIR__'

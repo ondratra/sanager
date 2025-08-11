@@ -1,12 +1,4 @@
-#!/bin/bash
-
-# escape on error
-set -e
-
-SCRIPT_DIR="`dirname \"$0\"`" # relative
-SCRIPT_DIR="`( cd \"$SCRIPT_DIR\" && pwd )`"  # absolutized and normalized
-
-function exportMateConfiguration {
+function dumpMateConfiguration {
     local CONFIG_FILE_PATH="$1"
 
     dconf dump /org/mate/ > $CONFIG_FILE_PATH
@@ -42,16 +34,23 @@ function splitIniFile {
     done < $INI_FILE_PATH
 }
 
-function main {
-    local CONFIG_FILE_PATH="$SCRIPT_DIR/../data/mate/config.txt"
+function fillConfigVariables {
+    local CONFIG_FILE_PATH=$1
 
-    exportMateConfiguration $CONFIG_FILE_PATH
-    splitIniFile $CONFIG_FILE_PATH
-
-    # comment this out in case you need to see/debug mate config as whole
-    rm $CONFIG_FILE_PATH
-
-    cp ~/.config/mimeapps.list $SCRIPT_DIR/../data/misc/
+    sed \
+        -i \
+        -e "s|$(xdg-user-dir PICTURES)|__\$XDG_PICTURES_DIR__|g" \
+        -e "s|$(xdg-user-dir DOWNLOAD)|__\$XDG_DOWNLOAD_DIR__|g" \
+        -e "s|$HOME|__\$HOME__|g" \
+        $CONFIG_FILE_PATH
 }
 
-main
+function exportMateConfig {
+    local CONFIG_FILE_PATH="$SCRIPT_DIR/data/mate/config.txt"
+
+    dumpMateConfiguration $CONFIG_FILE_PATH
+    fillConfigVariables $CONFIG_FILE_PATH
+    splitIniFile $CONFIG_FILE_PATH
+
+    cp ~/.config/mimeapps.list $SCRIPT_DIR/data/misc/
+}

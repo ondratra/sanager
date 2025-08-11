@@ -16,16 +16,18 @@ fi
 # Settings and helpers
 ###############################################################################
 
+source ./utilities/exportMateConfig.sh
+source ./utilities/exportSublimeTextConfig.sh
+
 SUBLIME_TEXT_PACKAGE_LOCAL_NAME="Ondratra"
 
 SCRIPT_DIR="`dirname \"$0\"`" # relative
 SCRIPT_DIR="`( cd \"$SCRIPT_DIR\" && pwd )`"  # absolutized and normalized
-
 
 ###############################################################################
 # Main procedure
 ###############################################################################
 
 echo "SANAGER: exporting configuration to Sanager folder";
-dconf dump /org/mate/ > $SCRIPT_DIR/data/mate/config.txt
-cp ~/.config/sublime-text-3/Packages/$SUBLIME_TEXT_PACKAGE_LOCAL_NAME $SCRIPT_DIR/data/sublimeText -rT
+exportMateConfig
+exportSublimeTextConfig

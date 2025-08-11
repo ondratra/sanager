@@ -1,5 +1,6 @@
 [panel/objects/object-19]
 launcher-location='librewolf-1.desktop'
+locked=true
 object-type='launcher'
 position=267
 toplevel-id='top'

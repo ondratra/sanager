@@ -3,4 +3,4 @@ border-effect='none'
 delay=0
 include-border=true
 include-pointer=true
-last-save-directory='file:///home/ondratra/Obr%C3%A1zky'
+last-save-directory='file://__$XDG_PICTURES_DIR__'

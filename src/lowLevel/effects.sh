@@ -55,6 +55,17 @@ function restoreMateConfig {
         done
     }
 
+    function fillConfigVariables {
+        local CONFIG_FILE=$1
+
+        sed \
+            -i \
+            -e "s|__\$HOME__|$HOME|g" \
+            -e "s|__\$XDG_PICTURES_DIR__|$(xdg-user-dir PICTURES)|g" \
+            -e "s|__\$XDG_DOWNLOAD_DIR__|$(xdg-user-dir DOWNLOAD)|g" \
+            $CONFIG_FILE
+    }
+
     function setUiScale {
         local RESOLUTION=$(xrandr | grep '*' | awk '{print $1}')
 
@@ -73,12 +84,13 @@ function restoreMateConfig {
     local PARTS_DIR="$SCRIPT_DIR/data/mate/parts"
 
     recomposeConfig $PARTS_DIR $OUTPUT_FILE
+    fillConfigVariables $OUTPUT_FILE
     chown "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $OUTPUT_FILE
 
     downloadTheme
 
     # passing DBUS_SESSION_BUS_ADDRESS might seem meaningless but it is needed to make dconf work with sudo
-    sudo -u $SCRIPT_EXECUTING_USER DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS dconf load /org/mate/ < "$SCRIPT_DIR/data/mate/config.txt"
+    sudo -u $SCRIPT_EXECUTING_USER DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS dconf load /org/mate/ < "$OUTPUT_FILE"
     setUiScale
 
     cp -f $SCRIPT_DIR/data/misc/mimeapps.list ~/.config/ # restore "Open with" settings

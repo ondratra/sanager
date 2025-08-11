@@ -1,2 +1,2 @@
 [atril]
-document-directory=@ms 'file:///home/ondratra'
+document-directory=@ms 'file://__$HOME__'

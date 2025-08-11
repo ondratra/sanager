@@ -1,8 +1,8 @@
 [engrampa/dialogs/add]
-current-folder='file:///home/ondratra'
+current-folder='file://__$HOME__'
 exclude-files=''
 exclude-folders=''
-filename='file:///home/ondratra'
+filename='file://__$HOME__'
 include-files=''
 no-symlinks=false
 recursive=true

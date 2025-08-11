@@ -146,7 +146,7 @@ function sublimeText {
         #       suffix `.symlinktarget` so they are ignored by Sublime Text on their own
         for TMP_FILE in "${FILES_TO_SYMLINK[@]}"; do
             TARGET_FILE_NAME="${TMP_FILE/.symlinktarget/}"
-            ln -sf "../$PACKAGE_LOCAL_NAME/$TMP_FILE" "$CONFIG_DIR/Packages/User/$TARGET_FILE_NAME"
+            ln -sfn "../$PACKAGE_LOCAL_NAME/$TMP_FILE" "$CONFIG_DIR/Packages/User/$TARGET_FILE_NAME"
         done
 
         # download package control when absent
@@ -677,7 +677,8 @@ function corectrl {
 
     autostartApplication "org.corectrl.CoreCtrl.desktop"
 
-    cp $SCRIPT_DIR/data/misc/90-corectrl.rules /etc/polkit-1/rules.d/90-corectrl.rules
+    local GROUP=`id -gn $SCRIPT_EXECUTING_USER`
+    sed -e "s|__\$GROUP__|$GROUP|g" $SCRIPT_DIR/data/misc/90-corectrl.rules > /etc/polkit-1/rules.d/90-corectrl.rules
 }
 
 function coolercontrol {
@@ -762,7 +763,7 @@ function nix {
     echo "allow-import-from-derivation = true" >> $NIX_ETC_CONFIG
 
     # manually add nix to current terminal
-    # . /home/ondratra/.nix-profile/etc/profile.d/nix.sh
+    # . ~/.nix-profile/etc/profile.d/nix.sh
 }
 
 function zellij {
