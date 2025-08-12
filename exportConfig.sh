@@ -21,6 +21,7 @@ source ./utilities/exportSublimeTextConfig.sh
 
 SUBLIME_TEXT_PACKAGE_LOCAL_NAME="Ondratra"
 
+SCRIPT_EXECUTING_USER=$SUDO_USER
 SCRIPT_DIR="`dirname \"$0\"`" # relative
 SCRIPT_DIR="`( cd \"$SCRIPT_DIR\" && pwd )`"  # absolutized and normalized
 

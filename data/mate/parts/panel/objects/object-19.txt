@@ -1,5 +1,5 @@
 [panel/objects/object-19]
-launcher-location='librewolf-1.desktop'
+launcher-location='librewolf.desktop'
 locked=true
 object-type='launcher'
 position=267

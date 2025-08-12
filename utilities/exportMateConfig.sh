@@ -13,7 +13,7 @@ function splitIniFile {
     local PARTS_DIR="$INI_FILE_DIR/parts"
 
     # remove all old parts
-    rm -rf "$PARTS_DIR/*"
+    rm -rf $PARTS_DIR/*
 
     local SECTION=__default
 
@@ -53,4 +53,6 @@ function exportMateConfig {
     splitIniFile $CONFIG_FILE_PATH
 
     cp ~/.config/mimeapps.list $SCRIPT_DIR/data/misc/
+
+    chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" "$SCRIPT_DIR/data/mate"
 }

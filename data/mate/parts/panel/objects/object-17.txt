@@ -1,5 +1,5 @@
 [panel/objects/object-17]
-launcher-location='brave-browser-1.desktop'
+launcher-location='brave-browser.desktop'
 locked=true
 object-type='launcher'
 panel-right-stick=false

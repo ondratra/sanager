@@ -1,7 +1,0 @@
-[panel/objects/object-14]
-launcher-location='/usr/share/applications/unity-editor.desktop'
-object-id-list=['menu-bar', 'show-desktop', 'window-list', 'workspace-switcher', 'object-1', 'object-2', 'object-4', 'object-3', 'object-5', 'object-6', 'object-7', 'object-8', 'object-9', 'object-10', 'object-11', 'object-13', 'object-0', 'object-12', 'object-14']
-object-type='launcher'
-panel-right-stick=false
-position=891
-toplevel-id='top'
