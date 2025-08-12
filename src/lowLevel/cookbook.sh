@@ -568,7 +568,7 @@ function lutris {
 }
 
 function multimedia {
-    PACKAGES="vlc transmission easytag ardour ffmpeg"
+    PACKAGES="vlc transmission easytag ardour ffmpeg mpv"
 
     aptGetInstall $PACKAGES
 }
