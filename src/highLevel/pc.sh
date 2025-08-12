@@ -55,6 +55,9 @@ function pc_work {
     pkg_officePack
     pkg_sublimeText
 
+    # containerization
+    pkg_docker
+
     # networking
     pkg_openvpn
 
