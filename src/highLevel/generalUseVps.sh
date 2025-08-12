@@ -6,8 +6,6 @@ function runHighLevel {
     common_all
 
     pkg_essential
-    effect_enableHistorySearch
-    effect_enableBashCompletion
 
     pkg_versioningAndTools
     pkg_nodejs

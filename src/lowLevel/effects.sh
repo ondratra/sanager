@@ -158,3 +158,9 @@ function effect_distCleanup {
     aptFixDependencies
     aptCleanup
 }
+
+function effect_setupShellPrompt {
+    local PS1_LINE='export PS1="\[\e[32m\]\u@\h\[\e[0m\]:\[\e[34m\]\w\[\e[0m\]\$ "'
+
+    grep -qxF "$PS1_LINE" ~/.bashrc || echo "$PS1_LINE" >> ~/.bashrc
+}

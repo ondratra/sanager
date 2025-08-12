@@ -28,8 +28,6 @@ function homeServer_essentials {
 function homeServer_userMinimum {
     pkg_userEssential
     pkg_diskUtils
-    effect_enableHistorySearch
-    effect_enableBashCompletion
     effect_restoreMateConfig
 }
 

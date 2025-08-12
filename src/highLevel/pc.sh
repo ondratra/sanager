@@ -28,8 +28,6 @@ function pc_essentials {
 function pc_userMinimum {
     pkg_userEssential
     pkg_diskUtils
-    effect_enableHistorySearch
-    effect_enableBashCompletion
     effect_restoreMateConfig
 }
 
