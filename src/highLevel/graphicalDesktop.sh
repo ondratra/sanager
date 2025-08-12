@@ -7,8 +7,8 @@ function runHighLevel {
 function graphicalDesktop_all {
     common_all
 
-    essential
-    desktopDisplayEtc
+    pkg_essential
+    pkg_desktopDisplayEtc
 
-    newestLinuxKernel
+    pkg_newestLinuxKernel
 }

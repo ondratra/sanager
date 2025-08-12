@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # enables bash history search by PageUp and PageDown keys
-function enableHistorySearch {
+function effect_enableHistorySearch {
     # works system wide (changing /etc/inputrc)
     sed -e '/.*\(history-search-backward\|history-search-forward\)/s/^# //g' /etc/inputrc > tmpSedReplacementFile && mv tmpSedReplacementFile /etc/inputrc
 }
 
-function enableBashCompletion {
+function effect_enableBashCompletion {
     applyPatch /etc/bash.bashrc < $SCRIPT_DIR/data/misc/bash.bashrc.diff || true
 }
 
-function restoreMateConfig {
+function effect_restoreMateConfig {
     function downloadTheme {
         THEME_URL="https://codeload.github.com/rtlewis88/rtl88-Themes/zip/refs/heads/Arc-Darkest-Nord-Frost"
         THEME_INTER_FOLDER="rtl88-Themes-Arc-Darkest-Nord-Frost"
@@ -97,14 +97,14 @@ function restoreMateConfig {
     chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" ~/.config/mimeapps.list
 }
 
-function installSanagerGlobally {
+function effect_installSanagerGlobally {
     EXECUTABLE_PATH=/usr/bin/sanager
 
     rm -rf $EXECUTABLE_PATH
     ln -s "$SCRIPT_DIR/systemInstall.sh" $EXECUTABLE_PATH
 }
 
-function installSanagerMedia {
+function effect_installSanagerMedia {
     MEDIA_TEMPLATES_DIR=$SCRIPT_DIR/data/sanager/mediaTemplatesSources
     MEDIA_TEMP_DIR=$SANAGER_INSTALL_TEMP_DIR/mediaTemplates
 
@@ -121,6 +121,40 @@ function installSanagerMedia {
     rm -r $MEDIA_TEMP_DIR
 }
 
-function setupTempSensors {
+function effect_setupTempSensors {
     sensors-detect --auto
+}
+
+function effect_changeMysqlPassword {
+    NEW_PASSWORD="$1"
+    echo "newPassword: '$1'"
+    TMP_FILE="$SANAGER_INSTALL_DIR/tmp.sql"
+    SQL_QUERY="FLUSH PRIVILEGES; ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$NEW_PASSWORD'; FLUSH PRIVILEGES; SHUTDOWN;";
+
+    systemctl stop mysql > /dev/null 2> /dev/null
+
+    mkdir -p /var/run/mysqld
+    chown mysql:mysql /var/run/mysqld
+    mysqld_safe --skip-grant-tables &
+    # make sure query is accpeted by server(aka server is running)
+    TMP="1"
+    while [[ "$TMP" != "0" ]]; do
+        printMsg "waiting for MySQL server"
+        (mysql <<< $SQL_QUERY && TMP="0") || TMP="1"
+        sleep 1
+    done
+    systemctl start mysql
+
+    # fix tables after dirty MySQL import (copying /var/lib/mysql folder instead of using `mysqldump`)
+    # mysqlcheck -u [username] -p --all-databases --check-upgrade --auto-repair
+}
+
+function effect_distUpgrade {
+    aptUpdate
+    aptDistUpgrade
+}
+
+function effect_distCleanup {
+    aptFixDependencies
+    aptCleanup
 }

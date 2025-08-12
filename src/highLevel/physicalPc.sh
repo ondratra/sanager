@@ -14,10 +14,10 @@ function physicalPc_all {
     physicalPc_screen
     physicalPc_cooling
 
-    hardwareAnalysis
-    2dPrint
-    restoreMateConfig # restore config (there might be icons for newly installed programs)
-    #changeMysqlPassword ""
+    pkg_hardwareAnalysis
+    pkg_2dPrint
+    effect_restoreMateConfig # restore config (there might be icons for newly installed programs)
+    #effect_changeMysqlPassword ""
 }
 
 function physicalPc_drivers {
@@ -26,21 +26,21 @@ function physicalPc_drivers {
     fi
 
     # TODO: make cpu and gpu vendors configurable(?)
-    amdCpuDrivers
-    amdGpuDrivers
+    pkg_amdCpuDrivers
+    pkg_amdGpuDrivers
 }
 
 function physicalPc_cooling {
-    setupTempSensors
+    effect_setupTempSensors
 
-    corectrl
-    coolercontrol
+    pkg_corectrl
+    pkg_coolercontrol
 }
 
 function physicalPc_virtualization {
-    virtualbox
+    pkg_virtualbox
 }
 
 function physicalPc_screen {
-    redshift
+    pkg_redshift
 }

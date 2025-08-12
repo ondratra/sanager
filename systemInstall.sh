@@ -92,4 +92,4 @@ runHighLevel "${@:2}"
 
 # make sure all dependencies are met and remove any unused packages
 printMsg "Cleaning up"
-distCleanup
+effect_distCleanup

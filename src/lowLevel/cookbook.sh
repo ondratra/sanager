@@ -1,14 +1,14 @@
 #!/bin/bash
 # see README.md for script description
 
-function essential {
+function pkg_essential {
     PACKAGES="apt-transport-https apt-listbugs aptitude wget net-tools bash-completion p7zip-full build-essential gdebi rsync ntpsec"
     DIRMNGR="dirmngr" # there might be glitches with gpg without dirmngr -> ensure it's presence
 
     aptGetInstall $PACKAGES $DIRMNGR
 }
 
-function fonts {
+function pkg_fonts {
     #PACKAGES="fontconfig-infinality fonts-noto-color-emoji"
     PACKAGES="fonts-noto-color-emoji"
     MAX_UBUNTU_VERSION="xenial" # repository doesn't support newer Ubuntu versions atm
@@ -23,7 +23,7 @@ function fonts {
     # and select 3) linux from the menu
 }
 
-function networkManager {
+function pkg_networkManager {
     PACKAGES="network-manager network-manager-gnome"
 
     # see https://wiki.debian.org/NetworkManager#Wired_Networks_are_Unmanaged
@@ -36,7 +36,7 @@ function networkManager {
     aptGetInstall $PACKAGES
 }
 
-function desktopDisplayEtc {
+function pkg_desktopDisplayEtc {
     local PACKAGES="dconf-cli"
     local XORG="xorg"
     local DESKTOP="mate mate-desktop-environment mate-desktop-environment-extras mate-tweak"
@@ -46,26 +46,26 @@ function desktopDisplayEtc {
     aptGetInstall $PACKAGES $DESKTOP $DISPLAY
 }
 
-function audio {
+function pkg_audio {
     PACKAGES="pulseaudio pulseeffects lsp-plugins"
 
     aptGetInstall $PACKAGES
 }
 
-function amdCpuDrivers {
+function pkg_amdCpuDrivers {
     PACKAGES="firmware-linux-nonfree"
     #firmware-linux-nonfree is proprietary microcode - needed in current version of debian for free driver to work
 
     aptGetInstall $PACKAGES
 }
 
-function amdGpuDrivers {
+function pkg_amdGpuDrivers {
     PACKAGES="xserver-xorg-video-ati mesa-va-drivers"
 
     aptGetInstall $PACKAGES
 }
 
-function virtualboxGuest {
+function pkg_virtualboxGuest {
     #PACKAGES="virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms"
     PACKAGES="virtualbox-guest-utils virtualbox-guest-x11"
 
@@ -81,7 +81,7 @@ function virtualboxGuest {
 #       that makes ``dropbox start -i` call recursively calling this (install) function`
 # TODO: make dropbox work - it unpredictably throws http error 404 when downloading install package and that breaks tests
 #       NOTE: possibly not an issue anymore since `dropbox` from external repository has been replaced by `caja-dropbox`
-function dropboxPackage {
+function pkg_dropboxPackage {
     PACKAGES="caja-dropbox"
 
     aptGetInstall $PACKAGES
@@ -90,35 +90,35 @@ function dropboxPackage {
 }
 
 
-function userEssential {
+function pkg_userEssential {
     PACKAGES="curl vim htop iotop-c chromium"
     PACKAGE_FIREFOX=$(is_debian_sid && echo "firefox" || echo "firefox-esr")
 
     aptGetInstall $PACKAGES $PACKAGE_FIREFOX
 
-    librewolf_pkg
+    pkg_librewolf
 }
 
-function diskUtils {
+function pkg_diskUtils {
     PACKAGES="gnome-disk-utility gparted"
 
     aptGetInstall $PACKAGES
 }
 
-function terminalImprovements {
+function pkg_terminalImprovements {
     PACKAGES="fzf duf tailspin"
 
     aptGetInstall $PACKAGES
 }
 
-function 2dPrint {
+function pkg_2dPrint {
     PACKAGES="cups cups-browsed xsane simple-scan gscan2pdf"
 
     aptGetInstall $PACKAGES
     systemctl restart cups-browsed
 }
 
-function sublimeText {
+function pkg_sublimeText {
     DEB_FILE="sublime-text_build-4200_amd64.deb"
     PACKAGE_URL="https://download.sublimetext.com/$DEB_FILE"
     PACKAGE_CONTROL_DOWNLOAD_URL="https://github.com/wbond/package_control/releases/download/4.0.8/Package.Control.sublime-package"
@@ -164,7 +164,7 @@ function sublimeText {
 }
 
 # newest version of nodejs (not among Debian packages yet)
-function nodejs_pkg {
+function pkg_nodejs {
     PACKAGES="nodejs"
 
     # uncomment and update when some version of node than available in Debian repositoriesis needed
@@ -178,17 +178,17 @@ function nodejs_pkg {
     aptGetInstall $PACKAGES
 }
 
-function npm_pkg {
+function pkg_npm {
     PACKAGES="npm"
 
     aptGetInstall $PACKAGES
 }
 
-function rust {
+function pkg_rust {
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sudo -u $SCRIPT_EXECUTING_USER sh -s -- -y
 }
 
-function yarn {
+function pkg_yarn {
     PACKAGES="yarnpkg"
 
     aptGetInstall $PACKAGES
@@ -221,7 +221,7 @@ function yarn {
 }
 
 # Linux Apache MySQL PHP
-function lamp {
+function pkg_lamp {
     # subversion(svn) is needed by some composer(https://getcomposer.org/) packages, etc.
     # it must be installed even when not directly used by system users
     PACKAGES="mysql-server apache2 php libapache2-mod-php subversion"
@@ -255,7 +255,7 @@ function lamp {
     fi
 }
 
-function mongodb {
+function pkg_mongodb {
     PACKAGES="mongodb-org"
     REPO_ROW="deb http://repo.mongodb.org/apt/debian bookworm/mongodb-org/8.0 main"
     REPO_KEY_URL="https://www.mongodb.org/static/pgp/server-8.0.asc"
@@ -283,7 +283,7 @@ function mongodb {
     installMongoDbCompass
 }
 
-function heroku {
+function pkg_heroku {
     PACKAGES="heroku"
     REPO_ROW="deb https://cli-assets.heroku.com/apt ./"
     REPO_KEY_URL="https://cli-assets.heroku.com/apt/release.key"
@@ -293,11 +293,11 @@ function heroku {
     aptInstall $PACKAGES
 }
 
-function firebase {
+function pkg_firebase {
     npm install -g firebase-tools
 }
 
-function docker {
+function pkg_docker {
     PACKAGES="docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
     REPO_ROW="deb https://download.docker.com/linux/debian $NOWADAYS_DEBIAN_VERSION stable"
     REPO_KEY_URL="https://download.docker.com/linux/debian/gpg"
@@ -329,62 +329,38 @@ function docker {
     installLazydocker
 }
 
-function pdftools {
+function pkg_pdftools {
     PACKAGES="pdfarranger img2pdf"
 
     aptGetInstall $PACKAGES
 }
 
-function pandoc {
+function pkg_pandoc {
     PACKAGES="pandoc"
 
     aptGetInstall $PACKAGES
 }
 
-function changeMysqlPassword {
-    NEW_PASSWORD="$1"
-    echo "newPassword: '$1'"
-    TMP_FILE="$SANAGER_INSTALL_DIR/tmp.sql"
-    SQL_QUERY="FLUSH PRIVILEGES; ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$NEW_PASSWORD'; FLUSH PRIVILEGES; SHUTDOWN;";
-
-    systemctl stop mysql > /dev/null 2> /dev/null
-
-    mkdir -p /var/run/mysqld
-    chown mysql:mysql /var/run/mysqld
-    mysqld_safe --skip-grant-tables &
-    # make sure query is accpeted by server(aka server is running)
-    TMP="1"
-    while [[ "$TMP" != "0" ]]; do
-        printMsg "waiting for MySQL server"
-        (mysql <<< $SQL_QUERY && TMP="0") || TMP="1"
-        sleep 1
-    done
-    systemctl start mysql
-
-    # fix tables after dirty MySQL import (copying /var/lib/mysql folder instead of using `mysqldump`)
-    # mysqlcheck -u [username] -p --all-databases --check-upgrade --auto-repair
-}
-
-function openvpn {
+function pkg_openvpn {
     PACKAGES="openvpn network-manager-openvpn network-manager-openvpn-gnome network-manager-pptp  network-manager-pptp-gnome"
 
     aptGetInstall $PACKAGES
 }
 
-function wireguard {
+function pkg_wireguard {
     PACKAGES="wireguard"
 
     aptGetInstall $PACKAGES
 }
 
 # screen capture
-function obsStudio {
+function pkg_obsStudio {
     PACKAGES="obs-studio"
 
     aptGetInstall $PACKAGES
 }
 
-function rabbitVCS {
+function pkg_rabbitVCS {
     PACKAGES="rabbitvcs-core python3-caja"
     EXTENSION_DIR=~/.local/share/caja-python/extensions/
     FILENAME="RabbitVCS.py"
@@ -398,7 +374,7 @@ function rabbitVCS {
     cp "$SCRIPT_DIR/data/caja/$FILENAME.template" "$EXTENSION_DIR/$FILENAME"
 }
 
-function unity3d {
+function pkg_unity3d {
     #DEB_FILE="unity-editor_amd64-5.6.1xf1Linux.deb"
     #DOWNLOAD_HASH="6a86e542cf5c"
 
@@ -438,7 +414,7 @@ function unity3d {
     androidSdk
 }
 
-function godotEngine {
+function pkg_godotEngine {
     APP_FILENAME="Godot_v2.1.4-stable_x11.64"
     ZIP_FILENAME="$APP_FILENAME.zip"
     OPT_DIR="$SANAGER_INSTALL_DIR/godot"
@@ -465,7 +441,7 @@ function godotEngine {
 }
 
 # requires manual wizard walk-through
-function androidStudio {
+function pkg_androidStudio {
     PACKAGES="lib32stdc++6"
     APP_FILENAME="android-studio-ide-181.5056338-linux"
     ZIP_FILENAME="$APP_FILENAME.zip"
@@ -494,7 +470,7 @@ function androidStudio {
     # "$APP_PATH/bin/studio.sh"
 }
 
-function datovka {
+function pkg_datovka {
     PACKAGES="datovka"
     REPO_ROW="deb http://ppa.launchpad.net/cz.nic-labs/datovka/ubuntu $NOWADAYS_UBUNTU_VERSION main"
     REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com F9C59A45` # key can be found at https://launchpad.net/~cz.nic-labs/+archive/ubuntu/datovka
@@ -504,25 +480,25 @@ function datovka {
     aptGetInstall $PACKAGES
 }
 
-function versioningAndTools {
+function pkg_versioningAndTools {
     PACKAGES="git subversion meld gimp yt-dlp"
 
     aptGetInstall $PACKAGES
 }
 
-function officePack {
+function pkg_officePack {
     PACKAGES="libreoffice libreoffice-gtk3 thunderbird"
 
     aptGetInstall $PACKAGES
 }
 
-function virtualbox {
+function pkg_virtualbox {
     PACKAGES="virtualbox"
 
     aptGetInstall $PACKAGES
 }
 
-function steam {
+function pkg_steam {
     PACKAGES="steam"
 
     TMP=`dpkg --print-foreign-architectures`
@@ -542,7 +518,7 @@ function steam {
     echo UNREGISTER steam/license | sudo debconf-communicate steam > /dev/null
 }
 
-function rhythmbox {
+function pkg_rhythmbox {
     # package rhythmbox-plugins is needed now because llyrics plugin itself doesn't install all dependencies needed for it to work
     PACKAGES="rhythmbox rhythmbox-plugins libflac14 flac"
 
@@ -556,7 +532,7 @@ function rhythmbox {
     aptGetInstall $PACKAGES
 }
 
-function lutris {
+function pkg_lutris {
     PACKAGES="lutris dxvk"
     RECOMMANDED_PACKAGES="libgnutls30:i386 libldap-2.4-2:i386 libgpg-error0:i386 libxml2:i386 libasound2-plugins:i386 libsdl2-2.0-0:i386 libfreetype6:i386 libdbus-1-3:i386 libsqlite3-0:i386"
     REPO_ROW="deb http://download.opensuse.org/repositories/home:/strycore/Debian_Unstable/ ./"
@@ -567,36 +543,26 @@ function lutris {
     aptGetInstall $PACKAGES $RECOMMANDED_PACKAGES
 }
 
-function multimedia {
+function pkg_multimedia {
     PACKAGES="vlc transmission easytag ardour ffmpeg mpv"
 
     aptGetInstall $PACKAGES
 }
 
-function newestLinuxKernel {
+function pkg_newestLinuxKernel {
     KERNEL_VERSION=$(is_debian_sid && echo "6.12.33+deb13" || echo "6.1.0-26")
     PACKAGES="linux-image-$KERNEL_VERSION-amd64 linux-headers-$KERNEL_VERSION-amd64"
 
     aptGetInstall $PACKAGES
 }
 
-function hardwareAnalysis {
+function pkg_hardwareAnalysis {
     PACKAGES="hardinfo"
 
     aptGetInstall $PACKAGES
 }
 
-function distUpgrade {
-    aptUpdate
-    aptDistUpgrade
-}
-
-function distCleanup {
-    aptFixDependencies
-    aptCleanup
-}
-
-function redshift {
+function pkg_redshift {
     PACKAGES="redshift-gtk"
     CONFIG_FILE_PATH=~/.config/redshift.conf
 
@@ -610,7 +576,7 @@ function redshift {
     autostartApplication "redshift-gtk.desktop"
 }
 
-function brave {
+function pkg_brave {
     PACKAGES="brave-browser"
     REPO_ROW="deb https://brave-browser-apt-release.s3.brave.com/ stable main"
     REPO_KEY_URL="https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg"
@@ -644,7 +610,7 @@ function brave {
 #    #aptGetInstall $PACKAGES
 #}
 
-function signal {
+function pkg_signal {
     PACKAGES="signal-desktop"
     REPO_ROW="deb https://updates.signal.org/desktop/apt xenial main"
     REPO_KEY_URL="https://updates.signal.org/desktop/apt/keys.asc" # TODO - save and check key's checksum
@@ -653,7 +619,7 @@ function signal {
     aptGetInstall $PACKAGES
 }
 
-function zoom {
+function pkg_zoom {
     PACKAGES_DEPENDENCIES=""
     DEB_FILE="zoom_amd64.deb"
     PACKAGE_URL="https://zoom.us/client/latest/$DEB_FILE"
@@ -662,7 +628,7 @@ function zoom {
     dpkgDownloadAndInstall zoom "$DEB_FILE" "$PACKAGE_URL"
 }
 
-function obsidian {
+function pkg_obsidian {
     LATEST_VERSION="1.8.9"
     DEB_FILE=obsidian_${LATEST_VERSION}_amd64.deb
     PACKAGE_URL="https://github.com/obsidianmd/obsidian-releases/releases/download/v${LATEST_VERSION}/$DEB_FILE"
@@ -670,7 +636,7 @@ function obsidian {
     dpkgDownloadAndInstall obsidian "$DEB_FILE" "$PACKAGE_URL"
 }
 
-function corectrl {
+function pkg_corectrl {
     PACKAGES="corectrl"
 
     aptGetInstall $PACKAGES
@@ -681,7 +647,7 @@ function corectrl {
     sed -e "s|__\$GROUP__|$GROUP|g" $SCRIPT_DIR/data/misc/90-corectrl.rules > /etc/polkit-1/rules.d/90-corectrl.rules
 }
 
-function coolercontrol {
+function pkg_coolercontrol {
     PACKAGES="coolercontrol"
     REPO_ROW="deb https://dl.cloudsmith.io/public/coolercontrol/coolercontrol/deb/debian $NOWADAYS_DEBIAN_VERSION main"
     REPO_KEY_URL="https://dl.cloudsmith.io/public/coolercontrol/coolercontrol/gpg.668189E5007F5A8D.key"
@@ -703,14 +669,14 @@ function coolercontrol {
     systemctl start coolercontrold.service
 }
 
-function discord {
+function pkg_discord {
     DEB_FILE=discord.deb
     PACKAGE_URL="https://discord.com/api/download?platform=linux&format=deb"
 
     dpkgDownloadAndInstall discord "$DEB_FILE" "$PACKAGE_URL"
 }
 
-function dotnet_pkg {
+function pkg_dotnet {
     #PACKAGES="dotnet-sdk-6.0 dotnet-sdk-7.0" # installing dotnet-sdk-7.0 is problematic when developing dotnet 6.0 app
     PACKAGES="dotnet-sdk-6.0"
     REPO_ROW="deb https://packages.microsoft.com/debian/11/prod $NOWADAYS_DEBIAN_VERSION main"
@@ -725,7 +691,7 @@ function dotnet_pkg {
     dotnet tool install --global dotnet-ef
 }
 
-function vscodium {
+function pkg_vscodium {
     PACKAGES="codium codium-insiders"
     REPO_ROW="deb https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs vscodium main"
     REPO_KEY_URL="https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg"
@@ -734,7 +700,7 @@ function vscodium {
     aptGetInstall $PACKAGES
 }
 
-function nix {
+function pkg_nix {
     INSTALL_FILE=install-nix.sh
     OPT_DIR="$SANAGER_INSTALL_DIR/nix"
     NIX_DIR="/nix"
@@ -766,7 +732,7 @@ function nix {
     # . ~/.nix-profile/etc/profile.d/nix.sh
 }
 
-function zellij {
+function pkg_zellij {
     PACKAGES="xclip"
     OPT_DIR="$SANAGER_INSTALL_DIR/zellij"
     CONFIG_DIR=~/.config/zellij
@@ -808,7 +774,7 @@ function zellij {
 }
 
 # after running this for first time, manually setup /etc/sanoid/sanoid.conf and /etc/systemd/system/syncoind.service
-function zfsLuks {
+function pkg_zfsLuks {
     PACKAGES="zfsutils-linux cryptsetup"
 
     aptGetInstall $PACKAGES
@@ -878,7 +844,7 @@ function zfsLuks {
     setupSyncoid
 }
 
-function sshServer {
+function pkg_sshServer {
     PACKAGES="openssh-server"
 
     aptGetInstall $PACKAGES
@@ -894,7 +860,7 @@ function sshServer {
     cp -rf $CONFIG_SOURCE_PATH $CONFIG_TARGET_PATH
 }
 
-function kittyTerminal {
+function pkg_kittyTerminal {
     PACKAGES="kitty"
     CONFIG_SOURCE_FOLDER=$SCRIPT_DIR/data/kitty
     CONFIG_TARGET_PATH=~/.config/kitty
@@ -910,7 +876,7 @@ function kittyTerminal {
     chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_TARGET_PATH
 }
 
-function syncthing_pkg {
+function pkg_syncthing {
     PACKAGES="syncthing"
     CONFIG_SOURCE_FOLDER=$SCRIPT_DIR/data/syncthing
     CONFIG_TARGET_PATH=~/.local/state/syncthing
@@ -949,14 +915,14 @@ function syncthing_pkg {
     sudo -u $SCRIPT_EXECUTING_USER  XDG_RUNTIME_DIR="/run/user/$(id -u $SCRIPT_EXECUTING_USER)" systemctl --user start syncthing
 }
 
-function extrepo_pkg {
+function pkg_extrepo {
     PACKAGES="extrepo"
 
     aptGetInstall $PACKAGES
 }
 
-function librewolf_pkg {
-    extrepo_pkg
+function pkg_librewolf {
+    pkg_extrepo
 
     PACKAGES="librewolf"
 
@@ -967,7 +933,7 @@ function librewolf_pkg {
     aptGetInstall $PACKAGES
 }
 
-function ferdium_pkg {
+function pkg_ferdium {
     LATEST_VERSION="7.1.0"
     DEB_FILE=Ferdium-linux-${LATEST_VERSION}-amd64.deb
     PACKAGE_URL="https://github.com/ferdium/ferdium-app/releases/download/v${LATEST_VERSION}/$DEB_FILE"
@@ -975,7 +941,7 @@ function ferdium_pkg {
     dpkgDownloadAndInstall ferdium "$DEB_FILE" "$PACKAGE_URL"
 }
 
-function keepass_pkg {
+function pkg_keepass {
     PACKAGES="keepassxc"
     CONFIG_SOURCE_FOLDER=$SCRIPT_DIR/data/keepassxc
     CONFIG_TARGET_PATH=~/.config/keepassxc

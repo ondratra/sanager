@@ -20,77 +20,77 @@ function pc_all {
 }
 
 function pc_essentials {
-    audio
-    fonts
-    networkManager
+    pkg_audio
+    pkg_fonts
+    pkg_networkManager
 }
 
 function pc_userMinimum {
-    userEssential
-    diskUtils
-    enableHistorySearch
-    enableBashCompletion
-    restoreMateConfig
+    pkg_userEssential
+    pkg_diskUtils
+    effect_enableHistorySearch
+    effect_enableBashCompletion
+    effect_restoreMateConfig
 }
 
 function pc_userRobust {
     # TODO: make dropbox work - it unpredictably throws http error 404 when downloading install package and that breaks tests
     #  dropboxPackage
-    pdftools
+    pkg_pdftools
     # TODO: make datovka work - it currently depends on obsolete `libssl1.0.0` that is no longer available in Debian sid
-    #datovka
-    brave
+    #pkg_datovka
+    pkg_brave
 
-    zellij
-    kittyTerminal
-    terminalImprovements
+    pkg_zellij
+    pkg_kittyTerminal
+    pkg_terminalImprovements
 
-    ferdium_pkg
-    keepass_pkg
+    pkg_ferdium
+    pkg_keepass
 
-    obsidian
+    pkg_obsidian
 }
 
 function pc_work {
     # essentials
-    versioningAndTools
-    officePack
-    sublimeText
+    pkg_versioningAndTools
+    pkg_officePack
+    pkg_sublimeText
 
     # networking
-    openvpn
+    pkg_openvpn
 
     # programming
-    yarn
-    rust
-    nodejs_pkg
-    npm_pkg
-    #lamp # no need for lamp lately
-    rabbitVCS
+    pkg_yarn
+    pkg_rust
+    pkg_nodejs
+    pkg_npm
+    #pkg_lamp # no need for lamp lately
+    pkg_rabbitVCS
 
     # video
-    obsStudio
+    pkg_obsStudio
 
-    #unity3d
-    #godotEngine
-    #heroku
+    #pkg_unity3d
+    #pkg_godotEngine
+    #pkg_heroku
 }
 
 function pc_workInstantMessaging {
-    #keybase
-    #slack
-    discord
-    signal
+    #pkg_keybase
+    #pkg_slack
+    pkg_discord
+    pkg_signal
 }
 
 function pc_fun {
-    multimedia
-    steam
-    rhythmbox
+    pkg_multimedia
+    pkg_steam
+    pkg_rhythmbox
     # TODO: uncomment this when lutris works - currently there is some incompatibility with `libasound-plugins:386` in sid
-    #lutris
+    #pkg_lutris
 }
 
 function pc_advancedNetworking {
-    syncthing_pkg
+    pkg_syncthing
 }

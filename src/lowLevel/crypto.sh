@@ -9,7 +9,7 @@
 # NOTE: when running this script from ubuntu-like system you shouldn't use default repository
 #       see https://www.torproject.org/docs/tor-relay-debian.html.en
 #       pure debian is fine
-function tor {
+function pkg_tor {
     PACKAGES="ntp tor"
 
     aptGetInstall $PACKAGES
@@ -19,7 +19,7 @@ function tor {
     systemctl restart tor
 }
 
-function monero {
+function pkg_monero {
     PACKAGES="monero-wallet-gui libxcb-image0 libxcb-iccm4 libxcb-keysims1 libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11 libxkbcommon-x11-0"
 
     wget https://www.whonix.org/patrick.asc
@@ -29,6 +29,6 @@ function monero {
     sudo apt-get install monero-gui
 }
 
-function trezorBridge {
-    https://wallet.trezor.io/#/bridge
-}
+#function pkg_trezorBridge {
+#    https://wallet.trezor.io/#/bridge
+#}

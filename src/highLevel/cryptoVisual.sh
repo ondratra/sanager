@@ -9,8 +9,8 @@ function runHighLevel {
     pc_essentials
     pc_userMinimum
 
-    versioningAndTools
-    sublimeText
+    pkg_versioningAndTools
+    pkg_sublimeText
 
-    restoreMateConfig # restore config (there might be icons for newly installed programs)
+    effect_restoreMateConfig # restore config (there might be icons for newly installed programs)
 }

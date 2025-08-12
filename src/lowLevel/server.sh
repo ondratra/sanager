@@ -3,7 +3,7 @@
 # GitLab
 # mail server (posix, dovecot)
 
-function certbot {
+function pkg_certbot {
     PACKAGES="python3 python3-venv libaugeas0"
 
     aptGetInstall $PACKAGES

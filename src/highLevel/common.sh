@@ -3,5 +3,5 @@ function runHighLevel {
 }
 
 function common_all {
-    installSanagerMedia
+    effect_installSanagerMedia
 }

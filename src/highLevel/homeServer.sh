@@ -18,27 +18,27 @@ function homeServer_all {
 }
 
 function homeServer_essentials {
-    audio
-    fonts
-    networkManager
-    versioningAndTools
-    sshServer
+    pkg_audio
+    pkg_fonts
+    pkg_networkManager
+    pkg_versioningAndTools
+    pkg_sshServer
 }
 
 function homeServer_userMinimum {
-    userEssential
-    diskUtils
-    enableHistorySearch
-    enableBashCompletion
-    restoreMateConfig
+    pkg_userEssential
+    pkg_diskUtils
+    effect_enableHistorySearch
+    effect_enableBashCompletion
+    effect_restoreMateConfig
 }
 
 function homeServer_userRobust {
-    sublimeText
-    multimedia
-    zellij
-    kittyTerminal
-    terminalImprovements
+    pkg_sublimeText
+    pkg_multimedia
+    pkg_zellij
+    pkg_kittyTerminal
+    pkg_terminalImprovements
 }
 
 function homeServer_physical {
@@ -46,17 +46,17 @@ function homeServer_physical {
         return
     fi
 
-    amdCpuDrivers
-    amdGpuDrivers
+    pkg_amdCpuDrivers
+    pkg_amdGpuDrivers
 
-    hardwareAnalysis
-    #corectrl # not available in stable repos atm
+    pkg_hardwareAnalysis
+    #pkg_corectrl # not available in stable repos atm
 }
 
 function homeServer_zfs {
-    zfsLuks
+    pkg_zfsLuks
 }
 
 function homeServer_advancedNetworking {
-    syncthing_pkg
+    pkg_syncthing
 }
