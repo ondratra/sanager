@@ -10,7 +10,7 @@
 #       see https://www.torproject.org/docs/tor-relay-debian.html.en
 #       pure debian is fine
 function pkg_tor {
-    PACKAGES="ntp tor"
+    local PACKAGES="ntp tor"
 
     aptGetInstall $PACKAGES
 
@@ -20,7 +20,7 @@ function pkg_tor {
 }
 
 function pkg_monero {
-    PACKAGES="monero-wallet-gui libxcb-image0 libxcb-iccm4 libxcb-keysims1 libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11 libxkbcommon-x11-0"
+    local PACKAGES="monero-wallet-gui libxcb-image0 libxcb-iccm4 libxcb-keysims1 libxcb-render-util0 libxcb-xkb1 libxkbcommon-x11 libxkbcommon-x11-0"
 
     wget https://www.whonix.org/patrick.asc
     sudo apt-key --keyring /etc/apt/trusted.gpg.d/whonix.gpg add ~/patrick.asc

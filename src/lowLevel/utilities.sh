@@ -51,11 +51,11 @@ function dpkgInstall {
 
 # usage: `dpkgDownloadAndInstall ferdium "Ferdium-linux-7.1.0-amd64.deb" "https://github.com/ferdium/ferdium-app/releases/download/v7.1.0/Ferdium-linux-7.1.0-amd64.deb"`
 function dpkgDownloadAndInstall {
-    APPLICATION_NAME="$1"
-    DEB_FILE=$2
-    PACKAGE_URL=$3
+    local APPLICATION_NAME="$1"
+    local DEB_FILE=$2
+    local PACKAGE_URL=$3
 
-    OPT_DIR="$SANAGER_INSTALL_DIR/$APPLICATION_NAME"
+    local OPT_DIR="$SANAGER_INSTALL_DIR/$APPLICATION_NAME"
 
     mkdir $OPT_DIR -p
     cd $OPT_DIR
@@ -72,7 +72,7 @@ function dpkgDownloadAndInstall {
 # returns 0 when installed, 1 otherwise
 function isInstalled {
     dpkg -s $1 > /dev/null
-    NOT_INSTALLED=$?
+    local NOT_INSTALLED=$?
     if [[ "$NOT_INSTALLED" == "0" ]]; then
         return 0
     fi
@@ -88,21 +88,21 @@ function isVirtualboxVm {
 
     # alternative approach
     ## for detection info see http://www.dmo.ca/blog/detecting-virtualization-on-linux/
-    #TMP=`dmesg | grep -i virtualbox || echo ""`
-    #IS_VIRTUALBOX_GUEST=`[[ "$TMP" == "" ]] && echo 0 || echo 1`
+    #local TMP=`dmesg | grep -i virtualbox || echo ""`
+    #local IS_VIRTUALBOX_GUEST=`[[ "$TMP" == "" ]] && echo 0 || echo 1`
 }
 
 # use:
 # addGpgKey https://myrepo.example/myrepo.asc myRepoName
 # addGpgKey https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xF425E228 myRepoName
 function addGpgKey {
-    KEY_URL=$1
-    KEY_NAME=$2
+    local KEY_URL=$1
+    local KEY_NAME=$2
 
-    TMP=`sed 's#.*\/##' <<< $KEY_URL | sed 's#\?.*$##'`
-    KEY_FILE_EXTENSION=`[ $TMP == "asc" ] && echo "asc" || echo "gpg"`
+    local TMP=`sed 's#.*\/##' <<< $KEY_URL | sed 's#\?.*$##'`
+    local KEY_FILE_EXTENSION=`[ $TMP == "asc" ] && echo "asc" || echo "gpg"`
 
-    KEY_FILE_PATH="$SANAGER_GPG_KEY_DIR/$KEY_NAME.$KEY_FILE_EXTENSION"
+    local KEY_FILE_PATH="$SANAGER_GPG_KEY_DIR/$KEY_NAME.$KEY_FILE_EXTENSION"
 
     if [ -f $KEY_FILE_PATH ]; then
         printMsg "Skipping adding of GPG key for repo: $KEY_NAME"
@@ -123,11 +123,11 @@ function addGpgKey {
 # use
 # addAptRepository repoName "deb https://myrepo.example/someRepo stable main" https://myrepo.example/myrepo.asc
 function addAptRepository {
-    REPO_NAME=$1
-    REPO_ROW=$2
-    KEY_URL=$3
+    local REPO_NAME=$1
+    local REPO_ROW=$2
+    local KEY_URL=$3
 
-    SOURCE_LIST_PATH="/etc/apt/sources.list.d/__sanager_${REPO_NAME}.list"
+    local SOURCE_LIST_PATH="/etc/apt/sources.list.d/__sanager_${REPO_NAME}.list"
 
     if [ -f $SOURCE_LIST_PATH ]; then
         printMsg "Skipping adding of apt repository: $REPO_NAME"
@@ -137,8 +137,8 @@ function addAptRepository {
     printMsg "Adding apt repository: $REPO_NAME"
 
     # add key
-    KEY_FILE_PATH=`addGpgKey $KEY_URL $REPO_NAME`
-    FINAL_REPO_ROW=`sed -e "s#deb#deb [arch=amd64 signed-by=$KEY_FILE_PATH]#" <<< $REPO_ROW`
+    local KEY_FILE_PATH=`addGpgKey $KEY_URL $REPO_NAME`
+    local FINAL_REPO_ROW=`sed -e "s#deb#deb [arch=amd64 signed-by=$KEY_FILE_PATH]#" <<< $REPO_ROW`
     echo "$FINAL_REPO_ROW" > $SOURCE_LIST_PATH
 
     aptUpdate
@@ -147,8 +147,8 @@ function addAptRepository {
 # use
 # gpgKeyUrlFromKeyring keyserver.ubuntu.com F425E228
 function gpgKeyUrlFromKeyring {
-    KEY_SERVER=$1
-    PUBKEY=$2
+    local KEY_SERVER=$1
+    local PUBKEY=$2
 
     echo "https://${KEY_SERVER}/pks/lookup?op=get&search=0x${PUBKEY}"
 }
@@ -161,12 +161,12 @@ function wgetDownload {
 # use:
 # applyPatch pathToFileToBePatched < patchString
 function applyPatch {
-    FILE_TO_BE_PATCHED=$1
-    PATCH_FILE_PATH=`cat -` # read whole input from stdin
+    local FILE_TO_BE_PATCHED=$1
+    local PATCH_FILE_PATH=`cat -` # read whole input from stdin
 
     ! PATCH_RESULT="`patch $FILE_TO_BE_PATCHED --forward <<< $PATCH_FILE_PATH`"
     grep -q "Reversed (or previously applied) patch detected!" <<< "$PATCH_RESULT"
-    NOT_APPLIED_YET=$?
+    local NOT_APPLIED_YET=$?
 
     if [[ "$NOT_APPLIED_YET" == "1" ]]; then
         printMsg "Patching file $FILE_TO_BE_PATCHED"
@@ -180,8 +180,8 @@ function applyPatch {
 # use:
 # addUserToGroup myUser myGroup
 function addUserToGroup {
-    USERNAME=$1
-    GROUPNAME=$2
+    local USERNAME=$1
+    local GROUPNAME=$2
 
     usermod -a -G $2 $1
 }
@@ -189,10 +189,10 @@ function addUserToGroup {
 # use:
 # addAlias myNewAliasName existingCommand
 function addAlias {
-    NEW_ALIAS_NAME=$1
-    EXISTING_COMMAND=$2
+    local NEW_ALIAS_NAME=$1
+    local EXISTING_COMMAND=$2
 
-    ALIAS_LINE="alias $NEW_ALIAS_NAME=$EXISTING_COMMAND"
+    local ALIAS_LINE="alias $NEW_ALIAS_NAME=$EXISTING_COMMAND"
 
     if ! grep -q "^$ALIAS_LINE" ~/.bash_aliases; then
         sudo -u $SCRIPT_EXECUTING_USER sh -c "echo $ALIAS_LINE >> ~/.bash_aliases"
@@ -206,8 +206,8 @@ function addAlias {
 # use
 # addGlobalEnvVariable "my_namespace" "MY_VARIABLE=my_value"
 function addGlobalEnvVariable {
-    NAMESPACE=$1
-    VARIABLE_DEFINITION=$2
+    local NAMESPACE=$1
+    local VARIABLE_DEFINITION=$2
 
     # ensure VARIABLE_DEFINITION really contains variable definition - prevents misuse of eval
     if ! [[ "$VARIABLE_DEFINITION" =~ ^[A-Za-z_][A-Za-z0-9_]*=[^=]+$ ]]; then
@@ -222,7 +222,7 @@ function addGlobalEnvVariable {
     # - /etc/bash.bashrc is used by by both login and non-login shells
     echo "$VARIABLE_DEFINITION" > "/etc/environment.d/__sanager_$NAMESPACE.sh"
     echo "$VARIABLE_DEFINITION" > "/etc/profile.d/__sanager_$NAMESPACE.sh"
-    SANAGER_GLOBAL_ENV_FILE="$SANAGER_INSTALL_DIR/bash.bashrc"
+    local SANAGER_GLOBAL_ENV_FILE="$SANAGER_INSTALL_DIR/bash.bashrc"
     appendToFileIfNotPresent /etc/bash.bashrc ". $SANAGER_GLOBAL_ENV_FILE"
     appendToFileIfNotPresent $SANAGER_GLOBAL_ENV_FILE "$VARIABLE_DEFINITION"
 
@@ -233,8 +233,8 @@ function addGlobalEnvVariable {
 # use
 # appendToFileIfNotPresent pathToFile textToBeAppended
 function appendToFileIfNotPresent {
-    FILE="$1"
-    TEXT="$2"
+    local FILE="$1"
+    local TEXT="$2"
 
     grep -q "$TEXT" "$FILE" || echo $TEXT >> $FILE
 }
@@ -246,9 +246,9 @@ function is_debian_sid {
 # usage
 # autostartApplication /usr/share/applications/org.corectrl.CoreCtrl.desktop
 function autostartApplication {
-    APPLICATION_PATH=$1
+    local APPLICATION_PATH=$1
 
-    AUTOSTART_FOLDER=~/.config/autostart/
+    local AUTOSTART_FOLDER=~/.config/autostart/
 
     mkdir -p ~/.config/autostart
     cp "/usr/share/applications/$APPLICATION_PATH" $AUTOSTART_FOLDER

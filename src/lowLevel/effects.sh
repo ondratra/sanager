@@ -12,10 +12,10 @@ function effect_enableBashCompletion {
 
 function effect_restoreMateConfig {
     function downloadTheme {
-        THEME_URL="https://codeload.github.com/rtlewis88/rtl88-Themes/zip/refs/heads/Arc-Darkest-Nord-Frost"
-        THEME_INTER_FOLDER="rtl88-Themes-Arc-Darkest-Nord-Frost"
-        THEME_SUBFOLDER="Arc-Darkest-Nord-Frost"
-        THEME_OUTPUT_FILE="$THEME_INTER_FOLDER.zip"
+        local THEME_URL="https://codeload.github.com/rtlewis88/rtl88-Themes/zip/refs/heads/Arc-Darkest-Nord-Frost"
+        local THEME_INTER_FOLDER="rtl88-Themes-Arc-Darkest-Nord-Frost"
+        local THEME_SUBFOLDER="Arc-Darkest-Nord-Frost"
+        local THEME_OUTPUT_FILE="$THEME_INTER_FOLDER.zip"
 
         if [ -d ~/.themes/$THEME_SUBFOLDER ]; then
             return
@@ -46,7 +46,7 @@ function effect_restoreMateConfig {
         local FIRST_LINE="1"
         for FILE in $FILE_PATHS; do
             if [[ $FIRST_LINE == "1" ]]; then
-                FIRST_LINE="0"
+                local FIRST_LINE="0"
             else
                 echo >> $OUTPUT_FILE
             fi
@@ -73,7 +73,7 @@ function effect_restoreMateConfig {
         local SCALE=1
 
         if [ "$WIDTH" -gt 1920 ]; then
-            SCALE=2
+            local SCALE=2
         fi
 
         # passing DBUS_SESSION_BUS_ADDRESS might seem meaningless but it is needed to make dconf work with sudo
@@ -98,21 +98,21 @@ function effect_restoreMateConfig {
 }
 
 function effect_installSanagerGlobally {
-    EXECUTABLE_PATH=/usr/bin/sanager
+    local EXECUTABLE_PATH=/usr/bin/sanager
 
     rm -rf $EXECUTABLE_PATH
     ln -s "$SCRIPT_DIR/systemInstall.sh" $EXECUTABLE_PATH
 }
 
 function effect_installSanagerMedia {
-    MEDIA_TEMPLATES_DIR=$SCRIPT_DIR/data/sanager/mediaTemplatesSources
-    MEDIA_TEMP_DIR=$SANAGER_INSTALL_TEMP_DIR/mediaTemplates
+    local MEDIA_TEMPLATES_DIR=$SCRIPT_DIR/data/sanager/mediaTemplatesSources
+    local MEDIA_TEMP_DIR=$SANAGER_INSTALL_TEMP_DIR/mediaTemplates
 
     mkdir -p $MEDIA_TEMP_DIR
 
     for svgFile in $MEDIA_TEMPLATES_DIR/*.svg; do
-        targetFilename="${svgFile##*/}"         # strip path
-        targetFilename="${targetFilename%.svg}"   # strip .svg extension
+        local targetFilename="${svgFile##*/}"         # strip path
+        local targetFilename="${targetFilename%.svg}"   # strip .svg extension
 
         convert "$svgFile" -background white -flatten "$MEDIA_TEMP_DIR/$targetFilename"
     done
@@ -126,10 +126,10 @@ function effect_setupTempSensors {
 }
 
 function effect_changeMysqlPassword {
-    NEW_PASSWORD="$1"
+    local NEW_PASSWORD="$1"
     echo "newPassword: '$1'"
-    TMP_FILE="$SANAGER_INSTALL_DIR/tmp.sql"
-    SQL_QUERY="FLUSH PRIVILEGES; ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$NEW_PASSWORD'; FLUSH PRIVILEGES; SHUTDOWN;";
+    local TMP_FILE="$SANAGER_INSTALL_DIR/tmp.sql"
+    local SQL_QUERY="FLUSH PRIVILEGES; ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$NEW_PASSWORD'; FLUSH PRIVILEGES; SHUTDOWN;";
 
     systemctl stop mysql > /dev/null 2> /dev/null
 
@@ -137,7 +137,7 @@ function effect_changeMysqlPassword {
     chown mysql:mysql /var/run/mysqld
     mysqld_safe --skip-grant-tables &
     # make sure query is accpeted by server(aka server is running)
-    TMP="1"
+    local TMP="1"
     while [[ "$TMP" != "0" ]]; do
         printMsg "waiting for MySQL server"
         (mysql <<< $SQL_QUERY && TMP="0") || TMP="1"

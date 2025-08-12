@@ -4,13 +4,12 @@
 # mail server (posix, dovecot)
 
 function pkg_certbot {
-    PACKAGES="python3 python3-venv libaugeas0"
+    local PACKAGES="python3 python3-venv libaugeas0"
 
     aptGetInstall $PACKAGES
 
-
-    CERBOT_DIR=$SANAGER_INSTALL_DIR/certbot
-    PIP_PATH=$CERBOT_DIR/bin/pip
+    local CERBOT_DIR=$SANAGER_INSTALL_DIR/certbot
+    local PIP_PATH=$CERBOT_DIR/bin/pip
 
     python3 -m venv $CERBOT_DIR/
     $PIP_PATH install --upgrade pip
