@@ -182,6 +182,8 @@ function pkg_npm {
     local PACKAGES="npm"
 
     aptGetInstall $PACKAGES
+
+    npm install -g pnpm
 }
 
 function pkg_rust {
