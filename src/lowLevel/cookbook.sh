@@ -536,7 +536,7 @@ function pkg_rhythmbox {
 
 function pkg_lutris {
     local PACKAGES="lutris dxvk"
-    local RECOMMANDED_PACKAGES="libgnutls30:i386 libldap-2.4-2:i386 libgpg-error0:i386 libxml2:i386 libasound2-plugins:i386 libsdl2-2.0-0:i386 libfreetype6:i386 libdbus-1-3:i386 libsqlite3-0:i386"
+    local RECOMMANDED_PACKAGES="libgnutls30:i386 libldap2:i386 libgpg-error0:i386 libxml2:i386 libasound2-plugins:i386 libsdl2-2.0-0:i386 libfreetype6:i386 libdbus-1-3:i386 libsqlite3-0:i386"
     local REPO_ROW="deb http://download.opensuse.org/repositories/home:/strycore/Debian_Unstable/ ./"
     local REPO_KEY_URL="https://download.opensuse.org/repositories/home:/strycore/Debian_Unstable/Release.key"
 
