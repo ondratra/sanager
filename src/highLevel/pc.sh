@@ -82,6 +82,7 @@ function pc_workInstantMessaging {
     #pkg_slack
     pkg_discord
     pkg_signal
+    pkg_telegram
 }
 
 function pc_fun {

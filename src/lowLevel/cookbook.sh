@@ -959,6 +959,13 @@ function pkg_keepass {
     chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_TARGET_PATH
 }
 
+function pkg_telegram {
+    local PACKAGES="telegram-desktop"
+
+    # TODO: uncomment after this bug is resolved and telegram is installable once again https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1115745
+    #aptGetInstall $PACKAGES
+}
+
 # TODO:
 # - IMPORTANT!!!
 #   - create apt policy file in preferences.d/ for each added repository
