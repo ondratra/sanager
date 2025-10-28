@@ -93,12 +93,3 @@ After export, commit changes to git.
 
 Running one of the high-level installs via `systemInstall.sh` also sets Mate configuration to state saved in Sanager.
 This process might be destructive if you made changes to your Mate and didn't update them in Sanager files.
-
-
-
-
-
-TODO:
-http://guacamole.incubator.apache.org/
-https://discussion.dreamhost.com/thread-133929
-

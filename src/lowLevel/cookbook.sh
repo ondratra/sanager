@@ -1006,3 +1006,4 @@ function pkg_solana {
 # - create a mechanism for installing binary files -> look at zellij and lazydocker -> it likely should create
 #   `/opt/__sanager/bin`, link or add binaries there, and add it to PATH via `.bashrc`
 # - isolate Steam from rest of system - it's proprietary software installing other proprietary system
+# - remote desktop (http://guacamole.incubator.apache.org/ or https://rustdesk.com/)
