@@ -966,6 +966,20 @@ function pkg_telegram {
     #aptGetInstall $PACKAGES
 }
 
+function pkg_solana {
+    local OPT_DIR="$SANAGER_INSTALL_DIR/solana"
+    SOLANA_REPO_URL=https://api.github.com/repos/anza-xyz/agave/releases/latest
+
+    #... not finished
+    return
+
+    #cargo install --git https://github.com/solana-foundation/anchor avm
+    #wgetDownload $SOLANA_REPO_URL -O "$OPT_DIR/agave"
+
+    ##see https://solana.com/docs/intro/installation
+    ## export PATH=~/.local/share/solana/install/active_release/bin:$PATH
+}
+
 # TODO:
 # - IMPORTANT!!!
 #   - create apt policy file in preferences.d/ for each added repository
