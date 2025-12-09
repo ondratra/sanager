@@ -1,0 +1,19 @@
+<snippet>
+    <content>
+<![CDATA[import {h} from 'preact'
+import * as styles from './$1.css'
+
+
+export interface I$1Props {
+
+}
+
+export function $1(props: I$1Props): h.JSX.Element {
+    return null
+}
+
+]]>
+</content>
+    <tabTrigger>pcomponent</tabTrigger>
+    <description>Preact component base</description>
+</snippet>
