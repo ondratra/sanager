@@ -9,6 +9,4 @@ function graphicalDesktop_all {
 
     pkg_essential
     pkg_desktopDisplayEtc
-
-    pkg_newestLinuxKernel
 }

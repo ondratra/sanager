@@ -500,6 +500,14 @@ function pkg_virtualbox {
     aptGetInstall $PACKAGES
 }
 
+function pkg_sanager_tests_prerequisities {
+    # see `tests/virtualBoxMachineInstall.sh` for up to date list
+    local TESTS_DEPENDENCIES="curlftpfs virtualbox-guest-additions-iso virtualbox-ext-pack openssh-client rsync xorriso isolinux sshpass fuseiso"
+    local PACKAGES="remmina"
+
+    aptGetInstall $TESTS_DEPENDENCIES $PACKAGES
+}
+
 function pkg_steam {
     local PACKAGES="steam"
 
@@ -551,8 +559,14 @@ function pkg_multimedia {
     aptGetInstall $PACKAGES
 }
 
+function pkg_multimedia_necessary {
+    local PACKAGES="imagemagick"
+
+    aptGetInstall $PACKAGES
+}
+
 function pkg_newestLinuxKernel {
-    local KERNEL_VERSION=$(is_debian_sid && echo "6.12.33+deb13" || echo "6.1.0-37")
+    local KERNEL_VERSION=$(is_debian_sid && echo "6.18.3+deb14" || echo "6.12.57+deb13")
     local PACKAGES="linux-image-$KERNEL_VERSION-amd64 linux-headers-$KERNEL_VERSION-amd64"
 
     aptGetInstall $PACKAGES
@@ -797,10 +811,10 @@ function pkg_zfsLuks {
 
         # checkout latest stable release or stay on master for bleeding edge stuff (but expect bugs!)
         #git checkout $(git tag | grep "^v" | tail -n 1)
-        git checkout 6beef5fee67deb2c17f160244953bd5a1983e1ad # (https://github.com/jimsalterjrs/sanoid/commit/6beef5fee67deb2c17f160244953bd5a1983e1ad)
+        git checkout 8d4abf14b2bf8d6b98fc8e163fa9895486e8cdeb # (https://github.com/jimsalterjrs/sanoid/commit/8d4abf14b2bf8d6b98fc8e163fa9895486e8cdeb)
         ln -s packages/debian .
         dpkg-buildpackage -uc -us
-        aptInstall ../sanoid_*_all.deb
+        aptGetInstall ../sanoid_*_all.deb
 
         systemctl enable sanoid --now
     }

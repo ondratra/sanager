@@ -5,6 +5,7 @@ source $SCRIPT_DIR/src/highLevel/pc.sh
 
 function runHighLevel {
     common_all
+    graphicalDesktop_all
 
     pc_essentials
     pc_userMinimum

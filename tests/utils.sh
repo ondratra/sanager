@@ -4,11 +4,11 @@ function log {
 }
 
 function downloadInstallMedium {
-    if [[ -f $NETINSTALL_ISO_FILE ]]; then
+    if [[ -f $NETINSTALL_ORIGINAL_ISO_FILE ]]; then
         return
     fi
 
-    wgetDownload $NETINSTALL_ISO_URL -O $NETINSTALL_ISO_FILE
+    wgetDownload $NETINSTALL_ISO_URL -O $NETINSTALL_ORIGINAL_ISO_FILE
 }
 
 function clearVMLog {
@@ -26,7 +26,7 @@ function startVm {
 
     log "Starting VM \"$TMP_MACHINE_NAME\""
 
-    VBoxManage startvm $TMP_MACHINE_NAME
+    VBoxManage startvm --type headless $TMP_MACHINE_NAME
 }
 
 function stopVm {
@@ -114,17 +114,63 @@ function waitForVMOsBoot {
     #sleep 10 # safety sleep
 }
 
+function waitForOsInstall {
+    local TMP_MACHINE_NAME=$1
+
+    log "Starting waiting for guest VM to boot OS"
+
+    while true; do
+        PROBLEM="0"
+
+        ensureSshRootConnection $TMP_MACHINE_NAME || PROBLEM=$?
+
+        if [[ "$PROBLEM" == "0" ]]; then
+            break
+        fi
+
+        sleep 10
+
+        log "Waiting for VM \"$TMP_MACHINE_NAME\"'s OS install"
+    done
+}
+
 function cloneVM {
-    local ORIGINAL_NAME=$1
-    local CLONE_NAME=$2
+    local ORIGINAL_NAME="$1"
+    local CLONE_NAME="$2"
+    local TARGET_DIR="${3:-$VIRTUAL_MACHINES_DIR}"
 
     log "Cloning VM $ORIGINAL_NAME -> $CLONE_NAME"
 
-    VBoxManage clonevm $ORIGINAL_NAME \
+    # clear previous virtual machine if it exists
+    rm -rf "$TARGET_DIR/$CLONE_NAME"
+
+    VBoxManage clonevm "$ORIGINAL_NAME" \
         --register \
         --options=KeepDiskNames,KeepHwUUIDs \
-        --name $CLONE_NAME \
-        --basefolder $VIRTUAL_MACHINES_DIR
+        --name "$CLONE_NAME" \
+        --basefolder $TARGET_DIR
+}
+
+function forkVm {
+    local ORIGINAL_NAME="$1"
+    local CLONE_NAME="$2"
+    local SSH_SERVER_PORT="$3"
+    local VRDE_PORT="$4"
+    local TARGET_DIR="$5"
+
+    cloneVM "$ORIGINAL_NAME" "$CLONE_NAME" "$TARGET_DIR"
+
+    VBoxManage modifyvm $CLONE_NAME \
+        --vrdeport "$VRDE_PORT" \
+        --vrdeaddress 0.0.0.0
+
+    # change ssh tunnel port
+    VBoxManage modifyvm $CLONE_NAME --natpf1 delete "$VM_SSH_TUNNEL_INTERFACE_NAME"
+    VBoxManage modifyvm $CLONE_NAME --natpf1 "$VM_SSH_TUNNEL_INTERFACE_NAME,tcp,,$SSH_SERVER_PORT,,$SSH_TUNNEL_GUEST_PORT"
+
+    VBoxManage modifyvm "$CLONE_NAME" --groups "$VM_GROUP_FORKS"
+
+    echo "Forking $ORIGINAL_NAME -> $CLONE_NAME; ssh port $SSH_SERVER_PORT; VRDE port $VRDE_PORT" >> "$TEST_DIR/forks.log"
 }
 
 function deleteVm {
@@ -175,6 +221,7 @@ function runTunneledSshCommand {
     local TMP_USER=$1
     local TMP_PASSWORD=$2
     local TMP_COMMAND=$3
+    local TMP_ENV_ASSIGNEMENT=$4
 
     # ensure no conflict between VM saved and current fingerprints
     __clearSshFingerprint
@@ -188,7 +235,7 @@ function runTunneledSshCommand {
             -o ConnectTimeout=5 \
             -o PubkeyAuthentication=no \
             -o "StrictHostKeyChecking=accept-new" \
-            "$TMP_COMMAND"
+            "$TMP_ENV_ASSIGNEMENT $TMP_COMMAND"
 }
 
 function copyTunneledSshContent {
@@ -225,4 +272,17 @@ function __clearSshFingerprint {
     log "Clearing SSH fingerprint (if exists)"
 
     ssh-keygen -R [$SSH_TUNNEL_HOST_HOSTNAME]:$SSH_TUNNEL_HOST_PORT
+}
+
+# VirtualBox assigns new id to virtual disks on VM clone (note difference"physical" virtual disk id vs filesystem UUID).
+# Booting into such machine is ok, fstab and grub boot config are working. Yet futher `grub-install` will fail because
+# it tries to install into no longer available disk. Changing install target to /dev/sda fixes the issue
+# and is sufficient to Sanager's VM use cases.
+function grubAdaptToVmCloneHardDiskIdChanges {
+    local GRUB_SETTINGS_LINE="grub-pc grub-pc/install_devices multiselect /dev/sda"
+
+    # basically running Sanager's `aptGetReinstall grub-pc`, but Sanager folder is not available yet in VM atm
+    local GRUB_RECONFIGURE_COMMAND="apt-get install -y --reinstall grub-pc"
+
+    __runTunneledCommand "echo \"$GRUB_SETTINGS_LINE\" | debconf-set-selections && $GRUB_RECONFIGURE_COMMAND"
 }

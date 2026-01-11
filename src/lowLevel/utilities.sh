@@ -17,6 +17,11 @@ function aptGetInstall {
     DEBIAN_FRONTEND="noninteractive" APT_LISTBUGS_FRONTEND="none" apt-get install "$VERBOSE_APT_FLAG" -y "$@"
 }
 
+function aptGetReinstall {
+    printMsg "Auto-removing packages"
+    DEBIAN_FRONTEND="noninteractive" apt-get install --reinstall "$VERBOSE_APT_FLAG" -y "$@"
+}
+
 function aptRemove {
     printMsg "Removing packages: $@"
     DEBIAN_FRONTEND="noninteractive" apt-get remove "$VERBOSE_APT_FLAG" -y "$@"

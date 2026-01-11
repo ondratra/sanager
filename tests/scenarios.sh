@@ -5,30 +5,16 @@ function testSanagerSetup {
 
     log "Running Sanager setup on $TMP_MACHINE_NAME"
 
-    # TODO: try to get rid of this call by improving wairForVMOsBoot
-    clearVMLog $TMP_MACHINE_NAME "$VIRTUAL_MACHINES_DIR/$TMP_MACHINE_NAME/Logs/VBox.log"
-
-    # startup VM
-    startVm $TMP_MACHINE_NAME
-    waitForVMOsBoot $TMP_MACHINE_NAME
-
+    __startupVm
     __copySanagerFilesToGuest
 
     log "Running Sanager script: \`rootInit.sh\`"
-    $EXECUTOR \
-        $TMP_MACHINE_NAME \
-        $VM_USERS_ROOT_NAME \
-        $VM_USERS_ROOT_PASSWORD \
+    __executeCommandAsRoot \
         "/bin/bash \"$SANAGER_GUEST_FOLDER_PATH/rootInit.sh\"" \
         "NON_ROOT_USERNAME=$VM_USERS_SANAGER_NAME AUTO_ACCEPT_FLAG=-y"
 
     # don't repeat /bin/sync call code over and over again - create meaningful function
-    log "Syncing file system"
-    $EXECUTOR \
-        $TMP_MACHINE_NAME \
-        $VM_USERS_ROOT_NAME \
-        $VM_USERS_ROOT_PASSWORD \
-        "/bin/sync" \
+    __syncFileSystem
 
     stopVm $TMP_MACHINE_NAME
 }
@@ -38,28 +24,13 @@ function testSanagerInstallGraphicalDesktop {
 
     log "Running Sanager install on $TMP_MACHINE_NAME - Graphical Desktop"
 
-    # TODO: try to get rid of this call by improving wairForVMOsBoot
-    clearVMLog $TMP_MACHINE_NAME "$VIRTUAL_MACHINES_DIR/$TMP_MACHINE_NAME/Logs/VBox.log"
-
-    # startup VM
-    startVm $TMP_MACHINE_NAME
-    waitForVMOsBoot $TMP_MACHINE_NAME
-
+    __startupVm
     __copySanagerFilesToGuest
 
     log "Running Sanager script: \`systemInstall.sh graphicalDesktop\`"
-    $EXECUTOR \
-        $TMP_MACHINE_NAME \
-        $VM_USERS_SANAGER_NAME \
-        $VM_USERS_SANAGER_PASSWORD \
-        "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh graphicalDesktop"
+    __executeCommand "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh graphicalDesktop"
 
-    log "Syncing file system"
-    $EXECUTOR \
-        $TMP_MACHINE_NAME \
-        $VM_USERS_ROOT_NAME \
-        $VM_USERS_ROOT_PASSWORD \
-        "/bin/sync" \
+    __syncFileSystem
 
     stopVm $TMP_MACHINE_NAME
 }
@@ -69,28 +40,13 @@ function testSanagerInstallPc {
 
     log "Running Sanager install on $TMP_MACHINE_NAME - PC"
 
-    # TODO: try to get rid of this call by improving wairForVMOsBoot
-    clearVMLog $TMP_MACHINE_NAME "$VIRTUAL_MACHINES_DIR/$TMP_MACHINE_NAME/Logs/VBox.log"
-
-    # startup VM
-    startVm $TMP_MACHINE_NAME
-    waitForVMOsBoot $TMP_MACHINE_NAME
-
+    __startupVm
     __copySanagerFilesToGuest
 
     log "Running Sanager script: \`systemInstall.sh pc\`"
-    $EXECUTOR \
-        $TMP_MACHINE_NAME \
-        $VM_USERS_SANAGER_NAME \
-        $VM_USERS_SANAGER_PASSWORD \
-        "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh pc"
+    __executeCommand "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh pc"
 
-    log "Syncing file system"
-    $EXECUTOR \
-        $TMP_MACHINE_NAME \
-        $VM_USERS_ROOT_NAME \
-        $VM_USERS_ROOT_PASSWORD \
-        "/bin/sync" \
+    __syncFileSystem
 
     stopVm $TMP_MACHINE_NAME
 }
@@ -99,36 +55,36 @@ function testSanagerInstallHomeServer {
     local TMP_MACHINE_NAME=$1
 
     # ensure root install
-    testSanagerSetup $TMP_MACHINE_NAME
+    #testSanagerSetup $TMP_MACHINE_NAME
 
     log "Running Sanager install on $TMP_MACHINE_NAME - HomeServer"
 
-    # TODO: try to get rid of this call by improving wairForVMOsBoot
-    clearVMLog $TMP_MACHINE_NAME "$VIRTUAL_MACHINES_DIR/$TMP_MACHINE_NAME/Logs/VBox.log"
-
-    # startup VM
-    startVm $TMP_MACHINE_NAME
-    waitForVMOsBoot $TMP_MACHINE_NAME
-
+    __startupVm
     __copySanagerFilesToGuest
 
     log "Running Sanager script: \`systemInstall.sh homeServer\`"
-    $EXECUTOR \
-        $TMP_MACHINE_NAME \
-        $VM_USERS_SANAGER_NAME \
-        $VM_USERS_SANAGER_PASSWORD \
-        "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh homeServer"
+    __executeCommand "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh homeServer"
 
-    log "Syncing file system"
-    $EXECUTOR \
-        $TMP_MACHINE_NAME \
-        $VM_USERS_ROOT_NAME \
-        $VM_USERS_ROOT_PASSWORD \
-        "/bin/sync" \
+    __syncFileSystem
 
     stopVm $TMP_MACHINE_NAME
 }
 
+function testSanagerCryptoVisual {
+    local TMP_MACHINE_NAME=$1
+
+    log "Running Sanager install on $TMP_MACHINE_NAME - PC"
+
+    __startupVm
+    __copySanagerFilesToGuest
+
+    log "Running Sanager script: \`systemInstall.sh cryptoVisual\`"
+    __executeCommand "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh cryptoVisual"
+
+    __syncFileSystem
+
+    stopVm $TMP_MACHINE_NAME
+}
 
 function runSanagerGuestVMChecks {
     local TMP_MACHINE_NAME=$1
@@ -180,4 +136,46 @@ function __copySanagerFilesToGuest {
         $SANAGER_MAIN_DIR \
         `dirname $SANAGER_GUEST_FOLDER_PATH` \
         ".*"
+}
+
+function __syncFileSystem {
+    log "Syncing file system"
+    $EXECUTOR \
+        $TMP_MACHINE_NAME \
+        $VM_USERS_ROOT_NAME \
+        $VM_USERS_ROOT_PASSWORD \
+        "/bin/sync"
+}
+
+function __startupVm {
+    # TODO: try to get rid of this call by improving wairForVMOsBoot
+    clearVMLog $TMP_MACHINE_NAME "$VIRTUAL_MACHINES_DIR/$TMP_MACHINE_NAME/Logs/VBox.log"
+
+    # startup VM
+    startVm $TMP_MACHINE_NAME
+    waitForVMOsBoot $TMP_MACHINE_NAME
+}
+
+function __executeCommand {
+    local COMMAND=$1
+    local ENV_ASSIGNMENTS=$2
+
+    $EXECUTOR \
+        $TMP_MACHINE_NAME \
+        $VM_USERS_SANAGER_NAME \
+        $VM_USERS_SANAGER_PASSWORD \
+        "$COMMAND" \
+        "$ENV_ASSIGNMENTS"
+}
+
+function __executeCommandAsRoot {
+    local COMMAND=$1
+    local ENV_ASSIGNMENTS=$2
+
+    $EXECUTOR \
+        $TMP_MACHINE_NAME \
+        $VM_USERS_ROOT_NAME \
+        $VM_USERS_ROOT_PASSWORD \
+        "$COMMAND" \
+        "$ENV_ASSIGNMENTS"
 }

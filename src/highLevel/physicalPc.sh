@@ -39,6 +39,7 @@ function physicalPc_cooling {
 
 function physicalPc_virtualization {
     pkg_virtualbox
+    pkg_sanager_tests_prerequisities
 }
 
 function physicalPc_screen {

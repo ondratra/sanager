@@ -38,15 +38,6 @@ function vmExecShellCommand {
         ENV_PARAMETERS="$ENV_PARAMETERS $ASSIGNMENT \\"
     done
 
-echo "VBoxManage guestcontrol $TMP_MACHINE_NAME run" \
-    "--verbose" \
-    "--username $VM_USERS_ROOT_NAME" \
-    "--password $VM_USERS_ROOT_PASSWORD" \
-    "--wait-stdout" \
-    "--wait-stderr" \
-    "$ENV_PARAMETERS" \
-    "--exe $COMMAND"
-
     VBoxManage guestcontrol $TMP_MACHINE_NAME run \
         --verbose \
         --username $VM_USERS_ROOT_NAME \

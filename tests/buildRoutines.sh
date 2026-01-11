@@ -9,47 +9,40 @@ function tmpWait {
 function vmWithOs {
     local TMP_MACHINE_NAME=$1
 
-    log "Applying routine: OS"
+    log "Applying routine: OS to \"$TMP_MACHINE_NAME\""
 
-    # TODO: "run VM with custom install iso"
+    # ensure iso is available and up to date
+    createCustomInstallIso
 
-    # TODO
-    downloadInstallMedium
-    # createCustomInstallIso
-
-    # TODO: enable ssh connection for root user
-    # sudo apt-get install openssh-server
-    # sudo sed -i -r "s~#PermitRootLogin [-a-z]+~PermitRootLogin yes~g" /etc/ssh/sshd_config
-    # sudo sed -i -r "s~#PasswordAuthentication yes~PasswordAuthentication yes~g" /etc/ssh/sshd_config
-    # sudo ssh-keygen -A # ensure mandatory ssh server folders and files exist
-    # sudo systemctl restart sshd
-
-    # TODO: make sure repositories are updated; needed for essential packages to be installed
-    # sudo -E ./systemInstall lowLevel distUpgrade (how to call it before Sanager folder is rsynced??)
-    # sudo -E ./systemInstall lowLevel distCleanup (how to call it before Sanager folder is rsynced??)
-
-    # TODO: insert virtualbox guest addition cd in (should be available in `/dev/sr0`)
+    attachDebianInstallationIso $TMP_MACHINE_NAME
+    startVm $TMP_MACHINE_NAME
+    waitForOsInstall $TMP_MACHINE_NAME
+    stopVm $TMP_MACHINE_NAME
+    deattachCd $TMP_MACHINE_NAME
 }
 
 function vmWithGuestAdditions {
     local TMP_MACHINE_NAME=$1
 
-    log "Applying routine: GuestAdditions to `$TMP_MACHINE_NAME`"
+    log "Applying routine: GuestAdditions to \"$TMP_MACHINE_NAME\""
 
-    startVm $TMP_MACHINE_NAME
-    tmpWait
+    attachVBoxGuestAdditions $TMP_MACHINE_NAME
+    __bootstrapVm
 
-    ensureSshRootConnection $TMP_MACHINE_NAME
-
-    runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "mkdir /mnt/tmp"
-    runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "mount /dev/sr0 /mnt/tmp"
-    runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "apt-get update"
-    runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "apt-get install -y linux-headers-\$(uname -r) build-essential dkms"
+    __runTunneledCommand "mkdir /mnt/tmp"
+    __runTunneledCommand "mount /dev/sr0 /mnt/tmp"
+    __runTunneledCommand "apt-get update"
+    # TODO: `linux-headers-\$(uname -r)` can throw error if previous machine has old kernel that is no longer available
+    #       in repositories. Rethink this approach.
+    __runTunneledCommand "apt-get install -y linux-headers-\$(uname -r) build-essential dkms" "DEBIAN_FRONTEND=noninteractive"
 
     # VBoxLinuxAdditions.run exists with code `2` which is considered as success here
-    runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "/mnt/tmp/VBoxLinuxAdditions.run --nox11 || true"
+    __runTunneledCommand "/mnt/tmp/VBoxLinuxAdditions.run --nox11 || true"
+
+    grubAdaptToVmCloneHardDiskIdChanges
 
     stopVm $TMP_MACHINE_NAME
+    deattachCd $TMP_MACHINE_NAME
 }
 
 function vmRunner {
@@ -60,15 +53,12 @@ function vmRunner {
     # share Sanager to guest VM
     vmShareFolder $TMP_MACHINE_NAME $SANAGER_MAIN_DIR $SANAGER_GUEST_FOLDER_NAME
 
-    startVm $TMP_MACHINE_NAME
-    tmpWait
+    __bootstrapVm
 
-    ensureSshRootConnection $TMP_MACHINE_NAME
+    __runTunneledCommand "apt-get update"
+    __runTunneledCommand "apt-get install -y rsync" "DEBIAN_FRONTEND=noninteractive"
 
-    runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "apt-get update"
-    runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "apt-get install -y rsync"
-
-    runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "usermod -a -G vboxsf $VM_USERS_SANAGER_NAME"
+    __runTunneledCommand "usermod -a -G vboxsf $VM_USERS_SANAGER_NAME"
 
     stopVm $TMP_MACHINE_NAME
 }
@@ -78,5 +68,25 @@ function vmRunnerUnstable {
 
     log "Applying routine: Runner unstable"
 
-    # TODO: change apt sources to unstable
+    __bootstrapVm
+
+    __runTunneledCommand "$SANAGER_GUEST_FOLDER_PATH/utilities/changeDebianToSid.sh"
+    __runTunneledCommand "apt-get update"
+    __runTunneledCommand "apt-get dist-upgrade -y" "DEBIAN_FRONTEND=noninteractive"
+
+    stopVm $TMP_MACHINE_NAME
+}
+
+function __bootstrapVm {
+    startVm $TMP_MACHINE_NAME
+    tmpWait
+
+    ensureSshRootConnection $TMP_MACHINE_NAME
+}
+
+function __runTunneledCommand {
+    local COMMAND=$1
+    local ENV_ASSIGNMENTS=$2
+
+    runTunneledSshCommand $VM_USERS_ROOT_NAME $VM_USERS_ROOT_PASSWORD "$COMMAND" "$ENV_ASSIGNMENTS"
 }

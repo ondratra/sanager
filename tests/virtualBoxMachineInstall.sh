@@ -33,6 +33,7 @@ function main {
     local TEST_NUMBER=1 # TODO
     local CLEAR_VMS_ON_STARTUP=false # TODO: read from parameters
 
+    local MACHINE_NAME_TEST_BASE_PREFIX="${MACHINE_NAME_TEST_BASE_PREFIX}"
     local MACHINE_NAME_RUNNER="${MACHINE_NAME_TEST_PREFIX}${TEST_NUMBER}"
     local MACHINE_NAME_RUNNER_UNSTABLE="${MACHINE_NAME_RUNNER}_Unstable"
 
@@ -58,25 +59,29 @@ function main {
     # VMcore build
 
     cachedBuildOnTopOfVm $MACHINE_NAME_BARE $MACHINE_NAME_WITH_OS vmWithOs
-
     cachedBuildOnTopOfVm $MACHINE_NAME_WITH_OS $MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS vmWithGuestAdditions
-    cachedBuildOnTopOfVm $MACHINE_NAME_WITH_OS $MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS_UNSTABLE vmWithOsUnstable
 
-    cachedBuildOnTopOfVm $MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS $MACHINE_NAME_RUNNER vmRunner
+    # TODO: improve naming of following machins - order/hierarchy is ok, but it's naming is awful
+    cachedBuildOnTopOfVm $MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS $MACHINE_NAME_TEST_BASE_PREFIX vmRunner
+    cachedBuildOnTopOfVm $MACHINE_NAME_TEST_BASE_PREFIX $MACHINE_NAME_RUNNER testSanagerSetup
     cachedBuildOnTopOfVm $MACHINE_NAME_RUNNER $MACHINE_NAME_RUNNER_UNSTABLE vmRunnerUnstable
 
     # VM test runs
-
-#    local MACHINE_NAME_ROOT_INSTALL=${MACHINE_NAME_RUNNER_UNSTABLE}_rootInstall
-#    local MACHINE_NAME_GRAPHICAL_DESKTOP=${MACHINE_NAME_RUNNER_UNSTABLE}_graphicalDesktop
-#    local MACHINE_NAME_PC=${MACHINE_NAME_RUNNER_UNSTABLE}_pc
+    #local MACHINE_NAME_ROOT_INSTALL=${MACHINE_NAME_RUNNER_UNSTABLE}_rootInstall
+    local MACHINE_NAME_GRAPHICAL_DESKTOP=${MACHINE_NAME_RUNNER_UNSTABLE}_graphicalDesktop
+    local MACHINE_NAME_PC=${MACHINE_NAME_RUNNER_UNSTABLE}_pc
     local MACHINE_NAME_HOME_SERVER=${MACHINE_NAME_RUNNER}_homeServer
+    local MACHINE_NAME_CRYPTO_VISUAL=${MACHINE_NAME_RUNNER}_cryptoVisual
 
-#    cachedBuildOnTopOfVm $MACHINE_NAME_RUNNER_UNSTABLE $MACHINE_NAME_ROOT_INSTALL testSanagerSetup
-#    cachedBuildOnTopOfVm $MACHINE_NAME_ROOT_INSTALL $MACHINE_NAME_GRAPHICAL_DESKTOP testSanagerInstallGraphicalDesktop
-#    cachedBuildOnTopOfVm $MACHINE_NAME_GRAPHICAL_DESKTOP $MACHINE_NAME_PC testSanagerInstallPc
 
+
+    # unstable/sid based tests
+    cachedBuildOnTopOfVm $MACHINE_NAME_RUNNER_UNSTABLE $MACHINE_NAME_GRAPHICAL_DESKTOP testSanagerInstallGraphicalDesktop
+    cachedBuildOnTopOfVm $MACHINE_NAME_GRAPHICAL_DESKTOP $MACHINE_NAME_PC testSanagerInstallPc
+
+    # stable based tests
     cachedBuildOnTopOfVm $MACHINE_NAME_RUNNER $MACHINE_NAME_HOME_SERVER testSanagerInstallHomeServer
+    cachedBuildOnTopOfVm $MACHINE_NAME_RUNNER $MACHINE_NAME_CRYPTO_VISUAL testSanagerCryptoVisual
 
     log "Tests finished successfully!"
 }
@@ -88,7 +93,8 @@ then
     exit 1
 fi
 
-REQUIRED_PACKAGES="curlftpfs virtualbox-guest-additions-iso openssh-client rsync"
+# these packages should be installed (possibly via `pkg_sanager_tests_prerequisities`)
+REQUIRED_PACKAGES="curlftpfs virtualbox-guest-additions-iso virtualbox-ext-pack openssh-client rsync xorriso isolinux sshpass fuseiso"
 
 for PACKAGE in $REQUIRED_PACKAGES; do
     if ! isInstalled $PACKAGE; then

@@ -25,7 +25,10 @@ function effect_restoreMateConfig {
         mkdir -p tmp/theme
         cd tmp
         wgetDownload "$THEME_URL" -O "$THEME_OUTPUT_FILE"
-        7z x "$THEME_OUTPUT_FILE" -o"./theme" # intentionally no space after `-o`
+
+        # TODO: archive contains symlink and 7z has no option to suppress errors about that
+        #7z x "$THEME_OUTPUT_FILE" -o"./theme" # intentionally no space after `-o`
+        7z x "$THEME_OUTPUT_FILE" -o"./theme" || true # intentionally no space after `-o`
 
         mkdir -p ~/.themes # ensure themes folder exist -> only important before first login into graphical interface
         cp -rf "./theme/$THEME_INTER_FOLDER/$THEME_SUBFOLDER" ~/.themes/$THEME_SUBFOLDER

@@ -5,8 +5,6 @@ source $SCRIPT_DIR/src/highLevel/common.sh
 function runHighLevel {
     common_all
 
-    pkg_essential
-
     pkg_versioningAndTools
     pkg_nodejs
     pkg_yarn
