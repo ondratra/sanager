@@ -14,7 +14,7 @@ if [[ $# -lt 5 ]]; then
     exit 1;
 fi
 
-source $SCRIPT_DIR/config.sh
-source $SCRIPT_DIR/utils.sh
+source $SCRIPT_DIR/../config.sh
+source $SCRIPT_DIR/../misc/utils.sh
 
 forkVm $1 $2 $3 $4 $5

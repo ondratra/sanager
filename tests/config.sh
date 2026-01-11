@@ -1,7 +1,8 @@
-SANAGER_MAIN_DIR=`realpath $(dirname $SCRIPT_DIR)`
+SANAGER_TESTS_CONFIG_FOLDER=`realpath $(dirname "${BASH_SOURCE[0]}")`
+SANAGER_MAIN_DIR=`realpath $(dirname $SANAGER_TESTS_CONFIG_FOLDER)`
 
 # config
-DEBIAN_VERSION="13.2.0"
+DEBIAN_VERSION="13.3.0"
 NOWADAYS_DEBIAN_VERSION="trixie"
 #DEBIAN_MIRROR_FTP="ftp.cz.debian.org/debian/"
 DEBIAN_MIRROR_FTP="ftp.us.debian.org/debian/"

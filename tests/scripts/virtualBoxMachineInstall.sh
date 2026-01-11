@@ -16,18 +16,18 @@ set -x # uncomment when debugging
 SCRIPT_DIR="`dirname \"$0\"`" # relative
 
 # load configuration
-source $SCRIPT_DIR/config.sh
+source $SCRIPT_DIR/../config.sh
 
 # use utilities
 source $SANAGER_MAIN_DIR/src/lowLevel/utilities.sh
 
 # TODO: further refactoring
-source $SCRIPT_DIR/utils.sh
-source $SCRIPT_DIR/guestAdditionUtils.sh
-source $SCRIPT_DIR/osInstallIsoBuilder.sh
-source $SCRIPT_DIR/buildRoutines.sh
-source $SCRIPT_DIR/vmBuild.sh
-source $SCRIPT_DIR/scenarios.sh
+source $SCRIPT_DIR/../misc/utils.sh
+source $SCRIPT_DIR/../vmBuilds/guestAdditionUtils.sh
+source $SCRIPT_DIR/../vmBuilds/osInstallIsoBuilder.sh
+source $SCRIPT_DIR/../vmBuilds/buildRoutines.sh
+source $SCRIPT_DIR/../vmBuilds/vmBuild.sh
+source $SCRIPT_DIR/../misc/scenarios.sh
 
 function main {
     local TEST_NUMBER=1 # TODO

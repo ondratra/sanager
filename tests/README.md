@@ -5,10 +5,10 @@ Make sure you have ~50GB of free disk space before running the tests.
 
 ```bash
 # cd sanagerRoot
-./tests/virtualBoxMachineInstall.sh
+./tests/scripts/virtualBoxMachineInstall.sh
 
 # alternatively log everything into file
-./tests/virtualBoxMachineInstall.sh >tmp.txt 2>&1
+./tests/scripts/virtualBoxMachineInstall.sh >tmp.txt 2>&1
 
 ```
 
@@ -32,5 +32,5 @@ ln -s /my/desired/path .sanagerTests
 Firstly, make sure to run tests. Then adjust and run the following command to fork the desired VM and save it
 to selected folder while adjusting it's SSH and VDRE ports.
 ```bash
-./tests/vmMaker Sanager_Testing_Runner_1_Unstable_pc Sanager_MySpecificUse 2223 10002 /path/to/virtual/machines
+./tests/scripts/vmMaker Sanager_Testing_Runner_1_Unstable_pc Sanager_MySpecificUse 2223 10002 /path/to/virtual/machines
 ```
