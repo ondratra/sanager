@@ -2,8 +2,10 @@
 
 # enables bash history search by PageUp and PageDown keys
 function effect_enableHistorySearch {
+    local TMP_FILE_PATH="$SANAGER_INSTALL_TEMP_DIR/tmpSedReplacementFile"
+
     # works system wide (changing /etc/inputrc)
-    sed -e '/.*\(history-search-backward\|history-search-forward\)/s/^# //g' /etc/inputrc > tmpSedReplacementFile && mv tmpSedReplacementFile /etc/inputrc
+    sed -e '/.*\(history-search-backward\|history-search-forward\)/s/^# //g' /etc/inputrc > "$TMP_FILE_PATH" && mv "$TMP_FILE_PATH" /etc/inputrc
 }
 
 function effect_enableBashCompletion {
@@ -22,8 +24,8 @@ function effect_restoreMateConfig {
         fi
 
         # extract theme in temporary folder
-        mkdir -p tmp/theme
-        cd tmp
+        mkdir -p "$SANAGER_INSTALL_TEMP_DIR/theme"
+        cd "$SANAGER_INSTALL_TEMP_DIR"
         wgetDownload "$THEME_URL" -O "$THEME_OUTPUT_FILE"
 
         # TODO: archive contains symlink and 7z has no option to suppress errors about that
@@ -33,10 +35,6 @@ function effect_restoreMateConfig {
         mkdir -p ~/.themes # ensure themes folder exist -> only important before first login into graphical interface
         cp -rf "./theme/$THEME_INTER_FOLDER/$THEME_SUBFOLDER" ~/.themes/$THEME_SUBFOLDER
         chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" ~/.themes
-
-        # clean tmp folder
-        cd ..
-        rm tmp -r
     }
 
     function recomposeConfig {
@@ -75,15 +73,15 @@ function effect_restoreMateConfig {
         local WIDTH=${RESOLUTION%x*}
         local SCALE=1
 
-        if [ "$WIDTH" -gt 1920 ]; then
-            local SCALE=2
+        if [ "${WIDTH:-"1920"}" -gt 1920 ]; then
+            SCALE=2
         fi
 
         # passing DBUS_SESSION_BUS_ADDRESS might seem meaningless but it is needed to make dconf work with sudo
         sudo -u $SCRIPT_EXECUTING_USER DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS  gsettings set org.mate.interface window-scaling-factor "$SCALE"
     }
 
-    local OUTPUT_FILE="$SCRIPT_DIR/data/mate/config.txt"
+    local OUTPUT_FILE="$SANAGER_INSTALL_TEMP_DIR/sanagerMateConfig.txt"
     local PARTS_DIR="$SCRIPT_DIR/data/mate/parts"
 
     recomposeConfig $PARTS_DIR $OUTPUT_FILE
@@ -163,7 +161,16 @@ function effect_distCleanup {
 }
 
 function effect_setupShellPrompt {
+    # TODO: prevent repetitive addition
     local PS1_LINE='export PS1="\[\e[32m\]\u@\h\[\e[0m\]:\[\e[34m\]\w\[\e[0m\]\$ "'
 
     grep -qxF "$PS1_LINE" ~/.bashrc || echo "$PS1_LINE" >> ~/.bashrc
+}
+
+function effect_addPathToUserBinaries {
+    # TODO: prevent repetitive addition
+    local EXPORT_STRING="export PATH=\$PATH:\$HOME/.local/bin"
+    echo "$EXPORT_STRING" >> ~/.bashrc
+
+    source ~/.bashrc
 }

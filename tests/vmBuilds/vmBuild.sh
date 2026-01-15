@@ -24,7 +24,8 @@ function createTestingVm {
     VBoxManage modifyvm "$TMP_MACHINE_NAME" \
         --ioapic on \
         --firmware efi \
-        --graphicscontroller vmsvga
+        --graphicscontroller vmsvga \
+        ‑‑accelerate‑3d=on
 
     # set memory limits
     VBoxManage modifyvm "$TMP_MACHINE_NAME" \

@@ -51,7 +51,7 @@ function vmRunner {
     log "Applying routine: Runner"
 
     # share Sanager to guest VM
-    vmShareFolder $TMP_MACHINE_NAME $SANAGER_MAIN_DIR $SANAGER_GUEST_FOLDER_NAME
+    vmShareFolder "$TMP_MACHINE_NAME" "$SANAGER_MAIN_DIR" "$SANAGER_GUEST_FOLDER_NAME" "$SANAGER_GUEST_SHARED_FOLDER_PATH"
 
     __bootstrapVm
 

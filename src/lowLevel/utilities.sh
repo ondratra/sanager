@@ -86,10 +86,10 @@ function isInstalled {
 
 function isVirtualboxVm {
     if grep -q "VirtualBox" /sys/class/dmi/id/product_name 2>/dev/null; then
-        return 1  # Running inside VirtualBox
+        return 0  # Running inside VirtualBox
     fi
 
-    return 0  # Not running inside VirtualBox
+    return 1  # Not running inside VirtualBox
 
     # alternative approach
     ## for detection info see http://www.dmo.ca/blog/detecting-virtualization-on-linux/

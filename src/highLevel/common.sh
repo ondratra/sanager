@@ -12,5 +12,6 @@ function common_all {
     # improve terminal
     effect_enableHistorySearch
     effect_enableBashCompletion
+    effect_addPathToUserBinaries
     effect_setupShellPrompt
 }

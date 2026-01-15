@@ -1,23 +1,19 @@
 function vmShareFolder {
-    # NOTE: this currently doesn't fully work because current Virtualbox guest additions don't work properly
-    #       Debian package `virtualbox-guest-additions-iso` - versions tried: `6.1.36-1`, `6.1.38-1`
-    log "Skipping sharing folder - guest additions not working"
-
-    return 0
-
-    local TMP_MACHINE_NAME=$1
-    local HOST_FOLDER_PATH=$2
+    local TMP_MACHINE_NAME="$1"
+    local HOST_FOLDER_PATH="$2"
+    #local GUEST_USER_NAME="$3"
     local GUEST_FOLDER_NAME=$3
-    local GUEST_USER_NAME=$4
+    local GUEST_FOLDER_PATH="$4"
 
-    log "Sharing folder \"$HOST_FOLDER_PATH\" -> \"$TMP_MACHINE_NAME:/media/sf_$GUEST_FOLDER_NAME\""
+    log "Sharing folder \"$HOST_FOLDER_PATH\" -> \"$TMP_MACHINE_NAME:$GUEST_FOLDER_PATH\" as \"$GUEST_FOLDER_NAME\""
 
     # https://docs.oracle.com/en/virtualization/virtualbox/6.0/user/vboxmanage-sharedfolder.html
     VBoxManage sharedfolder add $TMP_MACHINE_NAME \
-        --name $GUEST_FOLDER_NAME \
-        --hostpath $HOST_FOLDER_PATH \
+        --name "$GUEST_FOLDER_NAME" \
+        --hostpath "$HOST_FOLDER_PATH" \
         --readonly \
-        --automount
+        --automount \
+        --auto-mount-point "$GUEST_FOLDER_PATH"
 
     # this is likely not needed with properly working guest additions
     # In guest - later on somewhere in this code call
