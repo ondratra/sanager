@@ -279,3 +279,11 @@ function isExtrepoRepositoryEnabled {
 
     return 0
 }
+
+function listTestingDependencies {
+    local VIRTUALIZATION="virtualbox-guest-additions-iso virtualbox-ext-pack"
+    local HOST_TO_GUEST_CONNECTION="curlftpfs openssh-client rsync sshpass"
+    local ISO_CREATION="xorriso isolinux fuseiso"
+
+    echo $VIRTUALIZATION $HOST_TO_GUEST_CONNECTION $ISO_CREATION
+}

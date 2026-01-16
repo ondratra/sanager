@@ -502,7 +502,7 @@ function pkg_virtualbox {
 
 function pkg_sanager_tests_prerequisities {
     # see `tests/virtualBoxMachineInstall.sh` for up to date list
-    local TESTS_DEPENDENCIES="curlftpfs virtualbox-guest-additions-iso virtualbox-ext-pack openssh-client rsync xorriso isolinux sshpass fuseiso"
+    local TESTS_DEPENDENCIES=`listTestingDependencies`
     local PACKAGES="remmina"
 
     aptGetInstall $TESTS_DEPENDENCIES $PACKAGES

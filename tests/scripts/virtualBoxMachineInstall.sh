@@ -94,7 +94,7 @@ then
 fi
 
 # these packages should be installed (possibly via `pkg_sanager_tests_prerequisities`)
-REQUIRED_PACKAGES="curlftpfs virtualbox-guest-additions-iso virtualbox-ext-pack openssh-client rsync xorriso isolinux sshpass fuseiso"
+REQUIRED_PACKAGES=`listTestingDependencies`
 
 for PACKAGE in $REQUIRED_PACKAGES; do
     if ! isInstalled $PACKAGE; then
