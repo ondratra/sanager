@@ -1,3 +1,6 @@
 theme "molokai-dark"
 copy_command "xclip -selection clipboard"
 pane_frames false
+
+show_startup_tips false
+show_release_notes false

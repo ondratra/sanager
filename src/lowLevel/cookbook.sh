@@ -752,7 +752,7 @@ function pkg_zellij {
     local PACKAGES="xclip"
     local OPT_DIR="$SANAGER_INSTALL_DIR/zellij"
     local CONFIG_DIR=~/.config/zellij
-    local CURRENT_VERSION="v0.41.2"
+    local CURRENT_VERSION="v0.43.1"
 
     local INSTALL_FILE="zellij-x86_64-unknown-linux-musl.tar.gz"
     local BINARY_URL="https://github.com/zellij-org/zellij/releases/download/$CURRENT_VERSION/$INSTALL_FILE"
