@@ -65,17 +65,6 @@ function pkg_amdGpuDrivers {
     aptGetInstall $PACKAGES
 }
 
-function pkg_virtualboxGuest {
-    #local PACKAGES="virtualbox-guest-utils virtualbox-guest-x11 virtualbox-guest-dkms"
-    local PACKAGES="virtualbox-guest-utils virtualbox-guest-x11"
-
-    if ! isVirtualboxVm; then
-        return
-    fi
-
-    aptGetInstall $PACKAGES
-}
-
 # TODO: improve cookbook's recipes naming or way how to invoke them
 #       `dropbox` here conflicts with `dropbox` command that is installed
 #       that makes ``dropbox start -i` call recursively calling this (install) function`
@@ -501,11 +490,36 @@ function pkg_virtualbox {
 }
 
 function pkg_sanager_tests_prerequisities {
+    function ensureVMNetworksExist {
+        local VM_NETWORK_NAME="IsolatedNetwork"
+        local VM_NETWORK_DEFINITIONS_FOLDER="$SCRIPT_DIR/data/virt"
+
+        if ! virsh net-info "$VM_NETWORK_NAME" &>/dev/null; then
+            echo virsh net-define "$VM_NETWORK_DEFINITIONS_FOLDER/$VM_NETWORK_NAME.xml"
+            virsh net-define "$VM_NETWORK_DEFINITIONS_FOLDER/$VM_NETWORK_NAME.xml"
+        fi
+
+        virsh net-start $VM_NETWORK_NAME
+        virsh net-autostart $VM_NETWORK_NAME
+    }
+
+    function useSystemVirt {
+        # TODO: prevent duplicates + abstract adding of directives into bashrc
+        echo "export LIBVIRT_DEFAULT_URI=qemu:///system" >> ~/.bashrc
+
+        source ~/.bashrc
+    }
+
     # see `tests/virtualBoxMachineInstall.sh` for up to date list
     local TESTS_DEPENDENCIES=`listTestingDependencies`
-    local PACKAGES="remmina"
+    local PACKAGES="remmina remmina-plugin-spice"
 
     aptGetInstall $TESTS_DEPENDENCIES $PACKAGES
+
+    usermod -a -G libvirt,kvm $SCRIPT_EXECUTING_USER
+
+    useSystemVirt
+    ensureVMNetworksExist
 }
 
 function pkg_steam {
@@ -566,7 +580,7 @@ function pkg_multimedia_necessary {
 }
 
 function pkg_newestLinuxKernel {
-    local KERNEL_VERSION=$(is_debian_sid && echo "6.18.3+deb14" || echo "6.12.57+deb13")
+    local KERNEL_VERSION=$(is_debian_sid && echo "6.18.5+deb14" || echo "6.12.57+deb13")
     local PACKAGES="linux-image-$KERNEL_VERSION-amd64 linux-headers-$KERNEL_VERSION-amd64"
 
     aptGetInstall $PACKAGES

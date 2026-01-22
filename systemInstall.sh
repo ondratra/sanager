@@ -3,6 +3,7 @@
 
 # escape on error
 set -e
+#set -eu # TODO: use this to catch undefined variables
 
 # output all commands done if debug mode is on
 if [[ "$DEBUG" == "true" ]]; then

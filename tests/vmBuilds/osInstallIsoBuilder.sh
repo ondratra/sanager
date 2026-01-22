@@ -1,5 +1,7 @@
 function createCustomInstallIso {
-    #need to convert Sanager_Testing_WithOS -> Sanager-Testing-WithOS
+    if [[ -f "$NETINSTALL_FINAL_ISO_FILE" ]]; then
+        return 0
+    fi
 
     local ISO_MOUNT_PATH="$NETINSTALL_ISO_BUILD_DIR/isoMount"
     local ISO_WORKDIR_PATH="$NETINSTALL_ISO_BUILD_DIR/isoContent"

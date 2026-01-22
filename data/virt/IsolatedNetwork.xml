@@ -1,0 +1,19 @@
+<!-- Isolated VMs - VM can access host-provided internet, but can't access host or other VMs directly -->
+<network>
+    <name>IsolatedNetwork</name>
+    <forward mode='nat'/>
+    <bridge name='virbr1' stp='on' delay='0'/>
+    <ip address='192.168.50.1' netmask='255.255.255.0'>
+        <dhcp>
+            <range start='192.168.50.2' end='192.168.50.254'/>
+        </dhcp>
+    </ip>
+    <!-- Prevent VM → Host (except DNS/DHCP) -->
+    <rule action='drop' direction='in' priority='100'>
+        <all/>
+    </rule>
+    <!-- Prevent VM → VM communication -->
+    <rule action='drop' direction='out' priority='100'>
+        <ip match='no' address='0.0.0.0' prefix='0'/>
+    </rule>
+</network>

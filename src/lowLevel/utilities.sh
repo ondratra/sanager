@@ -281,7 +281,7 @@ function isExtrepoRepositoryEnabled {
 }
 
 function listTestingDependencies {
-    local VIRTUALIZATION="virtualbox-guest-additions-iso virtualbox-ext-pack"
+    local VIRTUALIZATION="qemu-system-x86 libvirt-daemon-system libvirt-clients virtinst virt-manager ovmf libguestfs-tools"
     local HOST_TO_GUEST_CONNECTION="curlftpfs openssh-client rsync sshpass"
     local ISO_CREATION="xorriso isolinux fuseiso"
 
