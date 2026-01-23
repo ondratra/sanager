@@ -19,6 +19,9 @@ fi
 source ./utilities/exportMateConfig.sh
 source ./utilities/exportSublimeTextConfig.sh
 
+SANAGER_MAIN_DIR="/opt/__sanager"
+SANAGER_INSTALL_TEMP_DIR="$SANAGER_MAIN_DIR/tmp"
+
 SUBLIME_TEXT_PACKAGE_LOCAL_NAME="Ondratra"
 
 SCRIPT_EXECUTING_USER=$SUDO_USER

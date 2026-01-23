@@ -8,9 +8,7 @@ function dumpMateConfiguration {
 function splitIniFile {
     local INI_FILE_PATH="$1"
 
-    local INI_FILE_DIR="`dirname \"$INI_FILE_PATH\"`"
-
-    local PARTS_DIR="$INI_FILE_DIR/parts"
+    local PARTS_DIR="$SCRIPT_DIR/data/mate/parts"
 
     # remove all old parts
     rm -rf $PARTS_DIR/*
@@ -46,7 +44,7 @@ function fillConfigVariables {
 }
 
 function exportMateConfig {
-    local CONFIG_FILE_PATH="$SCRIPT_DIR/data/mate/config.txt"
+    local CONFIG_FILE_PATH="$SANAGER_INSTALL_TEMP_DIR/sanagerMateConfig.txt"
 
     dumpMateConfiguration $CONFIG_FILE_PATH
     fillConfigVariables $CONFIG_FILE_PATH
