@@ -510,7 +510,7 @@ function pkg_sanager_tests_prerequisities {
         source ~/.bashrc
     }
 
-    # see `tests/virtualBoxMachineInstall.sh` for up to date list
+    # see `tests/scripts/vmInstallTests.sh` for up to date list
     local TESTS_DEPENDENCIES=`listTestingDependencies`
     local PACKAGES="remmina remmina-plugin-spice"
 

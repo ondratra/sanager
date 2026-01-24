@@ -8,34 +8,25 @@ set -x # uncomment when debugging
 SCRIPT_DIR="`dirname \"$0\"`" # relative
 
 # load configuration
-source $SCRIPT_DIR/../config.sh
+source "$SCRIPT_DIR/../config.sh"
 
 # use utilities
-source $SANAGER_MAIN_DIR/src/lowLevel/utilities.sh
+source "$SANAGER_MAIN_DIR/src/lowLevel/utilities.sh"
 
-# TODO: further refactoring
-source $SCRIPT_DIR/../misc/utils.sh
-source $SCRIPT_DIR/../vmBuilds/guestAdditionUtils.sh
-source $SCRIPT_DIR/../vmBuilds/osInstallIsoBuilder.sh
-source $SCRIPT_DIR/../vmBuilds/buildRoutines.sh
-source $SCRIPT_DIR/../vmBuilds/vmBuild.sh
-source $SCRIPT_DIR/../misc/sshHelpers.sh
-source $SCRIPT_DIR/../misc/scenarios.sh
+source "$SCRIPT_DIR/../misc/utils.sh"
+source "$SCRIPT_DIR/../vmBuilds/guestAdditionUtils.sh"
+source "$SCRIPT_DIR/../vmBuilds/osInstallIsoBuilder.sh"
+source "$SCRIPT_DIR/../vmBuilds/buildRoutines.sh"
+source "$SCRIPT_DIR/../vmBuilds/vmBuild.sh"
+source "$SCRIPT_DIR/../misc/sshHelpers.sh"
+source "$SCRIPT_DIR/../misc/scenarios.sh"
 
 function main {
-    local CLEAR_VMS_ON_STARTUP=false # TODO: read from parameters
-
     # ensure work folder exists
     mkdir -p $TEST_DIR
 
-    # TODO: comment this out by default (create new --parameter instead)
-    # clear testing VMs
-    if [ $CLEAR_VMS_ON_STARTUP == true ]; then
-        clearAllSanagerVms
-    else
-        # make sure temporary machine is gone (might have survived previous test due to script error)
-        deleteVm $MACHINE_NAME_TEMPORARY
-    fi
+    # make sure temporary machine is gone (might have survived previous test due to script error)
+    deleteVm $MACHINE_NAME_TEMPORARY
 
     if ! vmExists $MACHINE_NAME_BARE; then
         createTestingVm $MACHINE_NAME_BARE

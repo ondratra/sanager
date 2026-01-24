@@ -9,10 +9,10 @@ Make sure you have ~50GB of free disk space before running the tests.
 # install prerequisities
 sudo -E ./systemInstall.sh lowLevel pkg_sanager_tests_prerequisities
 
-./tests/scripts/virtualBoxMachineInstall.sh
+./tests/scripts/vmInstallTests.sh
 
 # alternatively log everything into file
-./tests/scripts/virtualBoxMachineInstall.sh >tmp.txt 2>&1
+./tests/scripts/vmInstallTests.sh >tmp.txt 2>&1
 
 ```
 
@@ -29,3 +29,11 @@ to selected folder while adjusting it's SSH and VDRE ports.
 ```bash
 ./tests/scripts/vmMaker Sanager_Testing_Runner_1_Unstable_pc Sanager_MySpecificUse 2223 10002 /path/to/virtual/machines
 ```
+
+## Delete test VMs
+Once you're done with tests, you can delete all VM's created during tests via:
+```bash
+./tests/scripts/vmMaker deleteAllTestVms
+```
+
+All forks will be left intact and need to be deleted manually if it's desired.
