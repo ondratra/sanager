@@ -130,8 +130,9 @@ function cloneVM {
 
     local MAC_ADDRESS=`reserveDhcpIpForVm "$CLONE_NAME"`
 
-    #local DISK_PATH=`createAndPrepareVmDisk "$CLONE_NAME" "$TARGET_DIR/$CLONE_NAME"`
-    local DISK_PATH="$TARGET_DIR/$CLONE_NAME/$VM_MACHINE_DISK_NAME.qcow2"
+    local SYSTEM_DISK_PATH="$TARGET_DIR/$CLONE_NAME/$VM_MACHINE_DISK_NAME_SYSTEM.qcow2"
+    local DATA_DISK_PATH="$TARGET_DIR/$CLONE_NAME/$VM_MACHINE_DISK_NAME_DATA.qcow2"
+
     # ensure disk folder exists
     mkdir -p "$TARGET_DIR/$CLONE_NAME"
 
@@ -139,7 +140,9 @@ function cloneVM {
         --original "$ORIGINAL_NAME" \
         --name "$CLONE_NAME" \
         --mac "$MAC_ADDRESS" \
-        --file "$DISK_PATH"
+        --check disk_size=off \
+        --file "$SYSTEM_DISK_PATH" \
+        --file "$DATA_DISK_PATH"
 }
 
 function forkVm {
@@ -166,20 +169,21 @@ function tagVm {
     #VBoxManage modifyvm "$CLONE_NAME" --groups "$VM_GROUP_FORKS"
 }
 
-
 function createAndPrepareVmDisk {
     local TMP_MACHINE_NAME="$1"
-    local TARGET_FOLDER="$2"
+    local DISK_NAME="$2"
+    local DISK_SIZE="$3"
+    local TARGET_FOLDER="$4"
 
     # config
-    local MACHINE_DISK_FILE_PATH="$TARGET_FOLDER/$VM_MACHINE_DISK_NAME.qcow2"
+    local MACHINE_DISK_FILE_PATH="$TARGET_FOLDER/$DISK_NAME.qcow2"
 
     # ensure disk folder exists
     mkdir -p "$TARGET_FOLDER"
 
     rm -f "$MACHINE_DISK_FILE_PATH"
 
-    qemu-img create -f qcow2 "$MACHINE_DISK_FILE_PATH" "$VM_MACHINE_DISK_SIZE" > /dev/null
+    qemu-img create -f qcow2 "$MACHINE_DISK_FILE_PATH" "$DISK_SIZE" > /dev/null
     chmod g+w "$MACHINE_DISK_FILE_PATH"
 
     echo "$MACHINE_DISK_FILE_PATH"

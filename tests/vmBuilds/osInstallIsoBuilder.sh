@@ -72,7 +72,6 @@ function updatePreseedWithLocalMachineSettings {
 
         sed -i "s|^d-i debian-installer/locale string .*|d-i debian-installer/locale string $CURRENT_LOCALE|" "$PRESEED_FILE"
         sed -i "s|^d-i keyboard-configuration/xkb-keymap select .*|d-i keyboard-configuration/xkb-keymap select $CURRENT_LAYOUT|" "$PRESEED_FILE"
-
     }
 
     function updatePreseedAptMirror {

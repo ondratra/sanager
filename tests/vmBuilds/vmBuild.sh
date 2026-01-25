@@ -37,10 +37,17 @@ function createVmDisks {
 
     log "Creating disks for $TMP_MACHINE_NAME"
 
-    local DISK_PATH=`createAndPrepareVmDisk "$TMP_MACHINE_NAME" "$VIRTUAL_MACHINES_DIR/$TMP_MACHINE_NAME"`
+    local SYSTEM_DISK_PATH=`createAndPrepareVmDisk "$TMP_MACHINE_NAME" "$VM_MACHINE_DISK_NAME_SYSTEM" "$VM_MACHINE_DISK_SIZE_SYSTEM" "$VIRTUAL_MACHINES_DIR/$TMP_MACHINE_NAME"`
+    local DATA_DISK_PATH=`createAndPrepareVmDisk "$TMP_MACHINE_NAME" "$VM_MACHINE_DISK_NAME_DATA" "$VM_MACHINE_DISK_SIZE_DATA" "$VIRTUAL_MACHINES_DIR/$TMP_MACHINE_NAME"`
 
     virsh attach-disk "$TMP_MACHINE_NAME" \
-        "$DISK_PATH" vda \
+        "$SYSTEM_DISK_PATH" vda \
+        --driver qemu \
+        --subdriver qcow2 \
+        --targetbus virtio \
+        --persistent
+    virsh attach-disk "$TMP_MACHINE_NAME" \
+        "$DATA_DISK_PATH" vdb \
         --driver qemu \
         --subdriver qcow2 \
         --targetbus virtio \
