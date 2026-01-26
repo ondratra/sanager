@@ -26,32 +26,29 @@ function main {
     mkdir -p $TEST_DIR
 
     # make sure temporary machine is gone (might have survived previous test due to script error)
-    deleteVm $MACHINE_NAME_TEMPORARY
+    deleteVm "$MACHINE_NAME_TEMPORARY"
 
-    if ! vmExists $MACHINE_NAME_BARE; then
-        createTestingVm $MACHINE_NAME_BARE
-        createVmDisks $MACHINE_NAME_BARE
+    if ! vmExists "$MACHINE_NAME_BARE"; then
+        createTestingVm "$MACHINE_NAME_BARE"
+        createVmDisks "$MACHINE_NAME_BARE"
     fi
 
-    # VMcore build
-    cachedBuildOnTopOfVm $MACHINE_NAME_BARE $MACHINE_NAME_WITH_OS vmWithOs
+    # VM core build
+    cachedBuildOnTopOfVm "$MACHINE_NAME_BARE" "$MACHINE_NAME_WITH_OS" vmWithOs
+    cachedBuildOnTopOfVm "$MACHINE_NAME_WITH_OS" "$MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS" vmWithGuestAdditions
 
-    cachedBuildOnTopOfVm $MACHINE_NAME_WITH_OS $MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS vmWithGuestAdditions
+    # VM minimals - stable/unstable and terminal-only/graphics
+    cachedBuildOnTopOfVm "$MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS" "$MACHINE_NAME_STABLE_TERMINAL_BASE" testSanagerSetup
+    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_TERMINAL_BASE" "$MACHINE_NAME_STABLE_GRAPHICAL_BASE" testSanagerInstallGraphicalDesktop
+    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_TERMINAL_BASE" "$MACHINE_NAME_UNSTABLE_TERMINAL_BASE" testSanagerSwitchToUnstable
+    cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_TERMINAL_BASE" "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" testSanagerInstallGraphicalDesktop
 
-    # TODO: improve naming of following machins - order/hierarchy is ok, but it's naming is awful
-    cachedBuildOnTopOfVm $MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS $MACHINE_NAME_TEST_BASE_PREFIX vmRunner
-    cachedBuildOnTopOfVm $MACHINE_NAME_TEST_BASE_PREFIX $MACHINE_NAME_RUNNER testSanagerSetup
-    cachedBuildOnTopOfVm $MACHINE_NAME_RUNNER $MACHINE_NAME_RUNNER_UNSTABLE vmRunnerUnstable
+    # unstable/sid-based tests
+    cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" "$MACHINE_NAME_UNSTABLE_PC" testSanagerInstallPc
 
-    # VM test runs
-
-    # unstable/sid based tests
-    cachedBuildOnTopOfVm $MACHINE_NAME_RUNNER_UNSTABLE $MACHINE_NAME_GRAPHICAL_DESKTOP testSanagerInstallGraphicalDesktop
-    cachedBuildOnTopOfVm $MACHINE_NAME_GRAPHICAL_DESKTOP $MACHINE_NAME_PC testSanagerInstallPc
-
-    # stable based tests
-    cachedBuildOnTopOfVm $MACHINE_NAME_RUNNER $MACHINE_NAME_HOME_SERVER testSanagerInstallHomeServer
-    cachedBuildOnTopOfVm $MACHINE_NAME_RUNNER $MACHINE_NAME_CRYPTO_VISUAL testSanagerCryptoVisual
+    # stable-based tests
+    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_GRAPHICAL_BASE" "$MACHINE_NAME_STABLE_HOME_SERVER" testSanagerInstallHomeServer
+    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_GRAPHICAL_BASE" "$MACHINE_NAME_STABLE_CRYPTO_VISUAL" testSanagerCryptoVisual
 
     log "Tests finished successfully!"
 }

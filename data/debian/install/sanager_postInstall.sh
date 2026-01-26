@@ -1,7 +1,10 @@
 set -e
 
-# install necessities
-DEBIAN_FRONTEND="noninteractive" apt-get install openssh-server parted -y -qq
+# install necessities:
+# - openssh-server - needed for connecting into VM
+# - parted - needed to setup secondary disk (`/dev/vdb`)
+# - rsync - sanager will be rsynced into the machine
+DEBIAN_FRONTEND="noninteractive" apt-get install openssh-server parted rsync -y -qq
 
 # setup ssh
 sed -i -r "s~#PermitRootLogin [-a-z]+~PermitRootLogin yes~g" /etc/ssh/sshd_config

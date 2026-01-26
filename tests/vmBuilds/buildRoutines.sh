@@ -37,36 +37,6 @@ function vmWithGuestAdditions {
     stopVm $TMP_MACHINE_NAME
 }
 
-function vmRunner {
-    local TMP_MACHINE_NAME=$1
-
-    log "Applying routine: Runner"
-
-    # share Sanager to guest VM
-    vmShareFolder "$TMP_MACHINE_NAME" "$SANAGER_MAIN_DIR" "$SANAGER_GUEST_FOLDER_NAME" "$SANAGER_GUEST_FOLDER_SHARED_PATH"
-
-    __bootstrapVm "$TMP_MACHINE_NAME"
-
-    __runTunneledCommand "apt-get update"
-    __runTunneledCommand "apt-get install -y rsync" "DEBIAN_FRONTEND=noninteractive"
-
-    stopVm $TMP_MACHINE_NAME
-}
-
-function vmRunnerUnstable {
-    local TMP_MACHINE_NAME=$1
-
-    log "Applying routine: Runner unstable"
-
-    __bootstrapVm "$TMP_MACHINE_NAME"
-
-    __runTunneledCommand "$SANAGER_GUEST_FOLDER_PATH/utilities/changeDebianToSid.sh"
-    __runTunneledCommand "apt-get update"
-    __runTunneledCommand "apt-get dist-upgrade -y" "DEBIAN_FRONTEND=noninteractive"
-
-    stopVm $TMP_MACHINE_NAME
-}
-
 function __bootstrapVm {
     local TMP_MACHINE_NAME="$1"
     startVm $TMP_MACHINE_NAME

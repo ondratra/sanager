@@ -5,6 +5,8 @@ function testSanagerSetup {
 
     log "Running Sanager setup on $TMP_MACHINE_NAME"
 
+    vmShareFolder "$TMP_MACHINE_NAME" "$SANAGER_MAIN_DIR" "$SANAGER_GUEST_FOLDER_NAME" "$SANAGER_GUEST_FOLDER_SHARED_PATH"
+
     __startupVm
     __copySanagerFilesToGuest
 
@@ -14,6 +16,25 @@ function testSanagerSetup {
         "NON_ROOT_USERNAME=$VM_USERS_SANAGER_NAME AUTO_ACCEPT_FLAG=-y"
 
     # don't repeat /bin/sync call code over and over again - create meaningful function
+    __syncFileSystem
+
+    stopVm $TMP_MACHINE_NAME
+}
+
+function testSanagerSwitchToUnstable {
+    local TMP_MACHINE_NAME=$1
+
+    log "Running Sanager switch to unstable on $TMP_MACHINE_NAME"
+
+    __startupVm
+    __copySanagerFilesToGuest
+
+    log "Running Sanager script: \`utilities/changeDebianToSid.sh\`"
+    __executeCommandAsRoot "/bin/bash \"$SANAGER_GUEST_FOLDER_PATH/utilities/changeDebianToSid.sh\""
+
+    __executeCommandAsRoot "apt-get update"
+    __executeCommandAsRoot "apt-get dist-upgrade -y" "DEBIAN_FRONTEND=noninteractive"
+
     __syncFileSystem
 
     stopVm $TMP_MACHINE_NAME
