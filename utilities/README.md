@@ -16,6 +16,11 @@ Generate SSH key
 ssh-keygen -t rsa -b 4096 -f myKey
 ```
 
+Connect to SSH agent. Use this, for example, when `ssh-add` is needed in remote server (you're ssh-ed into).
+```sh
+eval $(ssh-agent -s)
+```
+
 See battery info
 ```sh
 upower -i /org/freedesktop/UPower/devices/battery_BAT0
