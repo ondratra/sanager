@@ -10,25 +10,21 @@ function pc_all {
     graphicalDesktop_all
 
     pc_essentials
-    pc_userMinimum
     pc_userRobust
     pc_work
     pc_workInstantMessaging
     pc_fun
     pc_userRobust
     pc_advancedNetworking
+
+    effect_restoreMateConfig
 }
 
 function pc_essentials {
     pkg_audio
     pkg_fonts
     pkg_networkManager
-}
-
-function pc_userMinimum {
-    pkg_userEssential
     pkg_diskUtils
-    effect_restoreMateConfig
 }
 
 function pc_userRobust {
@@ -39,9 +35,7 @@ function pc_userRobust {
     #pkg_datovka
     pkg_brave
 
-    pkg_zellij
     pkg_kittyTerminal
-    pkg_terminalImprovements
 
     pkg_ferdium
     pkg_keepass
@@ -51,7 +45,7 @@ function pc_userRobust {
 
 function pc_work {
     # essentials
-    pkg_versioningAndTools
+    pkg_versioningAndToolsGui
     pkg_officePack
     pkg_sublimeText
 
@@ -87,6 +81,7 @@ function pc_workInstantMessaging {
 
 function pc_fun {
     pkg_multimedia
+    pkg_multimediaGui
     pkg_steam
     pkg_rhythmbox
     # TODO: uncomment this when lutris works - currently there is some incompatibility with `libasound-plugins:386` in sid

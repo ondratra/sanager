@@ -32,6 +32,12 @@ function aptDistUpgrade {
     DEBIAN_FRONTEND="noninteractive" apt-get dist-upgrade "$VERBOSE_APT_FLAG" -y
 }
 
+# this variant of dist-upgrade skips apt-listbugs checks -> use it rarely, mostly during highLevel target first-install
+function aptDistUpgradeTolerateBugs {
+    printMsg "Upgrading distribution"
+    DEBIAN_FRONTEND="noninteractive" APT_LISTBUGS_FRONTEND="none" apt-get dist-upgrade "$VERBOSE_APT_FLAG" -y
+}
+
 function aptFixDependencies {
     printMsg "Auto-removing packages"
     DEBIAN_FRONTEND="noninteractive" apt-get -f install "$VERBOSE_APT_FLAG" -y
@@ -84,17 +90,12 @@ function isInstalled {
     return 1
 }
 
-function isVirtualboxVm {
-    if grep -q "VirtualBox" /sys/class/dmi/id/product_name 2>/dev/null; then
-        return 0  # Running inside VirtualBox
+function isVirtualMachine {
+    if systemd-detect-virt -v > /dev/null; then
+        return 0 # running inside virtual machine
     fi
 
-    return 1  # Not running inside VirtualBox
-
-    # alternative approach
-    ## for detection info see http://www.dmo.ca/blog/detecting-virtualization-on-linux/
-    #local TMP=`dmesg | grep -i virtualbox || echo ""`
-    #local IS_VIRTUALBOX_GUEST=`[[ "$TMP" == "" ]] && echo 0 || echo 1`
+    return 1 # bare metal
 }
 
 # use:

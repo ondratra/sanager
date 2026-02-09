@@ -1,5 +1,25 @@
 #!/bin/bash
 
+# NOTE: diverting some configs changes are needed due to custom changes to these config -> apt-get/dpkg
+#       asks how to resolve conflict during package updates where config file gets changed. Divertion will keep config
+#       files static and any merge needs to be done manually - see `xxx.distrib` files that contain up to date
+#       "from debian package" version
+function effect_divertCustomizedEtcConfigs {
+    function divertConfig {
+        local CONFIG_PATH=$1
+
+        # prevent repeated setup
+        if dpkg-divert --list $CONFIG_PATH | grep -q .; then
+            return
+        fi
+
+        cp $CONFIG_PATH $CONFIG_PATH.distrib
+        dpkg-divert --divert $CONFIG_PATH.distrib $CONFIG_PATH
+    }
+
+    divertConfig /etc/bash.bashrc
+}
+
 # enables bash history search by PageUp and PageDown keys
 function effect_enableHistorySearch {
     local TMP_FILE_PATH="$SANAGER_INSTALL_TEMP_DIR/tmpSedReplacementFile"
@@ -130,21 +150,23 @@ function effect_changeMysqlPassword {
     local NEW_PASSWORD="$1"
     echo "newPassword: '$1'"
     local TMP_FILE="$SANAGER_INSTALL_DIR/tmp.sql"
-    local SQL_QUERY="FLUSH PRIVILEGES; ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$NEW_PASSWORD'; FLUSH PRIVILEGES; SHUTDOWN;";
+    local SQL_QUERY="FLUSH PRIVILEGES; SET PASSWORD FOR 'root'@'localhost' = '$NEW_PASSWORD'; FLUSH PRIVILEGES; SHUTDOWN;";
 
     systemctl stop mysql > /dev/null 2> /dev/null
 
-    mkdir -p /var/run/mysqld
-    chown mysql:mysql /var/run/mysqld
-    mysqld_safe --skip-grant-tables &
-    # make sure query is accpeted by server(aka server is running)
+    # TODO: remove these commented lines if everything works fine
+    #mkdir -p /var/run/mysqld
+    #chown mysql:mysql /var/run/mysqld
+    mariadbd-safe --skip-grant-tables &
+
+    # make sure query is accepted by server (aka server is running)
     local TMP="1"
     while [[ "$TMP" != "0" ]]; do
         printMsg "waiting for MySQL server"
-        (mysql <<< $SQL_QUERY && TMP="0") || TMP="1"
+        mariadb <<< "$SQL_QUERY" && TMP="0" || TMP="1"
         sleep 1
     done
-    systemctl start mysql
+    systemctl start mariadb
 
     # fix tables after dirty MySQL import (copying /var/lib/mysql folder instead of using `mysqldump`)
     # mysqlcheck -u [username] -p --all-databases --check-upgrade --auto-repair

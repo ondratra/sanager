@@ -1,12 +1,11 @@
-source $SCRIPT_DIR/src/highLevel/common.sh
+source $SCRIPT_DIR/src/highLevel/terminal.sh
 
 function runHighLevel {
     graphicalDesktop_all
 }
 
 function graphicalDesktop_all {
-    common_all
+    terminal_all
 
-    pkg_essential
     pkg_desktopDisplayEtc
 }

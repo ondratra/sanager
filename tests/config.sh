@@ -42,23 +42,28 @@ NETINSTALL_FINAL_ISO_FILE="$NETINSTALL_ISO_BUILD_DIR/$NETINSTALL_FINAL_ISO_FILEN
 NETINSTALL_FINAL_ISO_TITLE="Debian Sanager unattended"
 NETINSTALL_EXTRA_DATA_DIR="$SANAGER_MAIN_DIR/data/debian/install"
 
+GUEST_SSH_PORT=22
+
+################### VM names ###################################################
+
 # VM essentials
 MACHINE_NAME_TEMPORARY="Sanager_Temporary"
 MACHINE_NAME_BARE="Sanager_Testing_Bare"
 MACHINE_NAME_WITH_OS="Sanager_Testing_WithOS"
 MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS="Sanager_Testing_WithOS_GuestAdditions"
+MACHINE_NAME_STABLE_WITH_SANAGER="Sanager_Testing_WithSanager"
 
 # VM bases - stable/unstable and terminal-only/graphics
 MACHINE_NAME_STABLE_TERMINAL_BASE="Sanager_Testing_Stable_TerminalBase"
 MACHINE_NAME_STABLE_GRAPHICAL_BASE="Sanager_Testing_Stable_GraphicalBase"
+MACHINE_NAME_UNSTABLE_BASE="Sanager_Testing_Unstable_Base"
 MACHINE_NAME_UNSTABLE_TERMINAL_BASE="Sanager_Testing_Unstable_TerminalBase"
 MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE="Sanager_Testing_Unstable_GraphicalBase"
 
 # VM high levels
-MACHINE_NAME_STABLE_HOME_SERVER="Sanager_Testing_Unstable_HomeServer"
-MACHINE_NAME_STABLE_CRYPTO_VISUAL="Sanager_Testing_Unstable_CryptoVisual"
+MACHINE_NAME_STABLE_HOME_SERVER_TERMINAL="Sanager_Testing_Stable_HomeServerTerminal"
+MACHINE_NAME_STABLE_HOME_SERVER_GRAPHICAL="Sanager_Testing_Stable_HomeServerGraphical"
+MACHINE_NAME_STABLE_CRYPTO_VISUAL="Sanager_Testing_Stable_CryptoVisual"
+MACHINE_NAME_STABLE_GENERAL_USE_VPS="Sanager_Testing_Stable_GeneralUseVps"
 MACHINE_NAME_UNSTABLE_PC="Sanager_Testing_Unstable_Pc"
-
-GUEST_SSH_PORT=22
-
-VERBOSE_WGET_FLAG="-q"
+MACHINE_NAME_UNSTABLE_PHYSICAL_PC="Sanager_Testing_Unstable_PhysicalPc"

@@ -1,20 +1,18 @@
 # general use VPS without graphical interface
 
-source $SCRIPT_DIR/src/highLevel/common.sh
+source $SCRIPT_DIR/src/highLevel/terminal.sh
 
 function runHighLevel {
-    common_all
+    terminal_all
 
-    pkg_versioningAndTools
+    pkg_sshServer
     pkg_nodejs
     pkg_yarn
     pkg_lamp
 
     # TODO:
     # - gitlab (including Mattermost)
-    # - svn ? (legacy reasons)
+    # - forgejo?
     # - mail server (postfix, dovecot)
     # - certbot + cronjobs for him
-
 }
-

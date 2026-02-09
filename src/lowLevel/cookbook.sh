@@ -6,6 +6,8 @@ function pkg_essential {
     local DIRMNGR="dirmngr" # there might be glitches with gpg without dirmngr -> ensure it's presence
 
     aptGetInstall $PACKAGES $DIRMNGR
+
+    sudo -u $SCRIPT_EXECUTING_USER mkdir ~/.config -p
 }
 
 function pkg_fonts {
@@ -24,7 +26,7 @@ function pkg_fonts {
 }
 
 function pkg_networkManager {
-    local PACKAGES="network-manager network-manager-gnome"
+    local PACKAGES="network-manager"
 
     # see https://wiki.debian.org/NetworkManager#Wired_Networks_are_Unmanaged
     applyPatch /etc/NetworkManager/NetworkManager.conf < $SCRIPT_DIR/data/misc/NetworkManager.conf.diff || PATCH_PROBLEM=$?
@@ -32,6 +34,12 @@ function pkg_networkManager {
     if [[ "$PATCH_PROBLEM" == "0" ]]; then
         systemctl restart NetworkManager
     fi
+
+    aptGetInstall $PACKAGES
+}
+
+function pkg_networkManagerGui {
+    local PACKAGES="network-manager-gnome"
 
     aptGetInstall $PACKAGES
 }
@@ -80,7 +88,13 @@ function pkg_dropboxPackage {
 
 
 function pkg_userEssential {
-    local PACKAGES="curl vim htop iotop-c chromium"
+    local PACKAGES="curl vim htop iotop-c"
+
+    aptGetInstall $PACKAGES
+}
+
+function pkg_webBrowsers {
+    local PACKAGES="chromium"
     local PACKAGE_FIREFOX=$(is_debian_sid && echo "firefox" || echo "firefox-esr")
 
     aptGetInstall $PACKAGES $PACKAGE_FIREFOX
@@ -215,14 +229,11 @@ function pkg_yarn {
 function pkg_lamp {
     # subversion(svn) is needed by some composer(https://getcomposer.org/) packages, etc.
     # it must be installed even when not directly used by system users
-    local PACKAGES="mysql-server apache2 php libapache2-mod-php subversion"
+    local PACKAGES="mariadb-server apache2 php libapache2-mod-php subversion"
     local PHP_EXTENSIONS="php-curl php-gd php-mysql php-pdo-pgsql php-json php-soap php-apcu php-xml php-mbstring php-yaml"
 
     function wordpressCli {
-        which wp-cli > /dev/null
-        local CLI_ABSENT=$?
-
-        if [[ "$CLI_ABSENT" == "1" ]]; then
+        if ! which wp-cli > /dev/null; then
             local PHAR_URL="https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"
             wgetDownload --directory-prefix $SANAGER_INSTALL_DIR $PHAR_URL
 
@@ -232,7 +243,7 @@ function pkg_lamp {
     }
 
     local MYSQL_NEEDS_RESET="1"
-    if isInstalled "mysql-server"; then
+    if isInstalled "mariadb-server"; then
         local MYSQL_NEEDS_RESET="0"
     fi
 
@@ -242,7 +253,7 @@ function pkg_lamp {
     usermod -a -G www-data $SCRIPT_EXECUTING_USER
 
     if [[ $MYSQL_NEEDS_RESET == "1" ]]; then
-        changeMysqlPassword ""
+        effect_changeMysqlPassword ""
     fi
 }
 
@@ -472,7 +483,13 @@ function pkg_datovka {
 }
 
 function pkg_versioningAndTools {
-    local PACKAGES="git subversion meld gimp yt-dlp"
+    local PACKAGES="git subversion"
+
+    aptGetInstall $PACKAGES
+}
+
+function pkg_versioningAndToolsGui {
+    local PACKAGES="meld"
 
     aptGetInstall $PACKAGES
 }
@@ -568,7 +585,13 @@ function pkg_lutris {
 }
 
 function pkg_multimedia {
-    local PACKAGES="vlc transmission easytag ardour ffmpeg mpv"
+    local PACKAGES="ffmpeg"
+
+    aptGetInstall $PACKAGES
+}
+
+function pkg_multimediaGui {
+    local PACKAGES="vlc transmission easytag ardour mpv gimp yt-dlp"
 
     aptGetInstall $PACKAGES
 }
@@ -580,7 +603,7 @@ function pkg_multimedia_necessary {
 }
 
 function pkg_newestLinuxKernel {
-    local KERNEL_VERSION=$(is_debian_sid && echo "6.18.5+deb14" || echo "6.12.57+deb13")
+    local KERNEL_VERSION=$(is_debian_sid && echo "6.18.9+deb14" || echo "6.12.57+deb13")
     local PACKAGES="linux-image-$KERNEL_VERSION-amd64 linux-headers-$KERNEL_VERSION-amd64"
 
     aptGetInstall $PACKAGES
@@ -664,6 +687,12 @@ function pkg_obsidian {
     local PACKAGE_URL="https://github.com/obsidianmd/obsidian-releases/releases/download/v${LATEST_VERSION}/$DEB_FILE"
 
     dpkgDownloadAndInstall obsidian "$DEB_FILE" "$PACKAGE_URL"
+}
+
+function pkg_hardwareSensors {
+    local PACKAGES="lm-sensors"
+
+    aptGetInstall $PACKAGES
 }
 
 function pkg_corectrl {

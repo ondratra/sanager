@@ -36,21 +36,35 @@ function main {
     # VM core build
     cachedBuildOnTopOfVm "$MACHINE_NAME_BARE" "$MACHINE_NAME_WITH_OS" vmWithOs
     cachedBuildOnTopOfVm "$MACHINE_NAME_WITH_OS" "$MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS" vmWithGuestAdditions
+    cachedBuildOnTopOfVm "$MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS" "$MACHINE_NAME_STABLE_WITH_SANAGER" testSanagerSetup
 
-    # VM minimals - stable/unstable and terminal-only/graphics
-    cachedBuildOnTopOfVm "$MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS" "$MACHINE_NAME_STABLE_TERMINAL_BASE" testSanagerSetup
-    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_TERMINAL_BASE" "$MACHINE_NAME_STABLE_GRAPHICAL_BASE" testSanagerInstallGraphicalDesktop
-    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_TERMINAL_BASE" "$MACHINE_NAME_UNSTABLE_TERMINAL_BASE" testSanagerSwitchToUnstable
-    cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_TERMINAL_BASE" "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" testSanagerInstallGraphicalDesktop
-
-    # unstable/sid-based tests
-    cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" "$MACHINE_NAME_UNSTABLE_PC" testSanagerInstallPc
-
-    # stable-based tests
-    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_GRAPHICAL_BASE" "$MACHINE_NAME_STABLE_HOME_SERVER" testSanagerInstallHomeServer
-    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_GRAPHICAL_BASE" "$MACHINE_NAME_STABLE_CRYPTO_VISUAL" testSanagerCryptoVisual
+    buildStableBasedVms
+    buildUnstableBasedVms
 
     log "Tests finished successfully!"
+}
+
+function buildStableBasedVms {
+    # VM minimals - terminal-only/graphics
+    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_WITH_SANAGER" "$MACHINE_NAME_STABLE_TERMINAL_BASE" testSanagerInstallTerminal
+    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_TERMINAL_BASE" "$MACHINE_NAME_STABLE_GRAPHICAL_BASE" testSanagerInstallGraphicalDesktop
+
+    # stable-based tests
+    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_TERMINAL_BASE" "$MACHINE_NAME_STABLE_HOME_SERVER_TERMINAL" testSanagerInstallHomeServerTerminal
+    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_GRAPHICAL_BASE" "$MACHINE_NAME_STABLE_HOME_SERVER_GRAPHICAL" testSanagerInstallHomeServerGraphical
+    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_GRAPHICAL_BASE" "$MACHINE_NAME_STABLE_CRYPTO_VISUAL" testSanagerInstallCryptoVisual
+    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_TERMINAL_BASE" "$MACHINE_NAME_STABLE_GENERAL_USE_VPS" testSanagerInstallGeneralUseVps
+}
+
+function buildUnstableBasedVms {
+    # VM minimals - terminal-only/graphics
+    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_TERMINAL_BASE" "$MACHINE_NAME_UNSTABLE_BASE" testSanagerSwitchToUnstable
+    cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_BASE" "$MACHINE_NAME_UNSTABLE_TERMINAL_BASE" testSanagerInstallTerminal # reapply highLevel "terminal" this will update kernel for example
+    cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_TERMINAL_BASE" "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" testSanagerInstallGraphicalDesktop
+
+    # unstable-based tests
+    cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" "$MACHINE_NAME_UNSTABLE_PC" testSanagerInstallPc
+    cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" "$MACHINE_NAME_UNSTABLE_PHYSICAL_PC" testSanagerInstallPhysicalPc
 }
 
 # these packages should be installed (possibly via `pkg_sanager_tests_prerequisities`)

@@ -32,86 +32,77 @@ function testSanagerSwitchToUnstable {
     log "Running Sanager script: \`utilities/changeDebianToSid.sh\`"
     __executeCommandAsRoot "/bin/bash \"$SANAGER_GUEST_FOLDER_PATH/utilities/changeDebianToSid.sh\""
 
+
     __executeCommandAsRoot "apt-get update"
-    __executeCommandAsRoot "apt-get dist-upgrade -y" "DEBIAN_FRONTEND=noninteractive"
+    __executeCommand "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh lowLevel aptDistUpgradeTolerateBugs"
 
     __syncFileSystem
 
     stopVm $TMP_MACHINE_NAME
+}
+
+function testSanagerInstallTerminal {
+    local TMP_MACHINE_NAME=$1
+
+    sanagerStateInstall "$TMP_MACHINE_NAME" "Terminal" terminal
 }
 
 function testSanagerInstallGraphicalDesktop {
     local TMP_MACHINE_NAME=$1
 
-    log "Running Sanager install on $TMP_MACHINE_NAME - Graphical Desktop"
-
-    __startupVm
-    __copySanagerFilesToGuest
-
-    log "Running Sanager script: \`systemInstall.sh graphicalDesktop\`"
-    __executeCommand "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh graphicalDesktop"
-
-    __syncFileSystem
-
-    stopVm $TMP_MACHINE_NAME
+    sanagerStateInstall "$TMP_MACHINE_NAME" "Graphical Desktop" graphicalDesktop
 }
 
 function testSanagerInstallPc {
     local TMP_MACHINE_NAME=$1
 
-    log "Running Sanager install on $TMP_MACHINE_NAME - PC"
+    sanagerStateInstall "$TMP_MACHINE_NAME" "PC" pc
+}
+
+function testSanagerInstallPhysicalPc {
+    local TMP_MACHINE_NAME=$1
+
+    sanagerStateInstall "$TMP_MACHINE_NAME" "Physical PC" physicalPc
+}
+
+function testSanagerInstallHomeServerTerminal {
+    local TMP_MACHINE_NAME=$1
+
+    sanagerStateInstall "$TMP_MACHINE_NAME" "Home Server Terminal" homeServerTerminal
+}
+
+function testSanagerInstallHomeServerGraphical {
+    local TMP_MACHINE_NAME=$1
+
+    sanagerStateInstall "$TMP_MACHINE_NAME" "Home Server Graphical" homeServerGraphical
+}
+
+function testSanagerInstallCryptoVisual {
+    local TMP_MACHINE_NAME=$1
+
+    sanagerStateInstall "$TMP_MACHINE_NAME" "Crypto Visual" cryptoVisual
+}
+
+function testSanagerInstallGeneralUseVps {
+    local TMP_MACHINE_NAME=$1
+
+    sanagerStateInstall "$TMP_MACHINE_NAME" "General Use VPS" generalUseVps
+}
+
+function sanagerStateInstall {
+    local TMP_MACHINE_NAME="$1"
+    local HUMAN_READABLE_NAME="$2"
+    local HIGH_LEVEL_TARGET="$3"
+
+    log "Running Sanager install on $TMP_MACHINE_NAME - $HUMAN_READABLE_NAME"
 
     __startupVm
     __copySanagerFilesToGuest
 
-    log "Running Sanager script: \`systemInstall.sh pc\`"
-    __executeCommand "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh pc"
+    log "Running Sanager script: \`systemInstall.sh HIGH_LEVEL_TARGET\`"
+    __executeCommand "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh $HIGH_LEVEL_TARGET"
 
     __syncFileSystem
 
     stopVm $TMP_MACHINE_NAME
-}
-
-function testSanagerInstallHomeServer {
-    local TMP_MACHINE_NAME=$1
-
-    # ensure root install
-    #testSanagerSetup $TMP_MACHINE_NAME
-
-    log "Running Sanager install on $TMP_MACHINE_NAME - HomeServer"
-
-    __startupVm
-    __copySanagerFilesToGuest
-
-    log "Running Sanager script: \`systemInstall.sh homeServer\`"
-    __executeCommand "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh homeServer"
-
-    __syncFileSystem
-
-    stopVm $TMP_MACHINE_NAME
-}
-
-function testSanagerCryptoVisual {
-    local TMP_MACHINE_NAME=$1
-
-    log "Running Sanager install on $TMP_MACHINE_NAME - PC"
-
-    __startupVm
-    __copySanagerFilesToGuest
-
-    log "Running Sanager script: \`systemInstall.sh cryptoVisual\`"
-    __executeCommand "echo $VM_USERS_SANAGER_PASSWORD | sudo -ES /bin/bash $SANAGER_GUEST_FOLDER_PATH/systemInstall.sh cryptoVisual"
-
-    __syncFileSystem
-
-    stopVm $TMP_MACHINE_NAME
-}
-
-function runSanagerGuestVMChecks {
-    local TMP_MACHINE_NAME=$1
-
-    # TODO
-    echo "TODO"
-
-    # TODO: "run sanager checks"
 }
