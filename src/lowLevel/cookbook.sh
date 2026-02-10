@@ -837,7 +837,7 @@ function pkg_zellij {
 
 # after running this for first time, manually setup /etc/sanoid/sanoid.conf and /etc/systemd/system/syncoind.service
 function pkg_zfsLuks {
-    local PACKAGES="zfsutils-linux cryptsetup"
+    local PACKAGES="zfsutils-linux zfs-dkms cryptsetup"
 
     aptGetInstall $PACKAGES
 
