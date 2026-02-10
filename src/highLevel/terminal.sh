@@ -8,6 +8,7 @@ function terminal_all {
     pkg_newestLinuxKernel
     pkg_essential
     pkg_networkManager
+    pkg_sshClient
 
     terminal_sanager
     terminal_terminalEnhancements

@@ -18,3 +18,8 @@ parted -a opt /dev/vdb mkpart primary ext4 0% 100%
 mkfs.ext4 /dev/vdb1
 mkdir -p /mnt/data
 echo '/dev/vdb1 /mnt/data ext4 defaults 0 2' >> /etc/fstab
+
+# NOTE: uncomment this in case this preseed is ever used for physical pc installed via other means than network
+#       that will increase security as machine won't be accesable via SSH before it is fully configured
+## purge ssh to increase security - there doesn't seems to be a working way to disable it's install in preseed
+#apt-get purge -y openssh-server openssh-client

@@ -195,13 +195,13 @@ function addUserToGroup {
 # use:
 # addAlias myNewAliasName existingCommand
 function addAlias {
-    local NEW_ALIAS_NAME=$1
-    local EXISTING_COMMAND=$2
+    local NEW_ALIAS_NAME="$1"
+    local EXISTING_COMMAND="$2"
 
-    local ALIAS_LINE="alias $NEW_ALIAS_NAME=$EXISTING_COMMAND"
+    local ALIAS_LINE="alias $NEW_ALIAS_NAME=\"$EXISTING_COMMAND\""
 
     if ! grep -q "^$ALIAS_LINE" ~/.bash_aliases; then
-        sudo -u $SCRIPT_EXECUTING_USER sh -c "echo $ALIAS_LINE >> ~/.bash_aliases"
+        sudo -u $SCRIPT_EXECUTING_USER sh -c "echo '$ALIAS_LINE' >> ~/.bash_aliases"
     fi
     source ~/.bash_aliases
 

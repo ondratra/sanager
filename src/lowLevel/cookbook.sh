@@ -906,9 +906,21 @@ function pkg_zfsLuks {
     setupSyncoid
 }
 
+function pkg_sshClient {
+    local PACKAGES="openssh-client"
+
+    aptGetInstall $PACKAGES
+
+    # ensure SSH works even in KittyTerminal and others (don't use their features over SSH
+    addAlias ssh "TERM=xterm-256color ssh"
+}
+
 function pkg_sshServer {
     local PACKAGES="openssh-server"
 
+    if ! dpkg -s openssh-server; then
+        systemctl mask ssh.service # prevent ssh server autostart before it is set (keep maximum security)
+    fi
     aptGetInstall $PACKAGES
 
     local CONFIG_NAME="__sanagerConfig.conf"
@@ -920,6 +932,9 @@ function pkg_sshServer {
     fi
 
     cp -rf $CONFIG_SOURCE_PATH $CONFIG_TARGET_PATH
+
+    systemctl unmask ssh.service
+    systemctl start sshd
 }
 
 function pkg_kittyTerminal {
