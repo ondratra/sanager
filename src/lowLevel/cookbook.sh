@@ -516,7 +516,10 @@ function pkg_sanager_tests_prerequisities {
             virsh net-define "$VM_NETWORK_DEFINITIONS_FOLDER/$VM_NETWORK_NAME.xml"
         fi
 
-        virsh net-start $VM_NETWORK_NAME
+        if ! virsh net-list --name | grep -q "^${VM_NETWORK_NAME}$"; then
+            virsh net-start $VM_NETWORK_NAME
+        fi
+
         virsh net-autostart $VM_NETWORK_NAME
     }
 
