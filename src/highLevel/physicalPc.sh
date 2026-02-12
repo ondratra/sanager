@@ -12,6 +12,7 @@ function physicalPc_all {
     mixin_physicalHardwareGraphical_all
 
     pkg_2dPrint
+    pkg_remoteControlGui
 
     effect_restoreMateConfig
 }

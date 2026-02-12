@@ -355,3 +355,23 @@ function grubAdaptToVmCloneHardDiskIdChanges {
 
     __runTunneledCommand "echo \"$GRUB_SETTINGS_LINE\" | debconf-set-selections && $GRUB_RECONFIGURE_COMMAND"
 }
+
+# expects user `libvirt-qemu` is running libvirt and testing folder is not owned by it or any of it's groups
+function detectMissingAccessToTestingFolder() {
+    local PATH_TO_FOLDER="$1"
+
+    local NORMALIZED_PATH="$(readlink -f -- "$PATH_TO_FOLDER")"
+    local CURRENT_PATH="$NORMALIZED_PATH"
+
+    while [[ "$CURRENT_PATH" != "/" ]]; do
+        local MODE=$(stat -Lc '%a' "$CURRENT_PATH")
+        local PERMISSIONS_FOR_OTHERS=${MODE:-1}
+
+        if ! (( $PERMISSIONS_FOR_OTHERS & 1 )); then
+            printMsg "Missing execute (x) file permission on directory: $CURRENT_PATH"
+            return 1
+        fi
+
+        CURRENT_PATH="$(dirname "$CURRENT_PATH")"
+    done
+}

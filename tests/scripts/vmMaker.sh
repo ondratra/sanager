@@ -14,7 +14,9 @@ if [[ $# -ne 3 ]]; then
     exit 1;
 fi
 
-source $SCRIPT_DIR/../config.sh
-source $SCRIPT_DIR/../misc/utils.sh
+source "$SCRIPT_DIR/../config.sh"
+source "$SCRIPT_DIR/../misc/utils.sh"
+
+detectMissingAccessToTestingFolder "$TEST_DIR"
 
 forkVm $1 $2 $3

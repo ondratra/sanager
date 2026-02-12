@@ -20,4 +20,5 @@ function homeServerGraphical_userTools {
     pkg_sublimeText
     pkg_multimediaGui
     pkg_kittyTerminal
+    pkg_remoteControlGui
 }

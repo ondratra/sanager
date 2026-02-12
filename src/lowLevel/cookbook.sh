@@ -532,14 +532,19 @@ function pkg_sanager_tests_prerequisities {
 
     # see `tests/scripts/vmInstallTests.sh` for up to date list
     local TESTS_DEPENDENCIES=`listTestingDependencies`
-    local PACKAGES="remmina remmina-plugin-spice"
 
-    aptGetInstall $TESTS_DEPENDENCIES $PACKAGES
+    aptGetInstall $TESTS_DEPENDENCIES
 
     usermod -a -G libvirt,kvm $SCRIPT_EXECUTING_USER
 
     useSystemVirt
     ensureVMNetworksExist
+}
+
+function pkg_remoteControlGui {
+    local PACKAGES="virt-manager remmina remmina-plugin-spice"
+
+    aptGetInstall $PACKAGES
 }
 
 function pkg_steam {

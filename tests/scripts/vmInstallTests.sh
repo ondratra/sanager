@@ -25,6 +25,8 @@ function main {
     # ensure work folder exists
     mkdir -p $TEST_DIR
 
+    detectMissingAccessToTestingFolder "$TEST_DIR"
+
     # make sure temporary machine is gone (might have survived previous test due to script error)
     deleteVm "$MACHINE_NAME_TEMPORARY"
 

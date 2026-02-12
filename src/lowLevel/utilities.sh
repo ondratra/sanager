@@ -282,7 +282,7 @@ function isExtrepoRepositoryEnabled {
 }
 
 function listTestingDependencies {
-    local VIRTUALIZATION="qemu-system-x86 libvirt-daemon-system libvirt-clients virtinst virt-manager ovmf libguestfs-tools"
+    local VIRTUALIZATION="qemu-system-x86 libvirt-daemon-system libvirt-clients virtinst ovmf libguestfs-tools"
     local HOST_TO_GUEST_CONNECTION="curlftpfs openssh-client rsync sshpass"
     local ISO_CREATION="xorriso isolinux fuseiso"
 
