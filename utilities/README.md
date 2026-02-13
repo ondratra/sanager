@@ -121,16 +121,22 @@ Get partition's UUID (works even in some cases when `ls -al /dev/disk/by-uuid/` 
 sudo blkid /dev/sdX1
 ```
 
-Create 2 disks mirror pool:
+Create 2 disks mirror pool. Use either `by-partuuid` or `by-id/wwn...` identifiers.
 ```sh
 MY_ZFS_POOL_NAME=myPool
 
 sudo zpool create $MY_ZFS_POOL_NAME mirror \
-    /dev/disk/by-partuuid/09f2ecb6-7802-4fcd-9a95-fb828f0781be \
-    /dev/disk/by-partuuid/1312069d-7b9e-41e5-8490-5ec788d141c4
+    /dev/disk/by-partuuid/xxx \
+    /dev/disk/by-partuuid/yyy
 
 # check status
 zpool status
+```
+
+Create datasets (optional, but recommended)
+```sh
+sudo zfs create $MY_ZFS_POOL_NAME/mydataset
+sudo zfs create $MY_ZFS_POOL_NAME/mydataset/mysubdataset
 ```
 
 Set mount point for a pool:
@@ -183,9 +189,20 @@ sudo zpool create \
   -o ashift=12 \
   -O compression=lz4 \
   -O atime=off \
-  my-pool-name \
+  $MY_ZFS_POOL_NAME \
   /dev/disk/by-partuuid/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
+
+#### 3 disk ZFS pool (RAIDZ1)
+```sh
+sudo zpool create \
+    -o ashift=12 \
+    -O compression=lz4 \
+    -O atime=off \
+    $MY_ZFS_POOL_NAME raidz1 \
+    /dev/disk/by-partuuid/xxx... /dev/disk/by-partuuid/yyy... /dev/disk/by-partuuid/zzz...
+```
+
 
 #### Automatic backups using Sanoid & Syncoid
 
@@ -199,3 +216,20 @@ strategy for the specific machine:
     systemctl daemon-reload
     systemctl enable --now syncoid.timer
     ```
+
+#### ZFS scrubs
+
+ZFS scrub tests data integrity by reading whole zpool content. It can detect disk failures, hopefully before data
+is irreversibely lost.
+
+Regular scrubs are automatically set up in `/etc/cron.d/zfsutils-linux`. It scrubs all pools by default. You can change
+the file to change period or further develop scrub strategy.
+
+Useful commands:
+```sh
+# info of latest scrub - per pool
+zpool status
+
+# start pool scrub - it will take ~hours depending on the amount of saved data
+zpool scrub $MY_ZFS_POOL_NAME
+```
