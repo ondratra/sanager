@@ -65,6 +65,7 @@ function buildUnstableBasedVms {
     cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_TERMINAL_BASE" "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" testSanagerInstallGraphicalDesktop
 
     # unstable-based tests
+    cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" "$MACHINE_NAME_UNSTABLE_AI_CORE" testSanagerInstallAiCore
     cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" "$MACHINE_NAME_UNSTABLE_PC" testSanagerInstallPc
     cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" "$MACHINE_NAME_UNSTABLE_PHYSICAL_PC" testSanagerInstallPhysicalPc
 }

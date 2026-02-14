@@ -778,8 +778,8 @@ function pkg_nix {
     cd $OPT_DIR
 
     # ensure /nix folder exists
-    mkdir -m 0755 -p /nix
-    chown $SCRIPT_EXECUTING_USER /nix
+    mkdir -m 0755 -p $NIX_DIR
+    chown $SCRIPT_EXECUTING_USER $NIX_DIR
 
     if [ ! -f $INSTALL_FILE ]; then
         local PACKAGE_URL="https://nixos.org/nix/install"
@@ -1058,6 +1058,42 @@ function pkg_solana {
 
     ##see https://solana.com/docs/intro/installation
     ## export PATH=~/.local/share/solana/install/active_release/bin:$PATH
+}
+
+function pkg_aiCoding {
+    if ! isVirtualMachine; then
+        printMsg "Trying to install ai coding tools outside of virtual machine. For security reasons, installing only inside of VM is allowed."
+        return
+    fi
+
+    function installClaudeCode {
+        local VERSION="2.1.7"
+        local INSTALL_FILE="claude"
+        local PACKAGE_URL="https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/$VERSION/linux-x64/$INSTALL_FILE"
+        local OPT_DIR="$SANAGER_INSTALL_DIR/claudeCode"
+        local LOCAL_FILE_PATH="$OPT_DIR/$INSTALL_FILE"
+
+        if [ -f "$OPT_DIR/$INSTALL_FILE" ]; then
+            return
+        fi
+
+        mkdir $OPT_DIR -p
+
+        wgetDownload $PACKAGE_URL -O "$LOCAL_FILE_PATH"
+        chmod +x "$LOCAL_FILE_PATH"
+        sudo -u $SCRIPT_EXECUTING_USER "$LOCAL_FILE_PATH" install latest
+    }
+
+    function installAgentZero {
+        docker pull agent0ai/agent-zero:latest
+    }
+
+    installClaudeCode
+    installAgentZero
+
+    # TODO:
+    # - gsd (https://github.com/glittercowboy/get-shit-done)
+    # - Shotgun (https://github.com/shotgun-sh/shotgun)
 }
 
 # TODO:

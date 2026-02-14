@@ -36,9 +36,10 @@ function stopVm {
 
     virsh shutdown "$TMP_MACHINE_NAME"
 
-    # TODO: revisit this - without sleep VM tends to be still locked when starting
-    virsh domstate "$TMP_MACHINE_NAME" >/dev/null 2>&1
-    sleep 3
+    while [ "$(LANG=C virsh domstate --domain "$TMP_MACHINE_NAME")" != "shut off" ]; do
+        log Waiting for VM to shutdown - $TMP_MACHINE_NAME
+        sleep 3
+    done
 }
 
 function restartVm {
@@ -240,16 +241,17 @@ function clearAllSanagerVms {
 
     deleteVm "$MACHINE_NAME_STABLE_TERMINAL_BASE"
     deleteVm "$MACHINE_NAME_STABLE_GRAPHICAL_BASE"
-    deleteVm "$MACHINE_NAME_UNSTABLE_TERMINAL_BASE"
-    deleteVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE"
-
-    deleteVm "$MACHINE_NAME_UNSTABLE_PC"
-    deleteVm "$MACHINE_NAME_UNSTABLE_PHYSICAL_PC"
-
     deleteVm "$MACHINE_NAME_STABLE_HOME_SERVER_TERMINAL"
     deleteVm "$MACHINE_NAME_STABLE_HOME_SERVER_GRAPHICAL"
     deleteVm "$MACHINE_NAME_STABLE_CRYPTO_VISUAL"
     deleteVm "$MACHINE_NAME_STABLE_GENERAL_USE_VPS"
+
+    deleteVm "$MACHINE_NAME_UNSTABLE_BASE"
+    deleteVm "$MACHINE_NAME_UNSTABLE_TERMINAL_BASE"
+    deleteVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE"
+    deleteVm "$MACHINE_NAME_UNSTABLE_AI_CORE"
+    deleteVm "$MACHINE_NAME_UNSTABLE_PC"
+    deleteVm "$MACHINE_NAME_UNSTABLE_PHYSICAL_PC"
 
     rm -rf "$VIRTUAL_MACHINES_DIR"
 }

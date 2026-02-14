@@ -37,6 +37,11 @@ cat /sys/class/net/wlpXsY/address # replace X and Y
 ip link set enpXsY address 00:11:22:33:44:55  # replace X and Y and mac
 ```
 
+Remove `node_modules` recursively from the current folder.
+```sh
+find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
+```
+
 ## Package management
 
 Get package that installed the inspected file/command

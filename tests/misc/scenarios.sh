@@ -1,5 +1,7 @@
 EXECUTOR=__executorSsh
 
+# TODO: deduplicate common code of sanager high level install
+
 function testSanagerSetup {
     local TMP_MACHINE_NAME=$1
 
@@ -87,6 +89,12 @@ function testSanagerInstallGeneralUseVps {
     local TMP_MACHINE_NAME=$1
 
     sanagerStateInstall "$TMP_MACHINE_NAME" "General Use VPS" generalUseVps
+}
+
+function testSanagerInstallAiCore {
+    local TMP_MACHINE_NAME=$1
+
+    sanagerStateInstall "$TMP_MACHINE_NAME" "AI core" aiCore
 }
 
 function sanagerStateInstall {
