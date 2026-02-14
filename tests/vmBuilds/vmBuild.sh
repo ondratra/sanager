@@ -13,6 +13,16 @@ function createTestingVm {
 
     local MAC_ADDRESS=`reserveDhcpIpForVm "$TMP_MACHINE_NAME"`
 
+    local GRAPHICS_SETTINGS
+    local VIDEO_SETTINGS
+    if [ -c /dev/dri/renderD128 ]; then
+        GRAPHICS_SETTINGS="spice,listen=none,gl.enable=yes,gl.rendernode=/dev/dri/renderD128"
+        VIDEO_SETTINGS="virtio,accel3d=yes"
+    else
+        GRAPHICS_SETTINGS="spice,listen=127.0.0.1"
+        VIDEO_SETTINGS="qxl"
+    fi
+
     virt-install \
         --name "$TMP_MACHINE_NAME" \
         --os-variant debianunstable \
@@ -21,8 +31,8 @@ function createTestingVm {
         --cpu host \
         --machine q35 \
         --boot uefi \
-        --graphics spice,gl.enable=yes,gl.rendernode=/dev/dri/renderD128,listen=none \
-        --video virtio,accel3d=yes \
+        --graphics "$GRAPHICS_SETTINGS" \
+        --video "$VIDEO_SETTINGS" \
         --network network=$VM_NETWORK_NAME,model=virtio \
         --mac "$MAC_ADDRESS" \
         --disk none \
