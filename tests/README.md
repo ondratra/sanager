@@ -17,7 +17,7 @@ sudo -E ./systemInstall.sh lowLevel pkg_sanager_tests_prerequisities
 ```
 
 ### Custom VM folder
-By default, Sanager creates VMs inside of `./.sanagerTests` folder. The content of this folder might get very large. 
+By default, Sanager creates VMs inside of `./.sanagerTests` folder. The content of this folder might get very large.
 In case you need to change it, create a symlink pointing to your desired path at `./.sanagerTests`.
 ```bash
 ln -s /my/desired/path .sanagerTests
@@ -37,3 +37,16 @@ Once you're done with tests, you can delete all VM's created during tests via:
 ```
 
 All forks will be left intact and need to be deleted manually if it's desired.
+
+## Managing networks
+At the moment, there are no scripts to help managing the LibVirt networks except `scripts/connectVMs.sh` that connects
+multiple VMs into a new network.
+
+Use LibVirt commands to manually manage networks:
+```sh
+# see existing networks
+virsh net-list
+
+# see static dhcp leases and other network settings
+virsh net-dumpxml MyNetwork
+```

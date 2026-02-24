@@ -288,3 +288,31 @@ function listTestingDependencies {
 
     echo $VIRTUALIZATION $HOST_TO_GUEST_CONNECTION $ISO_CREATION
 }
+
+function ensureVMNetworksExist {
+    local VM_NETWORK_NAME="$1"
+    local DUPLICATE_INDEX="$2"
+
+    local VM_NETWORK_DEFINITIONS_FOLDER="$SANAGER_MAIN_DIR/data/virt"
+    local NETWORK_FULL_NAME=${VM_NETWORK_NAME}${DUPLICATE_INDEX:+-$DUPLICATE_INDEX}
+
+    function prepareNewNetwork {
+        local NETWORK_CONFIG_PATH="$TEST_DIR/networks/$NETWORK_FULL_NAME.xml"
+
+        mkdir -p "$TEST_DIR/networks"
+
+        sed -e "s/__DUPLICATE_INDEX__/$DUPLICATE_INDEX/g" "$VM_NETWORK_DEFINITIONS_FOLDER/$VM_NETWORK_NAME.xml" > "$NETWORK_CONFIG_PATH"
+
+        virsh net-define "$NETWORK_CONFIG_PATH"
+    }
+
+    if ! virsh net-info "$NETWORK_FULL_NAME" &>/dev/null; then
+        prepareNewNetwork
+    fi
+
+    if ! virsh net-list --name | grep -q "^${NETWORK_FULL_NAME}$"; then
+        virsh net-start "$NETWORK_FULL_NAME"
+    fi
+
+    virsh net-autostart "$NETWORK_FULL_NAME"
+}

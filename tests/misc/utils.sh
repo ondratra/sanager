@@ -129,7 +129,7 @@ function cloneVM {
     # clear previous virtual machine if it exists
     rm -rf "$TARGET_DIR/$CLONE_NAME"
 
-    local MAC_ADDRESS=`reserveDhcpIpForVm "$CLONE_NAME"`
+    local MAC_ADDRESS=`reserveDhcpIpForVm "$CLONE_NAME" "$VM_NETWORK_NAME" $VM_NETWORK_PREFIX"`
 
     local SYSTEM_DISK_PATH="$TARGET_DIR/$CLONE_NAME/$VM_MACHINE_DISK_NAME_SYSTEM.qcow2"
     local DATA_DISK_PATH="$TARGET_DIR/$CLONE_NAME/$VM_MACHINE_DISK_NAME_DATA.qcow2"
@@ -153,13 +153,32 @@ function forkVm {
 
     # NOTE: due to missing group/tag feature in virt-manager, let's prefix VM name to distinguish it
     local PREFIXED_CLONE_NAME="fork_$CLONE_NAME"
-    local NEW_IP=`generateIpForVm "$PREFIXED_CLONE_NAME"`
+    local NEW_IP=`generateIpForVm "$PREFIXED_CLONE_NAME" "$VM_NETWORK_PREFIX"`
 
     cloneVM "$ORIGINAL_NAME" "$PREFIXED_CLONE_NAME" "$TARGET_DIR"
 
     tagVm "$PREFIXED_CLONE_NAME" "$VM_GROUP_FORKS"
 
     echo "Forking $ORIGINAL_NAME -> $PREFIXED_CLONE_NAME; IP $NEW_IP" >> "$TEST_DIR/forks.log"
+}
+
+function connectVMs {
+    local NETWORK_INDEX="$1"
+
+    echo $NETWORK_INDEX ${@:2} $@
+    local NETWORK_NAME="$VM_CONNECTING_NETWORK_NAME-$NETWORK_INDEX"
+
+    ensureVMNetworksExist "$VM_CONNECTING_NETWORK_NAME" "$NETWORK_INDEX"
+
+    for VM_NAME in "${@:2}"; do
+        echo "Attaching $VM_NAME to $NETWORK_NAME"
+
+        virsh attach-interface --domain "$VM_NAME" \
+          --type network \
+          --source "$NETWORK_NAME" \
+          --model virtio \
+          --config
+    done
 }
 
 function tagVm {
@@ -203,16 +222,20 @@ function deleteVm {
 }
 
 function generateIpForVm() {
-    local TMP_MACHINE_NAME=$1
+    local TMP_MACHINE_NAME="$1"
+    local NETWORK_PREFIX="$2"
 
     local HASH=$(echo -n "$TMP_MACHINE_NAME" | md5sum | sed 's/[^0-9]//g')
-    local IP_SUFFIX=$(( (${HASH:0:8} % 253) + 2 ))  # range: 2-254
+    local IP_THIRD=$(( (${HASH:0:4} % 256) )) # range: 0-255
+    local IP_FOURTH=$(( (${HASH:4:8} % 253) + 2 )) # range: 2-254
 
-    echo "192.168.50.$IP_SUFFIX"
+    echo "$NETWORK_PREFIX.$IP_THIRD.$IP_FOURTH"
 }
 
 function reserveDhcpIpForVm {
     local TMP_MACHINE_NAME="$1"
+    local NETWORK_NAME="$2"
+    local NETWORK_PREFIX="$3"
 
     function generateMacForVm() {
         local TMP_MACHINE_NAME="$1"
@@ -220,11 +243,11 @@ function reserveDhcpIpForVm {
         echo "52:54:00:$(echo -n "$TMP_MACHINE_NAME" | md5sum | sed 's/^\(..\)\(..\)\(..\).*/\1:\2:\3/')"
     }
 
-    local MAC_ADDRESS=`generateMacForVm $TMP_MACHINE_NAME`
-    local STATIC_IP=`generateIpForVm $TMP_MACHINE_NAME`
+    local MAC_ADDRESS=`generateMacForVm "$TMP_MACHINE_NAME-$NETWORK_PREFIX"`
+    local STATIC_IP=`generateIpForVm "$TMP_MACHINE_NAME" "$NETWORK_PREFIX"`
 
-    virsh net-update $VM_NETWORK_NAME add ip-dhcp-host \
-        "<host mac='$MAC_ADDRESS' ip='$STATIC_IP'/>" \
+    virsh net-update "$NETWORK_NAME" add ip-dhcp-host \
+        "<host mac='$MAC_ADDRESS' ip='$STATIC_IP' name='$TMP_MACHINE_NAME'/>" \
         --live --config >/dev/null 2>/dev/null || true
 
     echo "$MAC_ADDRESS"
@@ -286,7 +309,7 @@ function runTunneledSshCommand {
     local TMP_COMMAND=$4
     local TMP_ENV_ASSIGNEMENT=$5
 
-    local SSH_HOSTNAME=`generateIpForVm "$TMP_MACHINE_NAME"`
+    local SSH_HOSTNAME=`generateIpForVm "$TMP_MACHINE_NAME" "$VM_NETWORK_PREFIX"`
 
     # ensure no conflict between VM saved and current fingerprints
     __clearSshFingerprint $SSH_HOSTNAME
@@ -315,7 +338,7 @@ function copyTunneledSshContent {
 
     log "Copying files over SSH \"$TMP_LOCAL_FILEPATH\" -> \"$TMP_REMOTE_FILEPATH\" ($EXCLUDED_PARAMETER)"
 
-    local SSH_HOSTNAME=`generateIpForVm "$TMP_MACHINE_NAME"`
+    local SSH_HOSTNAME=`generateIpForVm "$TMP_MACHINE_NAME" "$VM_NETWORK_PREFIX"`
 
     # ensure no conflict between VM saved and current fingerprints
     __clearSshFingerprint $SSH_HOSTNAME

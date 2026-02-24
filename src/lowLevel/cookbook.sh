@@ -507,22 +507,6 @@ function pkg_virtualbox {
 }
 
 function pkg_sanager_tests_prerequisities {
-    function ensureVMNetworksExist {
-        local VM_NETWORK_NAME="IsolatedNetwork"
-        local VM_NETWORK_DEFINITIONS_FOLDER="$SCRIPT_DIR/data/virt"
-
-        if ! virsh net-info "$VM_NETWORK_NAME" &>/dev/null; then
-            echo virsh net-define "$VM_NETWORK_DEFINITIONS_FOLDER/$VM_NETWORK_NAME.xml"
-            virsh net-define "$VM_NETWORK_DEFINITIONS_FOLDER/$VM_NETWORK_NAME.xml"
-        fi
-
-        if ! virsh net-list --name | grep -q "^${VM_NETWORK_NAME}$"; then
-            virsh net-start $VM_NETWORK_NAME
-        fi
-
-        virsh net-autostart $VM_NETWORK_NAME
-    }
-
     function useSystemVirt {
         # TODO: prevent duplicates + abstract adding of directives into bashrc
         echo "export LIBVIRT_DEFAULT_URI=qemu:///system" >> ~/.bashrc
@@ -538,7 +522,7 @@ function pkg_sanager_tests_prerequisities {
     usermod -a -G libvirt,kvm $SCRIPT_EXECUTING_USER
 
     useSystemVirt
-    ensureVMNetworksExist
+    ensureVMNetworksExist "IsolatedNetwork"
 }
 
 function pkg_remoteControlGui {

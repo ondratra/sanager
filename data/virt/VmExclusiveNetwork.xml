@@ -1,0 +1,9 @@
+<network>
+    <name>VmExclusiveNetwork-__DUPLICATE_INDEX__</name>
+    <bridge name='virbr-isol-__DUPLICATE_INDEX__' stp='on' delay='0'/>
+    <ip address='10.__DUPLICATE_INDEX__.0.1' netmask='255.0.0.0'>
+        <dhcp>
+            <range start='10.__DUPLICATE_INDEX__.0.2' end='10.__DUPLICATE_INDEX__.255.254'/>
+        </dhcp>
+    </ip>
+</network>
