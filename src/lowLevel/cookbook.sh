@@ -630,6 +630,23 @@ function pkg_brave {
     aptGetInstall $PACKAGES
 }
 
+function pkg_networkFileShareServer {
+    function setupZfsNfs {
+        PACKAGES="nfs-kernel-server"
+
+        aptGetInstall $PACKAGES
+    }
+
+    setupZfsNfs
+}
+
+function pkg_networkFileShareClient {
+    PACKAGES="nfs-common"
+
+    aptGetInstall $PACKAGES
+}
+
+
 # keybase not supported for now due to obsolete repo signature (SHA1)
 #function keybase {
 #    PACKAGES="keybase"

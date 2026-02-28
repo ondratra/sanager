@@ -90,4 +90,5 @@ function pc_fun {
 
 function pc_advancedNetworking {
     pkg_syncthing
+    pkg_networkFileShareClient
 }

@@ -238,3 +238,22 @@ zpool status
 # start pool scrub - it will take ~hours depending on the amount of saved data
 zpool scrub $MY_ZFS_POOL_NAME
 ```
+
+#### ZFS network share over NFS
+Ensure `pkg_networkFileShare` is installed. Then setup the sharing on server:
+
+```sh
+zfs set sharenfs="rw=@192.168.0.0/16,all_squash,anonuid=1000,anongid=1000" $MY_ZFS_POOL_NAME
+zfs share $MY_ZFS_POOL_NAME
+
+# optional - check mountpoint
+zfs get mountpoint $MY_ZFS_POOL_NAME
+```
+
+On client connect like this: (fill in server's IP)
+```sh
+# add this line to /etc/fstab
+192.168.XXX.XXX:/mnt/serverMountPoint  /mnt/clientMachineMountPoint  nfs  defaults  0  0
+
+mount -a
+```
