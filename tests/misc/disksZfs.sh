@@ -78,7 +78,7 @@ function cloneDisk {
     deleteDisk "$CLONE_MACHINE_NAME" "$DISK_NAME"
 
     # destroy existing snapshot (if exists)
-    zfs destroy "$SNAPSHOT_NAME"d
+    zfs destroy "$SNAPSHOT_NAME" > /dev/null 2> /dev/null || true
     # create snapshot for clone
     zfs snapshot "$SNAPSHOT_NAME"
 

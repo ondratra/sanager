@@ -27,5 +27,5 @@ function homeServerTerminal_zfs {
 
 function homeServerTerminal_advancedNetworking {
     pkg_syncthing
-    pkg_networkFileShare
+    pkg_networkFileShareServer
 }

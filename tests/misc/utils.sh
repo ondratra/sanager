@@ -139,7 +139,7 @@ function cloneVM {
 
     local MAC_ADDRESS=`reserveDhcpIpForVm "$CLONE_NAME" "$VM_NETWORK_NAME" "$VM_NETWORK_PREFIX"`
 
-    local SYSTEM_DISK_PATH=`cloneDisk "$ORIGINAL_NAME" "$CLONE_NAME" "$VM_MACHINE_DISK_NAME_SYSTEM"`
+    local SYSTEM_DISK_PATH=`cloneDisk "$ORIGINAL_NAME" "$CLONE_NAME" "$VM_MACHINE_DISK_NAME_SYSTEM" "$ZFS_ZVOL_ARCH_OS"`
     local DATA_DISK_PATH=`cloneDisk "$ORIGINAL_NAME" "$CLONE_NAME" "$VM_MACHINE_DISK_NAME_DATA" "$VM_TYPE"`
 
     # ensure disk folder exists
