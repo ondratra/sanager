@@ -38,7 +38,7 @@ function pc_userRobust {
     pkg_kittyTerminal
 
     pkg_ferdium
-    pkg_keepass
+    # pkg_keepass # TODO: keepassxc can't be installed atm due to missing libbotan-3-7 in Debian sid
 
     pkg_obsidian
 }
