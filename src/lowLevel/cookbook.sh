@@ -1025,7 +1025,7 @@ function pkg_ferdium {
 }
 
 function pkg_keepass {
-    local PACKAGES="keepassxc"
+    local PACKAGES="keepassxc-minimal"
     local CONFIG_SOURCE_FOLDER=$SANAGER_DATA_SOURCE_DIR/keepassxc
     local CONFIG_TARGET_PATH=~/.config/keepassxc
 
