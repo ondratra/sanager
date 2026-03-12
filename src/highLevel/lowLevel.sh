@@ -12,7 +12,7 @@ function runHighLevel {
 
     SORTED_NAMES=`lowLevel_getExistingRoutines`
 
-    if [[ $(echo "$SORTED_NAMES" | grep -e "$1") == "" ]]; then
+    if [[ $(echo " $SORTED_NAMES " | grep -e " $1 ") == "" ]]; then
         echo "Low level routine '$1' not found";
         lowLevel_printExistingRoutines
         exit 1

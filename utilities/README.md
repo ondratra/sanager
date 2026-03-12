@@ -1,4 +1,4 @@
-# Useful commands
+ # Useful commands
 
 ## Misc
 See used ports
@@ -237,6 +237,41 @@ zpool status
 
 # start pool scrub - it will take ~hours depending on the amount of saved data
 zpool scrub $MY_ZFS_POOL_NAME
+```
+
+#### ZVOL
+ZFS dataset acting as a block device. It inherits ZFS features, it's great for Virtual Machine disks as it provides
+performance close to hardware-level.
+
+This command is for demonstration purposes only. A lot of arguments need to be tweaked according to zvol usage type
+(aka VM purpose).
+```sh
+zfs create \
+  -V $DISK_SIZE \
+  -b 128k \
+  -o compression=lz4 \
+  -o primarycache=metadata \
+  -o sync=disabled \
+  -o logbias=throughput \
+  $MY_ZFS_POOL_NAME/zvols/myZvolName
+```
+
+#### Datasets
+Create a node in datasets path not meant for actual usage/mount
+```sh
+zfs create -o mountpoint=none myPool/my/dataset/path
+```
+
+Datasets parameters vary depending on the intended usage. For inspiration on how to set parameters look into
+`/tests/misc/disks.sh` and `/tests/config.sh`. Regular datasets doesn't have `-b` and `-V` like ZVOL does.
+```sh
+# generic usage dataset
+zfs create \
+  -o compression=lz4 \
+  -o primarycache=metadata \
+  -o sync=disabled \
+  -o logbias=throughput \
+  $MY_ZFS_POOL_NAME/zvols/myZvolName
 ```
 
 #### ZFS network share over NFS

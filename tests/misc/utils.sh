@@ -3,6 +3,13 @@ function log {
     echo "SANAGER TESTS: $@"
 }
 
+function requireTestConfigInit {
+    if [ ! -f "$TEST_DIR/customConfig.sh" ]; then
+        log Sanager tests not initialized. Use \`scripts/initTests.sh\`
+        exit 1
+    fi
+}
+
 function downloadInstallMedium {
     if [[ -f $NETINSTALL_ORIGINAL_ISO_FILE ]]; then
         return
@@ -123,16 +130,17 @@ function cloneVM {
     local ORIGINAL_NAME="$1"
     local CLONE_NAME="$2"
     local TARGET_DIR="${3:-$VIRTUAL_MACHINES_DIR}"
+    local VM_TYPE="${4:-$ZFS_ZVOL_ARCH_GENERIC}"
 
     log "Cloning VM $ORIGINAL_NAME -> $CLONE_NAME"
 
     # clear previous virtual machine if it exists
     rm -rf "$TARGET_DIR/$CLONE_NAME"
 
-    local MAC_ADDRESS=`reserveDhcpIpForVm "$CLONE_NAME" "$VM_NETWORK_NAME" $VM_NETWORK_PREFIX"`
+    local MAC_ADDRESS=`reserveDhcpIpForVm "$CLONE_NAME" "$VM_NETWORK_NAME" "$VM_NETWORK_PREFIX"`
 
-    local SYSTEM_DISK_PATH="$TARGET_DIR/$CLONE_NAME/$VM_MACHINE_DISK_NAME_SYSTEM.qcow2"
-    local DATA_DISK_PATH="$TARGET_DIR/$CLONE_NAME/$VM_MACHINE_DISK_NAME_DATA.qcow2"
+    local SYSTEM_DISK_PATH=`cloneDisk "$ORIGINAL_NAME" "$CLONE_NAME" "$VM_MACHINE_DISK_NAME_SYSTEM"`
+    local DATA_DISK_PATH=`cloneDisk "$ORIGINAL_NAME" "$CLONE_NAME" "$VM_MACHINE_DISK_NAME_DATA" "$VM_TYPE"`
 
     # ensure disk folder exists
     mkdir -p "$TARGET_DIR/$CLONE_NAME"
@@ -142,6 +150,7 @@ function cloneVM {
         --name "$CLONE_NAME" \
         --mac "$MAC_ADDRESS" \
         --check disk_size=off \
+        --preserve-data \
         --file "$SYSTEM_DISK_PATH" \
         --file "$DATA_DISK_PATH"
 }
@@ -149,13 +158,13 @@ function cloneVM {
 function forkVm {
     local ORIGINAL_NAME="$1"
     local CLONE_NAME="$2"
-    local TARGET_DIR="$3"
+    local TARGET_DIR_OR_ZFS_ZVOL="$3"
 
     # NOTE: due to missing group/tag feature in virt-manager, let's prefix VM name to distinguish it
     local PREFIXED_CLONE_NAME="fork_$CLONE_NAME"
     local NEW_IP=`generateIpForVm "$PREFIXED_CLONE_NAME" "$VM_NETWORK_PREFIX"`
 
-    cloneVM "$ORIGINAL_NAME" "$PREFIXED_CLONE_NAME" "$TARGET_DIR"
+    cloneVM "$ORIGINAL_NAME" "$PREFIXED_CLONE_NAME" "$TARGET_DIR_OR_ZFS_ZVOL"
 
     tagVm "$PREFIXED_CLONE_NAME" "$VM_GROUP_FORKS"
 
@@ -189,26 +198,6 @@ function tagVm {
     #VBoxManage modifyvm "$CLONE_NAME" --groups "$VM_GROUP_FORKS"
 }
 
-function createAndPrepareVmDisk {
-    local TMP_MACHINE_NAME="$1"
-    local DISK_NAME="$2"
-    local DISK_SIZE="$3"
-    local TARGET_FOLDER="$4"
-
-    # config
-    local MACHINE_DISK_FILE_PATH="$TARGET_FOLDER/$DISK_NAME.qcow2"
-
-    # ensure disk folder exists
-    mkdir -p "$TARGET_FOLDER"
-
-    rm -f "$MACHINE_DISK_FILE_PATH"
-
-    qemu-img create -f qcow2 "$MACHINE_DISK_FILE_PATH" "$DISK_SIZE" > /dev/null
-    chmod g+w "$MACHINE_DISK_FILE_PATH"
-
-    echo "$MACHINE_DISK_FILE_PATH"
-}
-
 function deleteVm {
     local TMP_MACHINE_NAME=$1
 
@@ -217,8 +206,8 @@ function deleteVm {
     virsh destroy "$TMP_MACHINE_NAME" 2> /dev/null || true
     virsh undefine "$TMP_MACHINE_NAME" --remove-all-storage --nvram 2> /dev/null || true
 
-    # ensure disks and other artifacts are deleted
-    rm -rf "$VIRTUAL_MACHINES_DIR/$TMP_MACHINE_NAME"
+    deleteDisk "$TMP_MACHINE_NAME" "$VM_MACHINE_DISK_NAME_SYSTEM"
+    deleteDisk "$TMP_MACHINE_NAME" "$VM_MACHINE_DISK_NAME_DATA"
 }
 
 function generateIpForVm() {
@@ -246,6 +235,11 @@ function reserveDhcpIpForVm {
     local MAC_ADDRESS=`generateMacForVm "$TMP_MACHINE_NAME-$NETWORK_PREFIX"`
     local STATIC_IP=`generateIpForVm "$TMP_MACHINE_NAME" "$NETWORK_PREFIX"`
 
+    # delete existing static lease (if any)
+    virsh net-update "$NETWORK_NAME" delete ip-dhcp-host \
+        "<host mac='$MAC_ADDRESS'/>" \
+        --live --config >/dev/null 2>/dev/null || true
+    # create new static lease
     virsh net-update "$NETWORK_NAME" add ip-dhcp-host \
         "<host mac='$MAC_ADDRESS' ip='$STATIC_IP' name='$TMP_MACHINE_NAME'/>" \
         --live --config >/dev/null 2>/dev/null || true
@@ -382,7 +376,7 @@ function grubAdaptToVmCloneHardDiskIdChanges {
 }
 
 # expects user `libvirt-qemu` is running libvirt and testing folder is not owned by it or any of it's groups
-function detectMissingAccessToTestingFolder() {
+function detectMissingAccessToTestingFolder {
     local PATH_TO_FOLDER="$1"
 
     local NORMALIZED_PATH="$(readlink -f -- "$PATH_TO_FOLDER")"
@@ -399,4 +393,19 @@ function detectMissingAccessToTestingFolder() {
 
         CURRENT_PATH="$(dirname "$CURRENT_PATH")"
     done
+}
+
+function isZfsEnabled {
+    [[ -n "$VM_ZPOOL_DATASET_PARENT" ]]
+}
+
+
+function isPathZpoolDatasetPath {
+    local MB_ZPOOL_PATH="$1"
+
+    if which zfs > /dev/null 2> /dev/null && zfs list "$MB_ZPOOL_PATH" > /dev/null 2> /dev/null; then
+        return 0
+    fi
+
+    return 1
 }

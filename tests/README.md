@@ -45,7 +45,7 @@ multiple VMs into a new network.
 Use LibVirt commands to manually manage networks:
 ```sh
 # see existing networks
-virsh net-list
+virsh net-list --all
 
 # see static dhcp leases and other network settings
 virsh net-dumpxml MyNetwork

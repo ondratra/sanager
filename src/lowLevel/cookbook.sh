@@ -29,7 +29,7 @@ function pkg_networkManager {
     local PACKAGES="network-manager"
 
     # see https://wiki.debian.org/NetworkManager#Wired_Networks_are_Unmanaged
-    applyPatch /etc/NetworkManager/NetworkManager.conf < $SCRIPT_DIR/data/misc/NetworkManager.conf.diff || PATCH_PROBLEM=$?
+    applyPatch /etc/NetworkManager/NetworkManager.conf < $SANAGER_DATA_SOURCE_DIR/misc/NetworkManager.conf.diff || PATCH_PROBLEM=$?
 
     if [[ "$PATCH_PROBLEM" == "0" ]]; then
         systemctl restart NetworkManager
@@ -136,7 +136,7 @@ function pkg_sublimeText {
         sudo -u $SCRIPT_EXECUTING_USER mkdir $CONFIG_DIR -p
         mkdir "$INSTALLED_PACKAGES_DIR" -p
         mkdir "$CONFIG_DIR/Packages/User" -p
-        cp "$SCRIPT_DIR/data/sublimeText" "$CONFIG_DIR/Packages/$PACKAGE_LOCAL_NAME" -rT
+        cp "$SANAGER_DATA_SOURCE_DIR/sublimeText" "$CONFIG_DIR/Packages/$PACKAGE_LOCAL_NAME" -rT
 
         # NOTE: my own theme depends on Soda theme being installed - use it if it's available.
         #       Otherwise keep theme commented out to prevent SublimeText from crashing on start
@@ -373,7 +373,7 @@ function pkg_rabbitVCS {
     if [ ! -f $EXTENSION_DIR ]; then
         mkdir $EXTENSION_DIR -p
     fi
-    cp "$SCRIPT_DIR/data/caja/$FILENAME.template" "$EXTENSION_DIR/$FILENAME"
+    cp "$SANAGER_DATA_SOURCE_DIR/caja/$FILENAME.template" "$EXTENSION_DIR/$FILENAME"
 }
 
 function pkg_unity3d {
@@ -612,7 +612,7 @@ function pkg_redshift {
     local CONFIG_FILE_PATH=~/.config/redshift.conf
 
     if [ ! -f $CONFIG_FILE_PATH ]; then
-        cp $SCRIPT_DIR/data/misc/redshift.conf $CONFIG_FILE_PATH
+        cp $SANAGER_DATA_SOURCE_DIR/misc/redshift.conf $CONFIG_FILE_PATH
         chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_FILE_PATH
     fi
 
@@ -712,7 +712,7 @@ function pkg_corectrl {
     autostartApplication "org.corectrl.CoreCtrl.desktop"
 
     local GROUP=`id -gn $SCRIPT_EXECUTING_USER`
-    sed -e "s|__\$GROUP__|$GROUP|g" $SCRIPT_DIR/data/misc/90-corectrl.rules > /etc/polkit-1/rules.d/90-corectrl.rules
+    sed -e "s|__\$GROUP__|$GROUP|g" $SANAGER_DATA_SOURCE_DIR/misc/90-corectrl.rules > /etc/polkit-1/rules.d/90-corectrl.rules
 }
 
 function pkg_coolercontrol {
@@ -723,7 +723,7 @@ function pkg_coolercontrol {
 
     function refreshConfiguration {
         # setup configuration
-        cp "$SCRIPT_DIR/data/coolercontrol" "$CONFIG_DIR" -rT
+        cp "$SANAGER_DATA_SOURCE_DIR/coolercontrol" "$CONFIG_DIR" -rT
 
         # pass folder permission to relevant user
         chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_DIR
@@ -827,7 +827,7 @@ function pkg_zellij {
 
     function refreshConfiguration {
         # setup configuration
-        cp "$SCRIPT_DIR/data/zellij" "$CONFIG_DIR" -rT
+        cp "$SANAGER_DATA_SOURCE_DIR/zellij" "$CONFIG_DIR" -rT
 
         # pass folder permission to relevant user
         chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" $CONFIG_DIR
@@ -873,7 +873,7 @@ function pkg_zfsLuks {
 
     function setupSanoid {
         local CONFIG_NAME=sanoid.conf
-        local CONFIG_SOURCE_PATH=$SCRIPT_DIR/data/sanoid/$CONFIG_NAME
+        local CONFIG_SOURCE_PATH=$SANAGER_DATA_SOURCE_DIR/sanoid/$CONFIG_NAME
         local CONFIG_TARGET_PATH=/etc/sanoid/$CONFIG_NAME
 
         if [ -f $CONFIG_TARGET_PATH ]; then
@@ -889,11 +889,11 @@ function pkg_zfsLuks {
 
     function setupSyncoid {
         local CONFIG_NAME=syncoid.service
-        local CONFIG_SOURCE_PATH=$SCRIPT_DIR/data/sanoid/$CONFIG_NAME
+        local CONFIG_SOURCE_PATH=$SANAGER_DATA_SOURCE_DIR/sanoid/$CONFIG_NAME
         local CONFIG_TARGET_PATH=/etc/systemd/system/$CONFIG_NAME
 
         local CONFIG_NAME_TIMER=syncoid.timer
-        local CONFIG_SOURCE_PATH_TIMER=$SCRIPT_DIR/data/sanoid/$CONFIG_NAME_TIMER
+        local CONFIG_SOURCE_PATH_TIMER=$SANAGER_DATA_SOURCE_DIR/sanoid/$CONFIG_NAME_TIMER
         local CONFIG_TARGET_PATH_TIMER=/etc/systemd/system/$CONFIG_NAME_TIMER
 
         if [ -f $CONFIG_TARGET_PATH ]; then
@@ -930,7 +930,7 @@ function pkg_sshServer {
     aptGetInstall $PACKAGES
 
     local CONFIG_NAME="__sanagerConfig.conf"
-    local CONFIG_SOURCE_PATH=$SCRIPT_DIR/data/sshServer/$CONFIG_NAME
+    local CONFIG_SOURCE_PATH=$SANAGER_DATA_SOURCE_DIR/sshServer/$CONFIG_NAME
     local CONFIG_TARGET_PATH=/etc/ssh/sshd_config.d/$CONFIG_NAME
 
     if [ -f $CONFIG_TARGET_PATH ]; then
@@ -945,7 +945,7 @@ function pkg_sshServer {
 
 function pkg_kittyTerminal {
     local PACKAGES="kitty"
-    local CONFIG_SOURCE_FOLDER=$SCRIPT_DIR/data/kitty
+    local CONFIG_SOURCE_FOLDER=$SANAGER_DATA_SOURCE_DIR/kitty
     local CONFIG_TARGET_PATH=~/.config/kitty
 
     aptGetInstall $PACKAGES
@@ -961,7 +961,7 @@ function pkg_kittyTerminal {
 
 function pkg_syncthing {
     local PACKAGES="syncthing"
-    local CONFIG_SOURCE_FOLDER=$SCRIPT_DIR/data/syncthing
+    local CONFIG_SOURCE_FOLDER=$SANAGER_DATA_SOURCE_DIR/syncthing
     local CONFIG_TARGET_PATH=~/.local/state/syncthing
     local CONFIG_XML_PATH=$CONFIG_TARGET_PATH/config.xml
 
@@ -1026,7 +1026,7 @@ function pkg_ferdium {
 
 function pkg_keepass {
     local PACKAGES="keepassxc"
-    local CONFIG_SOURCE_FOLDER=$SCRIPT_DIR/data/keepassxc
+    local CONFIG_SOURCE_FOLDER=$SANAGER_DATA_SOURCE_DIR/keepassxc
     local CONFIG_TARGET_PATH=~/.config/keepassxc
 
     aptGetInstall $PACKAGES

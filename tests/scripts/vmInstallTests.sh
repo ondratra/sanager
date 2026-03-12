@@ -70,6 +70,10 @@ function buildUnstableBasedVms {
     cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" "$MACHINE_NAME_UNSTABLE_PHYSICAL_PC" testSanagerInstallPhysicalPc
 }
 
+requireTestConfigInit
+source "$TEST_DIR/customConfig.sh"
+source "$SCRIPT_DIR/../misc/disks.sh"
+
 # these packages should be installed (possibly via `pkg_sanager_tests_prerequisities`)
 REQUIRED_PACKAGES=`listTestingDependencies`
 

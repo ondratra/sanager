@@ -3,9 +3,9 @@
     <name>IsolatedNetwork</name>
     <forward mode='nat'/>
     <bridge name='virbr1' stp='on' delay='0'/>
-    <ip address='192.168.0.1' netmask='255.255.0.0'>
+    <ip address='10.155.0.1' netmask='255.255.0.0'>
         <dhcp>
-            <range start='192.168.0.2' end='192.168.255.254'/>
+            <range start='10.155.0.2' end='10.155.255.254'/>
         </dhcp>
     </ip>
     <!-- Prevent VM -> Host (except DNS/DHCP) -->

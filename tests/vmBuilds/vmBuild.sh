@@ -11,7 +11,7 @@ function createTestingVm {
     virsh destroy "$TMP_MACHINE_NAME" 2>/dev/null || true
     virsh undefine "$TMP_MACHINE_NAME" --nvram 2>/dev/null || true
 
-    local MAC_ADDRESS=`reserveDhcpIpForVm "$TMP_MACHINE_NAME"`
+    local MAC_ADDRESS=`reserveDhcpIpForVm "$TMP_MACHINE_NAME" "$VM_NETWORK_NAME" "$VM_NETWORK_PREFIX"`
 
     local GRAPHICS_SETTINGS
     local VIDEO_SETTINGS
@@ -47,21 +47,46 @@ function createVmDisks {
 
     log "Creating disks for $TMP_MACHINE_NAME"
 
-    local SYSTEM_DISK_PATH=`createAndPrepareVmDisk "$TMP_MACHINE_NAME" "$VM_MACHINE_DISK_NAME_SYSTEM" "$VM_MACHINE_DISK_SIZE_SYSTEM" "$VIRTUAL_MACHINES_DIR/$TMP_MACHINE_NAME"`
-    local DATA_DISK_PATH=`createAndPrepareVmDisk "$TMP_MACHINE_NAME" "$VM_MACHINE_DISK_NAME_DATA" "$VM_MACHINE_DISK_SIZE_DATA" "$VIRTUAL_MACHINES_DIR/$TMP_MACHINE_NAME"`
+    local FALLBACK_LOCAL_DISK_FOLDER="$VIRTUAL_MACHINES_DIR/$TMP_MACHINE_NAME"
+
+    local STORAGE_ZPOOL_OR_FOLDER="${VM_ZPOOL_DATASET_PARENT:-$FALLBACK_LOCAL_DISK_FOLDER}"
+    local DISK_SUBDRIVER="${VM_ZPOOL_DATASET_PARENT:-$FALLBACK_LOCAL_DISK_FOLDER}"
+    local SYSTEM_DISK_ZVOL_ARCHETYPE="$ZFS_ZVOL_ARCH_OS"
+    local DATA_DISK_ZVOL_ARCHETYPE="$ZFS_ZVOL_ARCH_GENERIC"
+
+    local SYSTEM_DISK_PATH=`createDisk "$TMP_MACHINE_NAME" "$VM_MACHINE_DISK_NAME_SYSTEM" "$VM_MACHINE_DISK_SIZE_SYSTEM" "$SYSTEM_DISK_ZVOL_ARCHETYPE"`
+    local DATA_DISK_PATH=`createDisk "$TMP_MACHINE_NAME" "$VM_MACHINE_DISK_NAME_DATA" "$VM_MACHINE_DISK_SIZE_DATA" "$DATA_DISK_ZVOL_ARCHETYPE"`
+
+    local DISK_PARAMETERS=`prepareAttachDiskParameters`
 
     virsh attach-disk "$TMP_MACHINE_NAME" \
         "$SYSTEM_DISK_PATH" vda \
-        --driver qemu \
-        --subdriver qcow2 \
-        --targetbus virtio \
-        --persistent
+        $DISK_PARAMETERS
     virsh attach-disk "$TMP_MACHINE_NAME" \
         "$DATA_DISK_PATH" vdb \
-        --driver qemu \
-        --subdriver qcow2 \
-        --targetbus virtio \
-        --persistent
+        $DISK_PARAMETERS
+}
+
+function prepareAttachDiskParameters {
+    # common part
+    cat <<EOF
+--driver qemu
+--targetbus virtio
+--persistent
+EOF
+
+    # zfs disk
+    if isZfsEnabled; then
+        cat <<EOF2
+--subdriver raw
+--cache none
+--io native
+EOF2
+        return
+    fi
+
+    # qcow2 file disk
+    echo --subdriver qcow2
 }
 
 function attachDebianInstallationIso {

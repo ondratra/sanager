@@ -1,0 +1,101 @@
+function getZfsDatasetPath {
+    local TMP_MACHINE_NAME="$1"
+    local DISK_NAME="$2"
+
+    echo "$VM_ZPOOL_DATASET_PARENT/$TMP_MACHINE_NAME/$DISK_NAME"
+}
+
+function getZvolDevPath {
+    local DATASET_NAME="$1"
+
+    echo "/dev/zvol/$DATASET_NAME"
+}
+
+function createDisk {
+    local TMP_MACHINE_NAME="$1"
+    local DISK_NAME="$2"
+    local DISK_SIZE="$3"
+    local ZVOL_ARCHETYPE="$4"
+
+    local VOLBLOCKSIZE="ZFS_ZVOL_ARCH_${ZVOL_ARCHETYPE}_VOLBLOCKSIZE"
+    local SYNC="ZFS_ZVOL_ARCH_${ZVOL_ARCHETYPE}_SYNC"
+    local COMPRESSION="ZFS_ZVOL_ARCH_${ZVOL_ARCHETYPE}_COMPRESSION"
+    local PRIMARYCACHE="ZFS_ZVOL_ARCH_${ZVOL_ARCHETYPE}_PRIMARYCACHE"
+    local LOGBIAS="ZFS_ZVOL_ARCH_${ZVOL_ARCHETYPE}_LOGBIAS"
+
+    if [ -z "${!VOLBLOCKSIZE}" ]; then
+        echo "Unknown VM archetype for ZFS disk creation: '$ZVOL_ARCHETYPE'"
+        exit 1
+    fi
+
+    local DATASET_NAME=`getZfsDatasetPath "$TMP_MACHINE_NAME" "$DISK_NAME"`
+
+    # destroy already existing dataset (if exist)
+    deleteDisk "$DATASET_NAME"
+
+    # -s enables creation of bigger datasets/zvols than available physical space
+    zfs create \
+        -p \
+        -s \
+        -V $DISK_SIZE \
+        -b "${!VOLBLOCKSIZE}" \
+        -o "sync=${!SYNC}" \
+        -o "compression=${!COMPRESSION}" \
+        -o "primarycache=${!PRIMARYCACHE}" \
+        -o "logbias=${!LOGBIAS}" \
+        "$DATASET_NAME"
+
+    getZvolDevPath "$DATASET_NAME"
+}
+
+function deleteDisk {
+    local TMP_MACHINE_NAME="$1"
+    local DISK_NAME="$2"
+
+    local DATASET_NAME=`getZfsDatasetPath "$TMP_MACHINE_NAME" "$DISK_NAME"`
+
+    zfs destroy -r "$DATASET_NAME" > /dev/null 2> /dev/null || true
+}
+
+function cloneDisk {
+    local ORIGINAL_MACHINE_NAME="$1"
+    local CLONE_MACHINE_NAME="$2"
+    local DISK_NAME="$3"
+    local ZVOL_ARCHETYPE="${4:-$ZFS_ZVOL_ARCH_GENERIC}"
+
+    local ORIGINAL_DATASET_NAME=`getZfsDatasetPath "$ORIGINAL_MACHINE_NAME" "$DISK_NAME"`
+    local NEW_DATASET_NAME=`getZfsDatasetPath "$CLONE_MACHINE_NAME" "$DISK_NAME"`
+    local NEW_DATASET_PARENT_PATH="${NEW_DATASET_NAME%/*}"
+
+    local SNAPSHOT_NAME="$ORIGINAL_DATASET_NAME@sanagercloning"
+
+    local DISK_SIZE=`getDiskSize "$ORIGINAL_DATASET_NAME"`
+    #local ZVOL_PATH=`createDisk "$CLONE_MACHINE_NAME" "$DISK_NAME" "$DISK_SIZE" "$ZVOL_ARCHETYPE"`
+
+    # ensure parent path exist
+    zfs create -p -o mountpoint=none "$NEW_DATASET_PARENT_PATH"
+    # destroy already existing dataset (if exist)
+    deleteDisk "$CLONE_MACHINE_NAME" "$DISK_NAME"
+
+    # destroy existing snapshot (if exists)
+    zfs destroy "$SNAPSHOT_NAME"d
+    # create snapshot for clone
+    zfs snapshot "$SNAPSHOT_NAME"
+
+    # NOTE: zfs cloning doesn't let us delete temporary snapshosts, rather use zfs send & recieve for now
+    #       it's slower because it copies data, but likely will create less maintanance problems
+    # zfs clone "$SNAPSHOT_NAME" "$NEW_DATASET_NAME"
+
+    zfs send "$SNAPSHOT_NAME" | zfs receive "$NEW_DATASET_NAME"
+    zfs destroy "$SNAPSHOT_NAME"
+
+    # TODO: adjust zvol settings according to selected ZVOL_ARCHETYPE
+
+    getZvolDevPath "$NEW_DATASET_NAME"
+}
+
+function getDiskSize {
+    local DATASET_NAME="$1"
+
+    zfs get volsize "$DATASET_NAME" -o value -H
+}

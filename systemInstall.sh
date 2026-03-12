@@ -39,6 +39,7 @@ TEST_DIR="$SANAGER_MAIN_DIR/.sanagerTests"
 SCRIPT_EXECUTING_USER=$SUDO_USER
 SCRIPT_DIR="`echo $(dirname $(readlink -nf $0))`"
 SCRIPT_DIR="`( cd \"$SCRIPT_DIR\" && pwd )`"  # absolutized and normalized
+SANAGER_DATA_SOURCE_DIR="$SCRIPT_DIR/data"
 
 VERBOSE_SCRIPT=`[[ "$2" == "--verbose" ]] && echo 1 || echo 0`
 VERBOSE_APT_FLAG=`[[ "$VERBOSE_SCRIPT" == "1" ]] && echo "" || echo "-qq"`

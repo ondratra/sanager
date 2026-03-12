@@ -293,7 +293,7 @@ function ensureVMNetworksExist {
     local VM_NETWORK_NAME="$1"
     local DUPLICATE_INDEX="$2"
 
-    local VM_NETWORK_DEFINITIONS_FOLDER="$SANAGER_MAIN_DIR/data/virt"
+    local VM_NETWORK_DEFINITIONS_FOLDER="$SANAGER_DATA_SOURCE_DIR/virt"
     local NETWORK_FULL_NAME=${VM_NETWORK_NAME}${DUPLICATE_INDEX:+-$DUPLICATE_INDEX}
 
     function prepareNewNetwork {
