@@ -55,7 +55,7 @@ function pkg_desktopDisplayEtc {
 }
 
 function pkg_audio {
-    local PACKAGES="pulseaudio pulseeffects lsp-plugins"
+    local PACKAGES="pulseaudio easyeffects lsp-plugins"
 
     aptGetInstall $PACKAGES
 }
