@@ -33,6 +33,8 @@ function main {
 
     echo "ZFS usage enabled"
 
+    mkdir -p "$TEST_DIR"
+
     cat <<EOF > "$TEST_DIR/customConfig.sh"
 SANAGER_TESTS_INITIALIZED="true"
 VM_ZPOOL_DATASET_PARENT="$VM_ZPOOL_DATASET_PARENT"

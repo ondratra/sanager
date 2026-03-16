@@ -1,8 +1,10 @@
 function tmpWait {
     # TODO: this will not work because it relies on guest additions that are yet to be installed
     # waitForVMOsBoot $TMP_MACHINE_NAME
-    log Sleeping 30 seconds
-    sleep 30s
+
+    local SLEEP_TIME=40
+    log "Sleeping $SLEEP_TIME seconds"
+    sleep "${SLEEP_TIME}s"
     log Waking up
 }
 
