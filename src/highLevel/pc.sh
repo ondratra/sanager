@@ -82,7 +82,7 @@ function pc_workInstantMessaging {
 function pc_fun {
     pkg_multimedia
     pkg_multimediaGui
-    pkg_steam
+    #pkg_steam # TODO: steam can't be installed atm due to mesa-libgalium broken dependency in Debian sid
     pkg_rhythmbox
     # TODO: uncomment this when lutris works - currently there is some incompatibility with `libasound-plugins:386` in sid
     #pkg_lutris
