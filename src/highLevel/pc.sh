@@ -24,7 +24,6 @@ function pc_essentials {
     pkg_audio
     pkg_fonts
     pkg_networkManager
-    pkg_diskUtils
 }
 
 function pc_userRobust {

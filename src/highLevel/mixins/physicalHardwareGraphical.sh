@@ -4,9 +4,14 @@ function mixin_physicalHardwareGraphical_all {
     mixin_physicalHardwareTerminal_all
 
     mixin_physicalHardwareGraphical_screen
+    mixin_physicalHardwareGraphical_disks
 }
 
 function mixin_physicalHardwareGraphical_screen {
     pkg_redshift
     pkg_hardwareAnalysis
+}
+
+function mixin_physicalHardwareGraphical_disks {
+    pkg_diskUtilsGui
 }

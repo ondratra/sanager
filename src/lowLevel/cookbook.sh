@@ -103,6 +103,12 @@ function pkg_webBrowsers {
 }
 
 function pkg_diskUtils {
+    local PACKAGES="smartmontools"
+
+    aptGetInstall $PACKAGES
+}
+
+function pkg_diskUtilsGui {
     local PACKAGES="gnome-disk-utility gparted"
 
     aptGetInstall $PACKAGES

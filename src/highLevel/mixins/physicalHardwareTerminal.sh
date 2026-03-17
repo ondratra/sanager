@@ -2,6 +2,7 @@ function mixin_physicalHardwareTerminal_all {
     mixin_physicalHardwareTerminal_drivers
     mixin_physicalHardwareTerminal_cooling
     mixin_physicalHardwareTerminal_virtualization
+    mixin_physicalHardwareTerminal_disks
 }
 
 function mixin_physicalHardwareTerminal_drivers {
@@ -29,4 +30,8 @@ function mixin_physicalHardwareTerminal_virtualization {
 
     #pkg_virtualbox # TODO: temporary disabled because package is not available in Debian 13 Trixie
     pkg_sanager_tests_prerequisities
+}
+
+function mixin_physicalHardwareTerminal_disks {
+    pkg_diskUtils
 }

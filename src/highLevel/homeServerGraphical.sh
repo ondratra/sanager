@@ -15,8 +15,6 @@ function homeServerGraphical_all {
 }
 
 function homeServerGraphical_userTools {
-    pkg_diskUtils
-
     pkg_sublimeText
     pkg_multimediaGui
     pkg_kittyTerminal

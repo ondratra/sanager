@@ -4,7 +4,6 @@ source $SCRIPT_DIR/src/highLevel/pc.sh
 function runHighLevel {
     graphicalDesktop_all
 
-    pkg_diskUtils
     pkg_versioningAndToolsGui
     pkg_sublimeText
 
