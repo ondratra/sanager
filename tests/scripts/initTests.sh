@@ -109,7 +109,7 @@ function checkZfsPermissions {
     if ! zfs allow "\$DATASET" | grep -q "\$USER_ME"; then
         echo "Missing permissions for creating sub-datasets for '\$DATASET'"
         echo "To add permissions use:"
-        echo "sudo zfs allow \$USER_ME create,mount,mountpoint,destroy,volsize,volblocksize,compression,sync,primarycache,logbias,refreservation,snapshot,send,receive $VM_ZPOOL_DATASET_PARENT"
+        echo "sudo zfs allow \$USER_ME create,mount,mountpoint,destroy,volsize,volblocksize,compression,sync,primarycache,logbias,refreservation,snapshot,send,receive \$DATASET"
 
         exit 1
     fi
