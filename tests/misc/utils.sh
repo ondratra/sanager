@@ -208,6 +208,8 @@ function deleteVm {
 
     deleteDisk "$TMP_MACHINE_NAME" "$VM_MACHINE_DISK_NAME_SYSTEM"
     deleteDisk "$TMP_MACHINE_NAME" "$VM_MACHINE_DISK_NAME_DATA"
+
+    deleteDiskNamespace "$TMP_MACHINE_NAME"
 }
 
 function generateIpForVm() {
@@ -252,6 +254,7 @@ function clearAllSanagerVms {
 
     deleteVm "$MACHINE_NAME_TEMPORARY"
     deleteVm "$MACHINE_NAME_BARE"
+
     deleteVm "$MACHINE_NAME_WITH_OS"
     deleteVm "$MACHINE_NAME_WITH_OS_AND_GUEST_ADDITIONS"
     deleteVm "$MACHINE_NAME_STABLE_WITH_SANAGER"

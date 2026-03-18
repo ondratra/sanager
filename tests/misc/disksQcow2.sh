@@ -35,6 +35,14 @@ function deleteDisk {
     rm -f "$MACHINE_DISK_FILE_PATH"
 }
 
+function deleteDiskNamespace {
+    local TMP_MACHINE_NAME="$1"
+
+    local MACHINE_DISK_NAMESPACE_FILE_PATH=`getDiskFolder "$TMP_MACHINE_NAME" ""`
+
+    rm -rf "$MACHINE_DISK_NAMESPACE_FILE_PATH"
+}
+
 function cloneDisk {
     local ORIGINAL_MACHINE_NAME="$1"
     local CLONE_MACHINE_NAME="$2"

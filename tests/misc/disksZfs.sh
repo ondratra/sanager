@@ -1,8 +1,20 @@
 function getZfsDatasetPath {
     local TMP_MACHINE_NAME="$1"
     local DISK_NAME="$2"
+    local ZVOL_ARCHETYPE="$3"
 
-    echo "$VM_ZPOOL_DATASET_PARENT/$TMP_MACHINE_NAME/$DISK_NAME"
+    local DATASET_NAME_SUFFIX="$TMP_MACHINE_NAME/$DISK_NAME"
+
+    if [[ -z "$ZVOL_ARCHETYPE" ]]; then
+        # NOTE: this expects that there are no two dataset with same machine name and disk name
+        zfs list -H -o name | grep "$DATASET_NAME_SUFFIX\$"
+        return 0
+    fi
+
+    local MB_DATASET_PARENT_FOR_ARCHETYPE="VM_ZPOOL_DATASET_PARENT_FOR_${ZVOL_ARCHETYPE}"
+    local DATASET_PARENT="${!MB_DATASET_PARENT_FOR_ARCHETYPE:-$VM_ZPOOL_DATASET_PARENT}"
+
+    echo "$DATASET_PARENT/$DATASET_NAME_SUFFIX"
 }
 
 function getZvolDevPath {
@@ -17,6 +29,7 @@ function createDisk {
     local DISK_SIZE="$3"
     local ZVOL_ARCHETYPE="$4"
 
+    # dataset settings
     local VOLBLOCKSIZE="ZFS_ZVOL_ARCH_${ZVOL_ARCHETYPE}_VOLBLOCKSIZE"
     local SYNC="ZFS_ZVOL_ARCH_${ZVOL_ARCHETYPE}_SYNC"
     local COMPRESSION="ZFS_ZVOL_ARCH_${ZVOL_ARCHETYPE}_COMPRESSION"
@@ -28,10 +41,10 @@ function createDisk {
         exit 1
     fi
 
-    local DATASET_NAME=`getZfsDatasetPath "$TMP_MACHINE_NAME" "$DISK_NAME"`
+    local DATASET_NAME=`getZfsDatasetPath "$TMP_MACHINE_NAME" "$DISK_NAME" "$ZVOL_ARCHETYPE"`
 
     # destroy already existing dataset (if exist)
-    deleteDisk "$DATASET_NAME"
+    deleteDisk "$TMP_MACHINE_NAME" "$DISK_NAME"
 
     # -s enables creation of bigger datasets/zvols than available physical space
     zfs create \
@@ -54,7 +67,24 @@ function deleteDisk {
 
     local DATASET_NAME=`getZfsDatasetPath "$TMP_MACHINE_NAME" "$DISK_NAME"`
 
+    if [[ -z "$DATASET_NAME" ]]; then
+        return
+    fi
+
     zfs destroy -r "$DATASET_NAME" > /dev/null 2> /dev/null || true
+}
+
+function deleteDiskNamespace {
+    local TMP_MACHINE_NAME="$1"
+
+    for ZVOL_ARCHETYPE in $ZFS_ZVOL_ARCHITECTURES; do
+        local MB_DATASET_PARENT_FOR_ARCHETYPE="VM_ZPOOL_DATASET_PARENT_FOR_${ZVOL_ARCHETYPE}"
+        local DATASET_PARENT="${!MB_DATASET_PARENT_FOR_ARCHETYPE}"
+
+        if [[ -n "$DATASET_PARENT" ]]; then
+            zfs destroy -r "$DATASET_PARENT/$TMP_MACHINE_NAME" > /dev/null 2> /dev/null || true
+        fi
+    done
 }
 
 function cloneDisk {
@@ -63,8 +93,8 @@ function cloneDisk {
     local DISK_NAME="$3"
     local ZVOL_ARCHETYPE="${4:-$ZFS_ZVOL_ARCH_GENERIC}"
 
-    local ORIGINAL_DATASET_NAME=`getZfsDatasetPath "$ORIGINAL_MACHINE_NAME" "$DISK_NAME"`
-    local NEW_DATASET_NAME=`getZfsDatasetPath "$CLONE_MACHINE_NAME" "$DISK_NAME"`
+    local ORIGINAL_DATASET_NAME=`getZfsDatasetPath "$ORIGINAL_MACHINE_NAME" "$DISK_NAME" "$ZVOL_ARCHETYPE"`
+    local NEW_DATASET_NAME=`getZfsDatasetPath "$CLONE_MACHINE_NAME" "$DISK_NAME" "$ZVOL_ARCHETYPE"`
     local NEW_DATASET_PARENT_PATH="${NEW_DATASET_NAME%/*}"
 
     local SNAPSHOT_NAME="$ORIGINAL_DATASET_NAME@sanagercloning"

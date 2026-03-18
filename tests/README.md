@@ -9,6 +9,7 @@ Make sure you have ~50GB of free disk space before running the tests.
 # install prerequisities
 sudo -E ./systemInstall.sh lowLevel pkg_sanager_tests_prerequisities
 
+./tests/scripts/initTests.sh --zfsDataset /my/path/to/hdd/dataset --zfsDatasetOs /my/path/to/nvmeOrSdd/dataset
 ./tests/scripts/vmInstallTests.sh
 
 # alternatively log everything into file
