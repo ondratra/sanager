@@ -1,7 +1,8 @@
 function getZfsDatasetPath {
-    local TMP_MACHINE_NAME="$1"
-    local DISK_NAME="$2"
-    local ZVOL_ARCHETYPE="$3"
+    local IS_FORK_PATH=$1
+    local TMP_MACHINE_NAME="$2"
+    local DISK_NAME="$3"
+    local ZVOL_ARCHETYPE="$4"
 
     local DATASET_NAME_SUFFIX="$TMP_MACHINE_NAME/$DISK_NAME"
 
@@ -11,8 +12,10 @@ function getZfsDatasetPath {
         return 0
     fi
 
-    local MB_DATASET_PARENT_FOR_ARCHETYPE="VM_ZPOOL_DATASET_PARENT_FOR_${ZVOL_ARCHETYPE}"
-    local DATASET_PARENT="${!MB_DATASET_PARENT_FOR_ARCHETYPE:-$VM_ZPOOL_DATASET_PARENT}"
+    local FALLBACK_PARENT_PATH="VM_ZPOOL_DATASET_${IS_FORK_PATH:+"FORKS_"}PARENT"
+
+    local MB_DATASET_PARENT_FOR_ARCHETYPE="${FALLBACK_PARENT_PATH}_FOR_${ZVOL_ARCHETYPE}"
+    local DATASET_PARENT="${!MB_DATASET_PARENT_FOR_ARCHETYPE:-${!FALLBACK_PARENT_PATH:-$VM_ZPOOL_DATASET_PARENT}}"
 
     echo "$DATASET_PARENT/$DATASET_NAME_SUFFIX"
 }
@@ -41,7 +44,7 @@ function createDisk {
         exit 1
     fi
 
-    local DATASET_NAME=`getZfsDatasetPath "$TMP_MACHINE_NAME" "$DISK_NAME" "$ZVOL_ARCHETYPE"`
+    local DATASET_NAME=`getZfsDatasetPath "" "$TMP_MACHINE_NAME" "$DISK_NAME" "$ZVOL_ARCHETYPE"`
 
     # destroy already existing dataset (if exist)
     deleteDisk "$TMP_MACHINE_NAME" "$DISK_NAME"
@@ -65,7 +68,7 @@ function deleteDisk {
     local TMP_MACHINE_NAME="$1"
     local DISK_NAME="$2"
 
-    local DATASET_NAME=`getZfsDatasetPath "$TMP_MACHINE_NAME" "$DISK_NAME"`
+    local DATASET_NAME=`getZfsDatasetPath "" "$TMP_MACHINE_NAME" "$DISK_NAME"`
 
     if [[ -z "$DATASET_NAME" ]]; then
         return
@@ -88,13 +91,14 @@ function deleteDiskNamespace {
 }
 
 function cloneDisk {
-    local ORIGINAL_MACHINE_NAME="$1"
-    local CLONE_MACHINE_NAME="$2"
-    local DISK_NAME="$3"
-    local ZVOL_ARCHETYPE="${4:-$ZFS_ZVOL_ARCH_GENERIC}"
+    local IS_CREATING_FORK="$1"
+    local ORIGINAL_MACHINE_NAME="$2"
+    local CLONE_MACHINE_NAME="$3"
+    local DISK_NAME="$4"
+    local ZVOL_ARCHETYPE="${5:-$ZFS_ZVOL_ARCH_GENERIC}"
 
-    local ORIGINAL_DATASET_NAME=`getZfsDatasetPath "$ORIGINAL_MACHINE_NAME" "$DISK_NAME" "$ZVOL_ARCHETYPE"`
-    local NEW_DATASET_NAME=`getZfsDatasetPath "$CLONE_MACHINE_NAME" "$DISK_NAME" "$ZVOL_ARCHETYPE"`
+    local ORIGINAL_DATASET_NAME=`getZfsDatasetPath "" "$ORIGINAL_MACHINE_NAME" "$DISK_NAME" "$ZVOL_ARCHETYPE"`
+    local NEW_DATASET_NAME=`getZfsDatasetPath "$IS_CREATING_FORK" "$CLONE_MACHINE_NAME" "$DISK_NAME" "$ZVOL_ARCHETYPE"`
     local NEW_DATASET_PARENT_PATH="${NEW_DATASET_NAME%/*}"
 
     local SNAPSHOT_NAME="$ORIGINAL_DATASET_NAME@sanagercloning"

@@ -129,21 +129,18 @@ function waitForOsInstall {
 function cloneVM {
     local ORIGINAL_NAME="$1"
     local CLONE_NAME="$2"
-    local TARGET_DIR="${3:-$VIRTUAL_MACHINES_DIR}"
+    local IS_CREATING_FORK="$3"
     local VM_TYPE="${4:-$ZFS_ZVOL_ARCH_GENERIC}"
 
     log "Cloning VM $ORIGINAL_NAME -> $CLONE_NAME"
 
     # clear previous virtual machine if it exists
-    rm -rf "$TARGET_DIR/$CLONE_NAME"
+    deleteVm "$CLONE_NAME"
 
     local MAC_ADDRESS=`reserveDhcpIpForVm "$CLONE_NAME" "$VM_NETWORK_NAME" "$VM_NETWORK_PREFIX"`
 
-    local SYSTEM_DISK_PATH=`cloneDisk "$ORIGINAL_NAME" "$CLONE_NAME" "$VM_MACHINE_DISK_NAME_SYSTEM" "$ZFS_ZVOL_ARCH_OS"`
-    local DATA_DISK_PATH=`cloneDisk "$ORIGINAL_NAME" "$CLONE_NAME" "$VM_MACHINE_DISK_NAME_DATA" "$VM_TYPE"`
-
-    # ensure disk folder exists
-    mkdir -p "$TARGET_DIR/$CLONE_NAME"
+    local SYSTEM_DISK_PATH=`cloneDisk "$IS_CREATING_FORK" "$ORIGINAL_NAME" "$CLONE_NAME" "$VM_MACHINE_DISK_NAME_SYSTEM" "$ZFS_ZVOL_ARCH_OS"`
+    local DATA_DISK_PATH=`cloneDisk "$IS_CREATING_FORK" "$ORIGINAL_NAME" "$CLONE_NAME" "$VM_MACHINE_DISK_NAME_DATA" "$VM_TYPE"`
 
     virt-clone \
         --original "$ORIGINAL_NAME" \
@@ -158,17 +155,15 @@ function cloneVM {
 function forkVm {
     local ORIGINAL_NAME="$1"
     local CLONE_NAME="$2"
-    local TARGET_DIR_OR_ZFS_ZVOL="$3"
+    local VM_TYPE="$3"
 
-    # NOTE: due to missing group/tag feature in virt-manager, let's prefix VM name to distinguish it
-    local PREFIXED_CLONE_NAME="fork_$CLONE_NAME"
-    local NEW_IP=`generateIpForVm "$PREFIXED_CLONE_NAME" "$VM_NETWORK_PREFIX"`
+    local NEW_IP=`generateIpForVm "$CLONE_NAME" "$VM_NETWORK_PREFIX"`
 
-    cloneVM "$ORIGINAL_NAME" "$PREFIXED_CLONE_NAME" "$TARGET_DIR_OR_ZFS_ZVOL"
+    cloneVM "$ORIGINAL_NAME" "$CLONE_NAME" "true" "$VM_TYPE"
 
-    tagVm "$PREFIXED_CLONE_NAME" "$VM_GROUP_FORKS"
+    tagVm "$CLONE_NAME" "$VM_GROUP_FORKS"
 
-    echo "Forking $ORIGINAL_NAME -> $PREFIXED_CLONE_NAME; IP $NEW_IP" >> "$TEST_DIR/forks.log"
+    echo "Forking $ORIGINAL_NAME -> $CLONE_NAME; IP $NEW_IP" >> "$TEST_DIR/forks.log"
 }
 
 function connectVMs {

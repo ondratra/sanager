@@ -125,7 +125,7 @@ function buildOnTopOfVm {
     fi
 
     # save result VM
-    cloneVM "$MACHINE_NAME_TEMPORARY" $NEW_VM_NAME
+    cloneVM "$MACHINE_NAME_TEMPORARY" "$NEW_VM_NAME"
 
     # delete temporary VM
     deleteVm "$MACHINE_NAME_TEMPORARY"
