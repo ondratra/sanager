@@ -29,7 +29,7 @@ function mixin_physicalHardwareTerminal_virtualization {
     fi
 
     #pkg_virtualbox # TODO: temporary disabled because package is not available in Debian 13 Trixie
-    pkg_sanager_tests_prerequisities
+    pkg_sanagerTestsPrerequisities
 }
 
 function mixin_physicalHardwareTerminal_disks {

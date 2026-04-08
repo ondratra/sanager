@@ -512,7 +512,7 @@ function pkg_virtualbox {
     aptGetInstall $PACKAGES
 }
 
-function pkg_sanager_tests_prerequisities {
+function pkg_sanagerTestsPrerequisities {
     function useSystemVirt {
         # TODO: prevent duplicates + abstract adding of directives into bashrc
         echo "export LIBVIRT_DEFAULT_URI=qemu:///system" >> ~/.bashrc
@@ -1101,6 +1101,12 @@ function pkg_aiCoding {
     # TODO:
     # - gsd (https://github.com/glittercowboy/get-shit-done)
     # - Shotgun (https://github.com/shotgun-sh/shotgun)
+}
+
+function pkg_benchmarkingPrerequisities {
+    local PACKAGES=`listBenchmarkingDependencies`
+
+    aptGetInstall $PACKAGES
 }
 
 # TODO:

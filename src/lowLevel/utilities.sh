@@ -82,7 +82,7 @@ function dpkgDownloadAndInstall {
 
 # returns 0 when installed, 1 otherwise
 function isInstalled {
-    dpkg -s $1 > /dev/null
+    dpkg -s $1:amd64 > /dev/null
     local NOT_INSTALLED=$?
     if [[ "$NOT_INSTALLED" == "0" ]]; then
         return 0
@@ -287,6 +287,15 @@ function listTestingDependencies {
     local ISO_CREATION="xorriso isolinux fuseiso"
 
     echo $VIRTUALIZATION $HOST_TO_GUEST_CONNECTION $ISO_CREATION
+}
+
+function listBenchmarkingDependencies {
+    local MEMORY="memtester mbw"
+    local CPU="sysbench"
+    local DISKS="fio"
+    local GPU="glmark2-drm hashcat pocl-opencl-icd ocl-icd-libopencl1 clpeak"
+
+    echo $MEMORY $CPU $DISKS $GPU
 }
 
 function ensureVMNetworksExist {

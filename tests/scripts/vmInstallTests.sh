@@ -74,14 +74,8 @@ requireTestConfigInit
 source "$TEST_DIR/customConfig.sh"
 source "$SCRIPT_DIR/../misc/disks.sh"
 
-# these packages should be installed (possibly via `pkg_sanager_tests_prerequisities`)
+# these packages should be installed (possibly via `pkg_sanagerTestsPrerequisities`)
 REQUIRED_PACKAGES=`listTestingDependencies`
-
-for PACKAGE in $REQUIRED_PACKAGES; do
-    if ! isInstalled $PACKAGE; then
-        log "$PACKAGE package is not installed but it's required"
-        exit 1
-    fi
-done
+ensurePackagesAreInstalled $REQUIRED_PACKAGES
 
 main
