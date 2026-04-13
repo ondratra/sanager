@@ -66,6 +66,7 @@ function benchmarkGpu {
 
 function benchmarkDisks {
     # TODO: implement
+    echo ""
     #fio --name=rand-read --rw=randread --bs=4K --size=4G --numjobs=4 --runtime=30 --time_based --iodepth=32 --ioengine=libaio --direct=1
     #fio --name=rand-write --rw=randwrite --bs=4K --size=4G --numjobs=4 --runtime=30 --time_based --iodepth=32 --ioengine=libaio --direct=1
     #fio --name=mixed --rw=randrw --rwmixread=70 --bs=4K --size=4G --numjobs=4 --runtime=30 --time_based --iodepth=32 --ioengine=libaio --direct=1

@@ -412,10 +412,9 @@ function ensurePackagesAreInstalled {
     local REQUIRED_PACKAGES=$@
 
     for PACKAGE in $REQUIRED_PACKAGES; do
-        isInstalled $PACKAGE
         if ! isInstalled $PACKAGE 2> /dev/null; then
             log "Package '$PACKAGE' is not installed but it's required"
-            exit 1
+            return 1
         fi
     done
 }

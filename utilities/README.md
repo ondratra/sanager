@@ -271,7 +271,7 @@ zfs create \
   -o primarycache=metadata \
   -o sync=disabled \
   -o logbias=throughput \
-  $MY_ZFS_POOL_NAME/zvols/myZvolName
+  $MY_ZFS_POOL_NAME/myPath/myDatasetName
 ```
 
 #### ZFS network share over NFS

@@ -16,9 +16,8 @@ source "$SCRIPT_DIR/../misc/utils.sh"
 source "$SCRIPT_DIR/../benchmarking/systeminfo.sh"
 source "$SCRIPT_DIR/../benchmarking/benchmark.sh"
 
-# these packages should be installed (possibly via `pkg_benchmarkingPrerequisities`)
 REQUIRED_PACKAGES=`listBenchmarkingDependencies`
-ensurePackagesAreInstalled $REQUIRED_PACKAGES
+ensurePackagesAreInstalled $REQUIRED_PACKAGES || { log "Prerequisities missing! Install them with pkg_benchmarkingPrerequisities"; exit 1; }
 
 function main {
    echo "Collecting system info"

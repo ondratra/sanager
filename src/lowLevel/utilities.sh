@@ -82,9 +82,9 @@ function dpkgDownloadAndInstall {
 
 # returns 0 when installed, 1 otherwise
 function isInstalled {
-    dpkg -s $1:amd64 > /dev/null
-    local NOT_INSTALLED=$?
-    if [[ "$NOT_INSTALLED" == "0" ]]; then
+    local PACKAGE="$1"
+
+    if dpkg-query -W -f='${Status}' "$PACKAGE" 2>/dev/null | grep -q "ok installed"; then
         return 0
     fi
     return 1
@@ -282,7 +282,7 @@ function isExtrepoRepositoryEnabled {
 }
 
 function listTestingDependencies {
-    local VIRTUALIZATION="qemu-system-x86 libvirt-daemon-system libvirt-clients virtinst ovmf libguestfs-tools"
+    local VIRTUALIZATION="qemu-system-x86 libvirt-daemon-system libvirt-clients virt-install ovmf libguestfs-tools"
     local HOST_TO_GUEST_CONNECTION="curlftpfs openssh-client rsync sshpass"
     local ISO_CREATION="xorriso isolinux fuseiso"
 

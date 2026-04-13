@@ -67,15 +67,14 @@ function buildUnstableBasedVms {
     # unstable-based tests
     cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" "$MACHINE_NAME_UNSTABLE_AI_CORE" testSanagerInstallAiCore
     cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" "$MACHINE_NAME_UNSTABLE_PC" testSanagerInstallPc
-    cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" "$MACHINE_NAME_UNSTABLE_PHYSICAL_PC" testSanagerInstallPhysicalPc
+    cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_PC" "$MACHINE_NAME_UNSTABLE_PHYSICAL_PC" testSanagerInstallPhysicalPc
 }
 
 requireTestConfigInit
 source "$TEST_DIR/customConfig.sh"
 source "$SCRIPT_DIR/../misc/disks.sh"
 
-# these packages should be installed (possibly via `pkg_sanagerTestsPrerequisities`)
 REQUIRED_PACKAGES=`listTestingDependencies`
-ensurePackagesAreInstalled $REQUIRED_PACKAGES
+ensurePackagesAreInstalled $REQUIRED_PACKAGES || { log "Prerequisities missing! Install them with pkg_sanagerTestsPrerequisities"; exit 1; }
 
 main
