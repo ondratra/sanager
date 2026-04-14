@@ -130,7 +130,11 @@ Create 2 disks mirror pool. Use either `by-partuuid` or `by-id/wwn...` identifie
 ```sh
 MY_ZFS_POOL_NAME=myPool
 
-sudo zpool create $MY_ZFS_POOL_NAME mirror \
+sudo zpool create \
+   -o ashift=12 \
+   -O compression=lz4 \
+   -O atime=off \
+    $MY_ZFS_POOL_NAME mirror \
     /dev/disk/by-partuuid/xxx \
     /dev/disk/by-partuuid/yyy
 
