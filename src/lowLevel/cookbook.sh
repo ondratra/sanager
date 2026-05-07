@@ -199,6 +199,27 @@ function pkg_rust {
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sudo -u $SCRIPT_EXECUTING_USER sh -s -- -y
 }
 
+function pkg_solidity_foundry {
+    local BIN_URL="https://raw.githubusercontent.com/foundry-rs/foundry/HEAD/foundryup/foundryup"
+    local INSTALL_DIR="/opt/foundryup"
+    local INSTALL_FILE="$INSTALL_DIR/foundryup"
+
+    if [ -f "$INSTALL_FILE" ]; then
+        return
+    fi
+
+    mkdir -p "$INSTALL_DIR"
+    mkdir -p ~/.foundry/bin
+    mkdir -p ~/.foundry/share/man/man1
+    chown -R "$SCRIPT_EXECUTING_USER:$SCRIPT_EXECUTING_USER" ~/.foundry
+
+    wgetDownload --directory-prefix "$INSTALL_DIR" "$BIN_URL"
+    chmod +x "$INSTALL_FILE"
+
+    echo "export PATH=\$PATH:$INSTALL_DIR" >> ~/.bashrc
+    echo "export PATH=\$PATH:~/.foundry/bin" >> ~/.bashrc
+}
+
 function pkg_yarn {
     local PACKAGES="yarnpkg"
 
