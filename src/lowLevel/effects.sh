@@ -196,3 +196,10 @@ function effect_addPathToUserBinaries {
 
     source ~/.bashrc
 }
+
+function effect_setupSystemdSystemSettings {
+    sed -i \
+        -e 's/^#*DefaultTimeoutStartSec=.*/DefaultTimeoutStartSec=10s/' \
+        -e 's/^#*DefaultTimeoutStopSec=.*/DefaultTimeoutStopSec=10s/' \
+        /etc/systemd/system.conf
+}

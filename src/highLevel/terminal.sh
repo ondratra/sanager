@@ -4,6 +4,7 @@ function runHighLevel {
 
 function terminal_all {
     effect_divertCustomizedEtcConfigs
+    effect_setupSystemdSystemSettings
 
     pkg_newestLinuxKernel
     pkg_essential
