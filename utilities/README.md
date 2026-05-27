@@ -134,9 +134,9 @@ sudo zpool create \
    -o ashift=12 \
    -O compression=lz4 \
    -O atime=off \
-    $MY_ZFS_POOL_NAME mirror \
-    /dev/disk/by-partuuid/xxx \
-    /dev/disk/by-partuuid/yyy
+   $MY_ZFS_POOL_NAME mirror \
+   /dev/disk/by-id/xxx \
+   /dev/disk/by-id/yyy
 
 # check status
 zpool status
