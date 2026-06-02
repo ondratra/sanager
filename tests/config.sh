@@ -68,9 +68,10 @@ MACHINE_NAME_STABLE_HOME_SERVER_TERMINAL="Sanager_Testing_Stable_HomeServerTermi
 MACHINE_NAME_STABLE_HOME_SERVER_GRAPHICAL="Sanager_Testing_Stable_HomeServerGraphical"
 MACHINE_NAME_STABLE_CRYPTO_VISUAL="Sanager_Testing_Stable_CryptoVisual"
 MACHINE_NAME_STABLE_GENERAL_USE_VPS="Sanager_Testing_Stable_GeneralUseVps"
+MACHINE_NAME_STABLE_AI_SERVER="Sanager_Testing_Stable_AiServer"
+MACHINE_NAME_STABLE_AI_CLIENT="Sanager_Testing_Stable_AiClient"
 MACHINE_NAME_UNSTABLE_PC="Sanager_Testing_Unstable_Pc"
 MACHINE_NAME_UNSTABLE_PHYSICAL_PC="Sanager_Testing_Unstable_PhysicalPc"
-MACHINE_NAME_UNSTABLE_AI_CORE="Sanager_Testing_Unstable_AiCore"
 
 ##################### VM+ZFS disks settings ####################################
 

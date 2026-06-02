@@ -1088,7 +1088,44 @@ function pkg_solana {
     ## export PATH=~/.local/share/solana/install/active_release/bin:$PATH
 }
 
-function pkg_aiCoding {
+function pkg_aiServers {
+    if ! isVirtualMachine; then
+        printMsg "Trying to install ai coding tools outside of virtual machine. For security reasons, installing only inside of VM is allowed."
+        return
+    fi
+
+    function installOllama {
+        local INSTALL_FILE="ollama-linux-amd64"
+        local PACKAGE_URL="https://ollama.com/download/$INSTALL_FILE.tar.zst"
+        local OPT_DIR="$SANAGER_INSTALL_DIR/ollama"
+        local LOCAL_FILE_PATH="$OPT_DIR/$INSTALL_FILE"
+        local INSTALL_DIR="/opt/ollama"
+        local BIN_DIR="$INSTALL_DIR/bin"
+
+        if [ -f "$OPT_DIR/$INSTALL_FILE" ]; then
+            return
+        fi
+
+        mkdir "$OPT_DIR" -p
+        mkdir "$INSTALL_DIR" -p
+        wgetDownload "$PACKAGE_URL" -O "$LOCAL_FILE_PATH"
+
+        tar x -C "$INSTALL_DIR" -f "$LOCAL_FILE_PATH"
+
+        echo "export PATH=\$PATH:$BIN_DIR" >> ~/.bashrc
+    }
+
+    function installOpenWebUi {
+        mkdir -p "$SANAGER_DOCKER_SERVICES"
+
+        cp "$SANAGER_DATA_SOURCE_DOCKER_SERVICES_DIR/docker-compose.openWebUi.yaml" "$SANAGER_DOCKER_SERVICES"
+    }
+
+    installOllama
+    installOpenWebUi
+}
+
+function pkg_aiCodingCli {
     if ! isVirtualMachine; then
         printMsg "Trying to install ai coding tools outside of virtual machine. For security reasons, installing only inside of VM is allowed."
         return
@@ -1116,42 +1153,8 @@ function pkg_aiCoding {
         docker pull agent0ai/agent-zero:latest
     }
 
-    function installOllama {
-        local INSTALL_FILE="ollama-linux-amd64"
-        local PACKAGE_URL="https://ollama.com/download/$INSTALL_FILE.tar.zst"
-        local OPT_DIR="$SANAGER_INSTALL_DIR/ollama"
-        local LOCAL_FILE_PATH="$OPT_DIR/$INSTALL_FILE"
-        local INSTALL_DIR="/opt/ollama"
-        local BIN_DIR="$INSTALL_DIR/bin"
-
-        if [ -f "$OPT_DIR/$INSTALL_FILE" ]; then
-            return
-        fi
-
-        mkdir "$OPT_DIR" -p
-        mkdir "$INSTALL_DIR" -p
-        wgetDownload "$PACKAGE_URL" -O "$LOCAL_FILE_PATH"
-
-        tar x -C "$INSTALL_DIR" -f "$LOCAL_FILE_PATH"
-
-        echo "export PATH=\$PATH:$BIN_DIR" >> ~/.bashrc
-    }
-
-    #function installOllamaModels {
-    #    ollama pull gemma4:e4b
-    #}
-
-    function installOpenWebUi {
-        mkdir -p "$SANAGER_DOCKER_SERVICES"
-
-        cp "$SANAGER_DATA_SOURCE_DOCKER_SERVICES_DIR/docker-compose.openWebUi.yaml" "$SANAGER_DOCKER_SERVICES"
-    }
-
     installClaudeCode
     installAgentZero
-    installOllama
-    #installOllamaModels
-    installOpenWebUi
 
     # TODO:
     # - gsd (https://github.com/glittercowboy/get-shit-done)

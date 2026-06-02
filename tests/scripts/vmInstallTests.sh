@@ -56,6 +56,8 @@ function buildStableBasedVms {
     cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_GRAPHICAL_BASE" "$MACHINE_NAME_STABLE_HOME_SERVER_GRAPHICAL" testSanagerInstallHomeServerGraphical
     cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_GRAPHICAL_BASE" "$MACHINE_NAME_STABLE_CRYPTO_VISUAL" testSanagerInstallCryptoVisual
     cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_TERMINAL_BASE" "$MACHINE_NAME_STABLE_GENERAL_USE_VPS" testSanagerInstallGeneralUseVps
+    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_TERMINAL_BASE" "$MACHINE_NAME_STABLE_AI_SERVER" testSanagerInstallAiServer
+    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_GRAPHICAL_BASE" "$MACHINE_NAME_STABLE_AI_CLIENT" testSanagerInstallAiClient
 }
 
 function buildUnstableBasedVms {
@@ -65,7 +67,6 @@ function buildUnstableBasedVms {
     cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_TERMINAL_BASE" "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" testSanagerInstallGraphicalDesktop
 
     # unstable-based tests
-    cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" "$MACHINE_NAME_UNSTABLE_AI_CORE" testSanagerInstallAiCore
     cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_GRAPHICAL_BASE" "$MACHINE_NAME_UNSTABLE_PC" testSanagerInstallPc
     cachedBuildOnTopOfVm "$MACHINE_NAME_UNSTABLE_PC" "$MACHINE_NAME_UNSTABLE_PHYSICAL_PC" testSanagerInstallPhysicalPc
 }

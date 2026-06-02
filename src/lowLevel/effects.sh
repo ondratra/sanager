@@ -203,3 +203,9 @@ function effect_setupSystemdSystemSettings {
         -e 's/^#*DefaultTimeoutStopSec=.*/DefaultTimeoutStopSec=10s/' \
         /etc/systemd/system.conf
 }
+
+function effect_installOllamaModels {
+    echo "TODO: auto ollama download needs option to download from local sources to prevent timely network download"
+
+    #ollama pull gemma4:e4b
+}

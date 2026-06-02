@@ -91,10 +91,16 @@ function testSanagerInstallGeneralUseVps {
     sanagerStateInstall "$TMP_MACHINE_NAME" "General Use VPS" generalUseVps
 }
 
-function testSanagerInstallAiCore {
+function testSanagerInstallAiServer {
     local TMP_MACHINE_NAME=$1
 
-    sanagerStateInstall "$TMP_MACHINE_NAME" "AI core" aiCore
+    sanagerStateInstall "$TMP_MACHINE_NAME" "AI server" aiServer
+}
+
+function testSanagerInstallAiClient {
+    local TMP_MACHINE_NAME=$1
+
+    sanagerStateInstall "$TMP_MACHINE_NAME" "AI client" aiClient
 }
 
 function sanagerStateInstall {

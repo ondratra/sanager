@@ -1,27 +1,23 @@
 source $SCRIPT_DIR/src/highLevel/graphicalDesktop.sh
+source $SCRIPT_DIR/src/highLevel/aiServer.sh
 
 function runHighLevel {
     graphicalDesktop_all
 
-    aiCore_graphicalTooling
-    aiCore_codingTools
+    aiClient_codingCli
+    aiClient_graphicalTooling
 
     effect_restoreMateConfig # restore config (there might be icons for newly installed programs)
 }
 
-function aiCore_graphicalTooling {
+function aiClient_codingCli {
+    pkg_docker
+    pkg_aiCodingCli
+}
+
+function aiClient_graphicalTooling {
     pkg_versioningAndToolsGui
     pkg_sublimeText
     pkg_kittyTerminal
     pkg_obsidian
-}
-
-function aiCore_codingTools {
-    pkg_nodejs
-    pkg_npm
-    pkg_rust
-    pkg_yarn
-    pkg_docker
-
-    pkg_aiCoding
 }
