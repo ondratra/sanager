@@ -11,6 +11,7 @@ function pc_all {
 
     pc_essentials
     pc_userRobust
+    pkg_webBrowsers
     pc_work
     pc_workInstantMessaging
     pc_fun
