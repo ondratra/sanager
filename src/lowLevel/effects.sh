@@ -18,6 +18,7 @@ function effect_divertCustomizedEtcConfigs {
     }
 
     divertConfig /etc/bash.bashrc
+    divertConfig /etc/systemd/system.conf
 }
 
 # enables bash history search by PageUp and PageDown keys
