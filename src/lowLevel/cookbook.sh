@@ -622,7 +622,7 @@ function pkg_multimedia_necessary {
 }
 
 function pkg_newestLinuxKernel {
-    local KERNEL_VERSION=$(is_debian_sid && echo "7.0.9+deb14" || echo "6.12.74+deb13+1")
+    local KERNEL_VERSION=$(is_debian_sid && echo "7.0.10+deb14" || echo "6.12.90+deb13")
     local PACKAGES="linux-image-$KERNEL_VERSION-amd64 linux-headers-$KERNEL_VERSION-amd64"
 
     aptGetInstall $PACKAGES
