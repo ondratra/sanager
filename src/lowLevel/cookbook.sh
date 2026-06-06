@@ -286,7 +286,7 @@ function pkg_lamp {
 
 function pkg_mongodb {
     local PACKAGES="mongodb-org"
-    local REPO_ROW="deb http://repo.mongodb.org/apt/debian bookworm/mongodb-org/8.0 main"
+    local REPO_ROW="deb https://repo.mongodb.org/apt/debian bookworm/mongodb-org/8.0 main"
     local REPO_KEY_URL="https://www.mongodb.org/static/pgp/server-8.0.asc"
 
     addAptRepository mongodb "$REPO_ROW" $REPO_KEY_URL
