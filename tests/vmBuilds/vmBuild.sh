@@ -14,9 +14,11 @@ function createTestingVm {
     local MAC_ADDRESS=`reserveDhcpIpForVm "$TMP_MACHINE_NAME" "$VM_NETWORK_NAME" "$VM_NETWORK_PREFIX"`
 
     local GRAPHICS_SETTINGS
+    local GRAPHICS_SETTINGS_EXTRA
     local VIDEO_SETTINGS
     if [ -c /dev/dri/renderD128 ]; then
-        GRAPHICS_SETTINGS="spice,listen=none,gl.enable=yes,gl.rendernode=/dev/dri/renderD128"
+        GRAPHICS_SETTINGS="egl-headless,gl.rendernode=/dev/dri/renderD128"
+        GRAPHICS_SETTINGS_EXTRA="spice,listen=127.0.0.1,image.compression=off"
         VIDEO_SETTINGS="virtio,accel3d=yes"
     else
         GRAPHICS_SETTINGS="spice,listen=127.0.0.1"
@@ -32,6 +34,7 @@ function createTestingVm {
         --machine q35 \
         --boot uefi \
         --graphics "$GRAPHICS_SETTINGS" \
+        ${GRAPHICS_SETTINGS_EXTRA:+--graphics ${GRAPHICS_SETTINGS_EXTRA}} \
         --video "$VIDEO_SETTINGS" \
         --network network=$VM_NETWORK_NAME,model=virtio \
         --mac "$MAC_ADDRESS" \
