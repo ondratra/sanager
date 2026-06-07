@@ -688,16 +688,13 @@ function pkg_networkFileShareClient {
 #}
 
 # slack not supported for now due to obsolete repo signature (SHA1)
-#function slack {
-#    PACKAGES="slack-desktop"
-#    REPO_ROW="deb https://packagecloud.io/slacktechnologies/slack/debian/ jessie main"
-#    REPO_KEY_URL="https://slack.com/gpg/slack_pubkey_20210901.gpg"
-#    #REPO_KEY_URL=`gpgKeyUrlFromKeyring pgpkeys.mit.edu C6ABDCF64DB9A0B2` # TODO - automatically search for online keyservers
-#    REPO_KEY_URL=`gpgKeyUrlFromKeyring keyserver.ubuntu.com C6ABDCF64DB9A0B2`
-#
-#    #addAptRepository slack "$REPO_ROW" $REPO_KEY_URL
-#    #aptGetInstall $PACKAGES
-#}
+function pkg_slack {
+    local LATEST_VERSION="4.49.89"
+    local DEB_FILE="slack-desktop-${LATEST_VERSION}-amd64.deb"
+    local PACKAGE_URL="https://downloads.slack-edge.com/desktop-releases/linux/x64/$LATEST_VERSION/$DEB_FILE"
+
+    dpkgDownloadAndInstall slack "$DEB_FILE" "$PACKAGE_URL"
+}
 
 function pkg_signal {
     local PACKAGES="signal-desktop"

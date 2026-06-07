@@ -73,7 +73,7 @@ function pc_work {
 
 function pc_workInstantMessaging {
     #pkg_keybase
-    #pkg_slack
+    pkg_slack
     pkg_discord
     pkg_signal
     pkg_telegram
