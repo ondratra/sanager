@@ -286,11 +286,16 @@ zfs create \
 Ensure `pkg_networkFileShare` is installed. Then setup the sharing on server:
 
 ```sh
+# start sharing
 zfs set sharenfs="rw=@192.168.0.0/16,all_squash,anonuid=1000,anongid=1000" $MY_ZFS_POOL_NAME
-zfs share $MY_ZFS_POOL_NAME
+# zfs share $MY_ZFS_POOL_NAME - likely no longer needed
 
 # optional - check mountpoint
 zfs get mountpoint $MY_ZFS_POOL_NAME
+
+# stop sharing
+zfs set sharenfs=none $MY_ZFS_POOL_NAME
+# zfs unshare $MY_ZFS_POOL_NAME - likely no longer needed
 ```
 
 On client connect like this: (fill in server's IP)
