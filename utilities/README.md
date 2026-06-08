@@ -131,12 +131,12 @@ Create 2 disks mirror pool. Use either `by-partuuid` or `by-id/wwn...` identifie
 MY_ZFS_POOL_NAME=myPool
 
 sudo zpool create \
-   -o ashift=12 \
-   -O compression=lz4 \
-   -O atime=off \
-   $MY_ZFS_POOL_NAME mirror \
-   /dev/disk/by-id/xxx \
-   /dev/disk/by-id/yyy
+    -o ashift=12 \
+    -O compression=lz4 \
+    -O atime=off \
+    $MY_ZFS_POOL_NAME mirror \
+    /dev/disk/by-id/xxx \
+    /dev/disk/by-id/yyy
 
 # check status
 zpool status
@@ -160,10 +160,14 @@ zfs get mountpoint
 
 Create 1 disk backup pool:
 ```sh
-MY_ZFS_BACKUP_POOL_NAME=myBackupPool
+MY_ZFS_POOL_NAME=myPool
 
-sudo zpool create $MY_ZFS_BACKUP_POOL_NAME
-sudo zpool set compression=lz4 $MY_ZFS_BACKUP_POOL_NAME
+sudo zpool create \
+    -o ashift=12 \
+    -O compression=lz4 \
+    -O atime=off \
+    $MY_ZFS_POOL_NAME \
+    /dev/disk/by-id/xxx
 ```
 
 Creating backup
