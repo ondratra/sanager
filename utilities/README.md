@@ -14,6 +14,9 @@ mogrify -strip ./*.jpg
 Generate SSH key
 ```sh
 ssh-keygen -t rsa -b 4096 -f myKey
+
+# if you need to explicitely set user info (key's `comment section`)
+ssh-keygen -t rsa -b 4096 -f myKey -C "myuser@myhost"
 ```
 
 Connect to SSH agent. Use this, for example, when `ssh-add` is needed in remote server (you're ssh-ed into).
