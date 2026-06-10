@@ -1,7 +1,7 @@
 source $SCRIPT_DIR/src/highLevel/graphicalDesktop.sh
 
 function runHighLevel {
-    graphicalDesktop_all
+    terminal_all
 
     aiServer_codingTools
     aiServer_aiServices
