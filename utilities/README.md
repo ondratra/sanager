@@ -66,6 +66,11 @@ See what packages depend on selected package
 apt-cache rdepends my-package-name
 ```
 
+See what manually installed package required selected automatically installed package
+```sh
+apt-cache rdepends --installed my-package-name
+```
+
 List *non-free* packages and packages that rely on *non-free* packages (aka *contrib*)
 ```sh
 aptitude search '~i ?section(non-free)
