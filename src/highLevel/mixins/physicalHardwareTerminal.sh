@@ -18,9 +18,6 @@ function mixin_physicalHardwareTerminal_drivers {
 function mixin_physicalHardwareTerminal_cooling {
     pkg_hardwareSensors
     effect_setupTempSensors
-
-    pkg_corectrl
-    pkg_coolercontrol
 }
 
 function mixin_physicalHardwareTerminal_virtualization {

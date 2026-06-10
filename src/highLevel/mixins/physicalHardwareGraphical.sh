@@ -5,6 +5,7 @@ function mixin_physicalHardwareGraphical_all {
 
     mixin_physicalHardwareGraphical_screen
     mixin_physicalHardwareGraphical_disks
+    mixin_physicalHardwareGraphical_cooling
 }
 
 function mixin_physicalHardwareGraphical_screen {
@@ -14,4 +15,9 @@ function mixin_physicalHardwareGraphical_screen {
 
 function mixin_physicalHardwareGraphical_disks {
     pkg_diskUtilsGui
+}
+
+function mixin_physicalHardwareGraphical_cooling {
+    pkg_corectrl
+    pkg_coolercontrol
 }

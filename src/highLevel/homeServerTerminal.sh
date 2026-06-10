@@ -17,7 +17,7 @@ function homeServerTerminal_all {
 function homeServerTerminal_essentials {
     pkg_sshServer
     pkg_audio
-    pkg_versioningAndToolsGui
+    pkg_versioningAndTools
     pkg_multimedia
 }
 
