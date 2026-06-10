@@ -68,7 +68,7 @@ function pkg_amdCpuDrivers {
 }
 
 function pkg_amdGpuDrivers {
-    local PACKAGES="xserver-xorg-video-ati mesa-va-drivers"
+    local PACKAGES="mesa-va-drivers"
 
     aptGetInstall $PACKAGES
 }
