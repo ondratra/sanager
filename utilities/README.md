@@ -224,6 +224,15 @@ sudo zpool create \
     /dev/disk/by-partuuid/xxx... /dev/disk/by-partuuid/yyy... /dev/disk/by-partuuid/zzz...
 ```
 
+#### Add new disk to mirror
+```sh
+# clear disk if needed
+sudo wipefs -a /dev/disk/by-id/xxx
+sudo sgdisk --zap-all /dev/disk/by-id/xxx
+
+# attach disk to existing pool
+zpool attach $MY_ZFS_POOL_NAME /dev/disk/by-id/yyy /dev/disk/by-id/xxx
+```
 
 #### Automatic backups using Sanoid & Syncoid
 
