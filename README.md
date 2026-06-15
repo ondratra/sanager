@@ -59,11 +59,17 @@ If you need to log system install run command with additional parameter `--verbo
 sudo -E ./systemInstall.sh pc --verbose |& sudo -E tee systemInstall.log
 ```
 
-
 ## Notes
 All scripts are meant to be non-destructive when run repeatedly.
 Script has limited to no error handeling, when problem occurs fix it manually and update script.
 All script are meant to be quite by default; messages to stderr are enabled always.
+
+## Ignoring VM-only installation safeguards
+Some parts of installations are by default installable inside virtual machines only. If you know what you are doing
+and want to ignore these safeguards set `DISABLE_VM_ONLY_PROTECTION` to any non-empty value.
+```
+DISABLE_VM_ONLY_PROTECTION="true" sudo -E ./systemInstall.sh pc
+```
 
 # Troubleshooting
 When somethings goes wrong try to rerun `systemInstall.sh`.

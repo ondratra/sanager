@@ -1086,7 +1086,7 @@ function pkg_solana {
 }
 
 function pkg_aiServers {
-    if ! isVirtualMachine; then
+    if ! isVirtualMachine && [[ $DISABLE_VM_ONLY_PROTECTION == "" ]]; then
         printMsg "Trying to install ai coding tools outside of virtual machine. For security reasons, installing only inside of VM is allowed."
         return
     fi
@@ -1123,7 +1123,7 @@ function pkg_aiServers {
 }
 
 function pkg_aiCodingCli {
-    if ! isVirtualMachine; then
+    if ! isVirtualMachine && [[ $DISABLE_VM_ONLY_PROTECTION == "" ]]; then
         printMsg "Trying to install ai coding tools outside of virtual machine. For security reasons, installing only inside of VM is allowed."
         return
     fi
