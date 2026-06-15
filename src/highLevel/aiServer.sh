@@ -17,7 +17,6 @@ function aiServer_codingTools {
 
 function aiServer_aiServices {
     pkg_aiServers
-    pkg_aiCodingCli
 
     effect_installOllamaModels
 }
