@@ -28,4 +28,5 @@ function homeServerTerminal_zfs {
 function homeServerTerminal_advancedNetworking {
     pkg_syncthing
     pkg_networkFileShareServer
+    pkg_firewall
 }

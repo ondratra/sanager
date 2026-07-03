@@ -26,7 +26,7 @@ function pkg_fonts {
 }
 
 function pkg_networkManager {
-    local PACKAGES="network-manager"
+    local PACKAGES="network-manager bridge-utils"
 
     # see https://wiki.debian.org/NetworkManager#Wired_Networks_are_Unmanaged
     applyPatch /etc/NetworkManager/NetworkManager.conf < $SANAGER_DATA_SOURCE_DIR/misc/NetworkManager.conf.diff || PATCH_PROBLEM=$?
@@ -662,6 +662,10 @@ function pkg_networkFileShareServer {
         PACKAGES="nfs-kernel-server"
 
         aptGetInstall $PACKAGES
+
+        cp -f "$SANAGER_DATA_SOURCE_DIR/nfs/__sanagerConfig.conf" /etc/nfs.conf.d/
+
+        systemctl restart nfs-server
     }
 
     setupZfsNfs
@@ -673,6 +677,27 @@ function pkg_networkFileShareClient {
     aptGetInstall $PACKAGES
 }
 
+function pkg_firewall {
+    function setupInitialRules {
+        ufw default deny incoming
+        ufw default allow outgoing
+
+        # ssh - very permisive to cover all possible networks -> restrict it manually later on
+        ufw allow ssh
+
+        ufw enable
+    }
+
+    PACKAGES="ufw"
+
+    local NEEDS_INIT=$(isInstalled ufw && echo "false" || echo "true")
+
+    aptGetInstall $PACKAGES
+
+    if [[ "$NEEDS_INIT" == "true" ]]; then
+        setupInitialRules
+    fi
+}
 
 # keybase not supported for now due to obsolete repo signature (SHA1)
 #function keybase {

@@ -175,14 +175,21 @@ function connectVMs {
     ensureVMNetworksExist "$VM_CONNECTING_NETWORK_NAME" "$NETWORK_INDEX"
 
     for VM_NAME in "${@:2}"; do
-        echo "Attaching $VM_NAME to $NETWORK_NAME"
-
-        virsh attach-interface --domain "$VM_NAME" \
-          --type network \
-          --source "$NETWORK_NAME" \
-          --model virtio \
-          --config
+        connectVMToNetwork "$VM_NAME" "$NETWORK_NAME"
     done
+}
+
+function connectVMToNetwork {
+    local VM_NAME="$1"
+    local NETWORK_NAME="$2"
+
+    echo "Attaching $VM_NAME to $NETWORK_NAME"
+
+    virsh attach-interface --domain "$VM_NAME" \
+      --type network \
+      --source "$NETWORK_NAME" \
+      --model virtio \
+      --config
 }
 
 function tagVm {
@@ -223,13 +230,7 @@ function reserveDhcpIpForVm {
     local NETWORK_NAME="$2"
     local NETWORK_PREFIX="$3"
 
-    function generateMacForVm() {
-        local TMP_MACHINE_NAME="$1"
-
-        echo "52:54:00:$(echo -n "$TMP_MACHINE_NAME" | md5sum | sed 's/^\(..\)\(..\)\(..\).*/\1:\2:\3/')"
-    }
-
-    local MAC_ADDRESS=`generateMacForVm "$TMP_MACHINE_NAME-$NETWORK_PREFIX"`
+    local MAC_ADDRESS=`generateMacForVm "$TMP_MACHINE_NAME" "$NETWORK_PREFIX"`
     local STATIC_IP=`generateIpForVm "$TMP_MACHINE_NAME" "$NETWORK_PREFIX"`
 
     # delete existing static lease (if any)
@@ -242,6 +243,15 @@ function reserveDhcpIpForVm {
         --live --config >/dev/null 2>/dev/null || true
 
     echo "$MAC_ADDRESS"
+}
+
+function generateMacForVm() {
+    local TMP_MACHINE_NAME="$1"
+    local SALT="$2"
+
+    local VIRTIO_MAC_PREFIX="52:54:00"
+
+    echo "$VIRTIO_MAC_PREFIX:$(echo -n "${TMP_MACHINE_NAME}-${SALT}" | md5sum | sed 's/^\(..\)\(..\)\(..\).*/\1:\2:\3/')"
 }
 
 function clearAllSanagerVms {

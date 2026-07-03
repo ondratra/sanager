@@ -47,6 +47,16 @@ find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
 
 ## Package management
 
+Check if package is installed.
+```sh
+# short, but not working properly for uninstalled packages
+dpkg -s my-package-name
+
+# script friendly
+PACKAGE="my-package-name"
+dpkg-query -W -f='${Status}' "$PACKAGE" 2>/dev/null | grep -q "ok installed";
+```
+
 Get package that installed the inspected file/command
 ```sh
 dpkg -S /usr/bin/vim

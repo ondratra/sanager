@@ -15,7 +15,7 @@ if [[ $# -lt 3 ]]; then
     echo "$0 1 Sanager_MySpecificUseVM Sanager_MyAnotherUseVM"
     echo "NETWORK_INDEX must be unique"
 
-    exit 1;
+    exit 1
 fi
 
 # load configuration
