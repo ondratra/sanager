@@ -541,6 +541,36 @@ function pkg_sanagerTestsPrerequisities {
         source ~/.bashrc
     }
 
+    function prepareNvidiaSupport {
+        function prepareNvidiaSupport_appArmor {
+            install -Dm644 "$SANAGER_DATA_SOURCE_DIR/libvirt/apparmor/libvirt-qemu" /etc/apparmor.d/local/abstractions/libvirt-qemu
+        }
+
+        function prepareNvidiaSupport_qemu {
+            local CONFIG_FILE="/etc/libvirt/qemu.conf"
+
+            # uncomment block if still commented
+            sed -i '/^#cgroup_device_acl = \[/,/^#\]/ s/^#//' "$CONFIG_FILE"
+
+            # insert new entries after the opening line when absent
+            grep -qF '"/dev/nvidia0",' "$CONFIG_FILE" ||
+            sed -i '/^cgroup_device_acl = \[/r /dev/stdin' "$CONFIG_FILE" <<'EOF'
+                "/dev/nvidia0",
+                "/dev/nvidiactl",
+                "/dev/nvidia-modeset",
+                "/dev/nvidia-uvm",
+                "/dev/nvidia-uvm-tools",
+
+EOF
+        }
+
+        prepareNvidiaSupport_appArmor
+        prepareNvidiaSupport_qemu
+
+        systemctl restart libvirtd
+        systemctl reload apparmor
+    }
+
     # see `tests/scripts/vmInstallTests.sh` for up to date list
     local TESTS_DEPENDENCIES=`listTestingDependencies`
 
@@ -550,6 +580,8 @@ function pkg_sanagerTestsPrerequisities {
 
     useSystemVirt
     ensureVMNetworksExist "IsolatedNetwork"
+
+    prepareNvidiaSupport
 }
 
 function pkg_remoteControlGui {
