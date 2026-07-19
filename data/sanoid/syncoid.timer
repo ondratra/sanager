@@ -2,7 +2,7 @@
 Description=Run Syncoid Hourly
 
 [Timer]
-OnCalendar=hourly
+OnCalendar=*:0/15
 Persistent=true
 
 [Install]
