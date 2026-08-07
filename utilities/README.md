@@ -83,8 +83,8 @@ apt-cache rdepends --installed my-package-name
 
 List *non-free* packages and packages that rely on *non-free* packages (aka *contrib*)
 ```sh
-aptitude search '~i ?section(non-free)
-aptitude search '~i ?section(contrib)
+aptitude search '~i ?section(non-free)'
+aptitude search '~i ?section(contrib)'
 ```
 
 ## Disks
