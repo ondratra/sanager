@@ -1221,6 +1221,56 @@ function pkg_benchmarkingPrerequisities {
     aptGetInstall $PACKAGES
 }
 
+function pkg_forgejo {
+    local PACKAGES="forgejo-sqlite"
+    local REPO_ROW="deb https://code.forgejo.org/api/packages/apt/debian stable main"
+    local REPO_KEY_URL="https://code.forgejo.org/api/packages/apt/debian/repository.key"
+    local CONFIG_FILE_PATH=/etc/forgejo/app.ini
+
+    function fillSecretToConfig {
+        local SECRET_NAME="$1"
+        local PLACEHOLDER="__${SECRET_NAME}__"
+        local VALUE=`forgejo generate secret "$SECRET_NAME"`
+        local ESCAPED_VALUE=$(printf '%s' "$VALUE" | sed -e 's/[&/\]/\\&/g')
+
+        sed -i "s/${PLACEHOLDER}/${ESCAPED_VALUE}/" "$CONFIG_FILE_PATH"
+    }
+
+    function setupConfig {
+        SECRET_NAMES=("SECRET_KEY" "INTERNAL_TOKEN" "JWT_SECRET")
+
+        cp "$SANAGER_DATA_SOURCE_DIR/forgejo/app.ini" "$CONFIG_FILE_PATH"
+
+        for SECRET_NAME in "${SECRET_NAMES[@]}"; do
+            fillSecretToConfig "$SECRET_NAME"
+        done
+    }
+
+    function setupAdmin {
+        sudo -u forgejo forgejo migrate --config "$CONFIG_FILE_PATH"
+        sudo -u forgejo forgejo admin user create \
+            --config "$CONFIG_FILE_PATH" \
+            --username sanager \
+            --password sanager \
+            --email sanager@sanager.sanager \
+            --admin
+
+        printMsg "Dummy admin for Forgejo created. Update admin account manually."
+        printMsg "Edit admin account (e-mail, name, password) in web UI - \`Site Administration -> User Accounts\`"
+    }
+
+    addAptRepository forgejo "$REPO_ROW" "$REPO_KEY_URL"
+    aptGetInstall $PACKAGES
+
+    # config doesn't exist or contains only comments and empty lines?
+    if [[ ! -f "$CONFIG_FILE_PATH" ]] || ! grep -qE '^[[:space:]]*[^#;[:space:]]' "$CONFIG_FILE_PATH"; then
+        setupConfig
+        setupAdmin
+
+        systemctl restart forgejo
+    fi
+}
+
 # TODO:
 # - IMPORTANT!!!
 #   - create apt policy file in preferences.d/ for each added repository
