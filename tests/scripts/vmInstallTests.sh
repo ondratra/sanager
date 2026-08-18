@@ -58,6 +58,7 @@ function buildStableBasedVms {
     cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_TERMINAL_BASE" "$MACHINE_NAME_STABLE_GENERAL_USE_VPS" testSanagerInstallGeneralUseVps
     cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_TERMINAL_BASE" "$MACHINE_NAME_STABLE_AI_SERVER" testSanagerInstallAiServer
     cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_GRAPHICAL_BASE" "$MACHINE_NAME_STABLE_AI_CLIENT" testSanagerInstallAiClient
+    cachedBuildOnTopOfVm "$MACHINE_NAME_STABLE_TERMINAL_BASE" "$MACHINE_NAME_STABLE_SERVICE_NEST" testSanagerServiceNest
 }
 
 function buildUnstableBasedVms {

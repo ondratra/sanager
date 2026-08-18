@@ -103,6 +103,12 @@ function testSanagerInstallAiClient {
     sanagerStateInstall "$TMP_MACHINE_NAME" "AI client" aiClient
 }
 
+function testSanagerServiceNest {
+    local TMP_MACHINE_NAME=$1
+
+    sanagerStateInstall "$TMP_MACHINE_NAME" "Service Nest" serviceNest
+}
+
 function sanagerStateInstall {
     local TMP_MACHINE_NAME="$1"
     local HUMAN_READABLE_NAME="$2"
