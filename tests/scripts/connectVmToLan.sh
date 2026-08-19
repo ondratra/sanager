@@ -34,6 +34,7 @@ iface eno1 inet manual
 auto $LAN_BRIDGE_NAME
 iface $LAN_BRIDGE_NAME inet static
     address xxx.xxx.xxx.xxx/yy # address of bridging interface
+    gateway zzz.zzz.zzz.zzz/yy # address of gateway
     bridge_ports eno1
     bridge_stp off
 EOF

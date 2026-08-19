@@ -24,7 +24,7 @@ function pc_all {
 function pc_essentials {
     pkg_audio
     pkg_fonts
-    pkg_networkManager
+    pkg_networkManagerGui
 }
 
 function pc_userRobust {
