@@ -27,7 +27,7 @@ fi
 
 # used when importing ubuntu packages
 NOWADAYS_UBUNTU_VERSION="noble"
-NOWADAYS_DEBIAN_VERSION="bullseye"
+NOWADAYS_DEBIAN_VERSION="trixie"
 TARGET_DEBIAN_VERSION="sid"
 SANAGER_MAIN_DIR="/opt/__sanager"
 SANAGER_INSTALL_DIR="$SANAGER_MAIN_DIR/install"

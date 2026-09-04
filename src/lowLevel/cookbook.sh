@@ -1271,6 +1271,15 @@ function pkg_forgejo {
     fi
 }
 
+function pkg_terraform {
+    local PACKAGES="terraform"
+    local REPO_ROW="deb https://apt.releases.hashicorp.com $NOWADAYS_DEBIAN_VERSION main"
+    local REPO_KEY_URL="https://apt.releases.hashicorp.com/gpg"
+
+    addAptRepository terraform "$REPO_ROW" "$REPO_KEY_URL"
+    aptGetInstall $PACKAGES
+}
+
 # TODO:
 # - IMPORTANT!!!
 #   - create apt policy file in preferences.d/ for each added repository
