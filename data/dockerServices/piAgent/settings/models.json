@@ -1,0 +1,16 @@
+{
+  "providers": {
+    "ollama": {
+      "baseUrl": "http://ollama-server:11434/v1",
+      "api": "openai-completions",
+      "apiKey": "ollama",
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false
+      },
+      "models": [
+        { "id": "qwen3.8:27b", "reasoning": true }
+      ]
+    }
+  }
+}

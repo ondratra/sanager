@@ -1,0 +1,17 @@
+services:
+  pi-agent:
+    build:
+      context: .
+      dockerfile: piAgent/Dockerfile
+    image: pi-sandbox
+    working_dir: /workspace
+    extra_hosts:
+      - "ollama-server:${OLLAMA_SERVER_IP:-host-gateway}"
+    volumes:
+      - pi-agent-workspace:/workspace
+      - ./piAgent/settings/models.json:/root/.pi/agent/models.json:ro
+    stdin_open: true
+    tty: true
+
+volumes:
+  pi-agent-workspace:
