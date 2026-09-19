@@ -39,7 +39,7 @@ function pkg_networkManager {
 }
 
 function pkg_networkManagerGui {
-    local PACKAGES="network-manager-gnome"
+    local PACKAGES="network-manager-applet nm-connection-editor"
 
     aptGetInstall $PACKAGES
 }
