@@ -4,10 +4,15 @@ source $SCRIPT_DIR/src/highLevel/aiServer.sh
 function runHighLevel {
     graphicalDesktop_all
 
+    aiClient_advancedNetworking
     aiClient_codingCli
     aiClient_graphicalTooling
 
     effect_restoreMateConfig # restore config (there might be icons for newly installed programs)
+}
+
+function aiClient_advancedNetworking {
+    pkg_networkFileShareClient
 }
 
 function aiClient_codingCli {
